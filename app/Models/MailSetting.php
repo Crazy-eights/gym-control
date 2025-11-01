@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class MailSetting extends Model
 {
@@ -84,9 +86,41 @@ class MailSetting extends Model
      */
     public static function getConfig()
     {
-        return Cache::remember('mail_settings', 3600, function () {
-            return self::first() ?? self::create([]);
-        });
+        try {
+            return Cache::remember('mail_settings', 3600, function () {
+                $config = self::first();
+                if (!$config) {
+                    // Crear configuración por defecto si no existe
+                    $config = self::create([
+                        'mail_driver' => 'smtp',
+                        'mail_host' => 'localhost',
+                        'mail_port' => 587,
+                        'mail_encryption' => 'tls',
+                        'auth_method' => 'smtp',
+                        'mail_from_address' => 'noreply@example.com',
+                        'mail_from_name' => 'Gym Control',
+                        'email_timeout' => 30,
+                        'email_retry_attempts' => 3,
+                        'verify_ssl' => true,
+                        'email_notifications_enabled' => true,
+                        'email_queue_enabled' => false,
+                        'email_log_enabled' => true,
+                    ]);
+                }
+                return $config;
+            });
+        } catch (Exception $e) {
+            Log::error('Error getting mail config: ' . $e->getMessage());
+            // Retornar configuración básica si hay error
+            return new self([
+                'mail_driver' => 'log',
+                'mail_host' => 'localhost',
+                'mail_port' => 587,
+                'mail_from_address' => 'noreply@example.com',
+                'mail_from_name' => 'Gym Control',
+                'email_timeout' => 30,
+            ]);
+        }
     }
 
     /**
@@ -393,14 +427,13 @@ class MailSetting extends Model
                 
                 // Actualizar tokens
                 $updateData = [
-                    'microsoft_access_token' => Crypt::encryptString($tokenData['access_token']),
+                    'microsoft_access_token' => $tokenData['access_token'], // El mutator se encarga de encriptar
                     'microsoft_token_expires_at' => now()->addSeconds($tokenData['expires_in'] ?? 3600),
                 ];
 
                 // Si viene un nuevo refresh token, actualizarlo también
                 if (isset($tokenData['refresh_token'])) {
-                    $updateData['microsoft_refresh_token'] = Crypt::encryptString($tokenData['refresh_token']);
-
+                    $updateData['microsoft_refresh_token'] = $tokenData['refresh_token']; // El mutator se encarga de encriptar
                 }
 
                 $this->update($updateData);

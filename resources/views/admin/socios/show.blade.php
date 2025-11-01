@@ -1,52 +1,56 @@
-@extends('layouts.admin')
+@extends('layouts.admin-modern')
 
 @section('title', 'Detalles del Socio')
 
+@section('header-color', 'bg-success')
+
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">
-                    <i class="fas fa-user me-2"></i>
-                    Detalles del Socio
-                </h1>
-                <div class="btn-group">
-                    <a href="{{ route('admin.socios.edit', $socio) }}" class="btn btn-warning">
-                        <i class="fas fa-edit me-1"></i>Editar
-                    </a>
-                    <a href="{{ route('admin.socios.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Volver
-                    </a>
-                </div>
-            </div>
+<div class="animate-fade-in-up">
+    <!-- Header con acciones -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-success mb-1">
+                <i class="fas fa-user me-2"></i>Detalles del Socio
+            </h2>
+            <p class="text-muted mb-0">Información completa del miembro</p>
+        </div>
+        <div class="btn-group">
+            <a href="{{ route('admin.socios.edit', $socio) }}" class="btn btn-warning btn-modern">
+                <i class="fas fa-edit me-1"></i>Editar
+            </a>
+            <a href="{{ route('admin.socios.index') }}" class="btn btn-secondary btn-modern">
+                <i class="fas fa-arrow-left me-1"></i>Volver
+            </a>
         </div>
     </div>
 
     <div class="row">
         <!-- Información Personal -->
         <div class="col-lg-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Información Personal</h6>
+            <div class="card-modern mb-4">
+                <div class="card-modern-header">
+                    <h3 class="card-modern-title">
+                        <i class="fas fa-id-card text-success me-2"></i>
+                        Información Personal
+                    </h3>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-modern-body text-center">
                     <!-- Foto del Socio -->
                     <div class="mb-3">
                         @if($socio->photo)
                             <img src="{{ asset('storage/' . $socio->photo) }}" 
                                  alt="Foto de {{ $socio->full_name }}" 
                                  class="rounded-circle img-fluid"
-                                 style="width: 150px; height: 150px; object-fit: cover;">
+                                 style="width: 150px; height: 150px; object-fit: cover; border: 4px solid var(--success-color);">
                         @else
-                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" 
-                                 style="width: 150px; height: 150px;">
-                                <i class="fas fa-user fa-4x text-white"></i>
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto border" 
+                                 style="width: 150px; height: 150px; border: 4px solid var(--success-color) !important;">
+                                <i class="fas fa-user fa-4x text-muted"></i>
                             </div>
                         @endif
                     </div>
 
-                    <h4 class="mb-1">{{ $socio->full_name }}</h4>
+                    <h4 class="mb-1 text-success">{{ $socio->full_name }}</h4>
                     <p class="text-muted mb-3">ID: {{ $socio->member_id }}</p>
 
                     <!-- Estado de la Membresía -->
@@ -85,10 +89,10 @@
                             <div class="col-8">
                                 @switch($socio->gender)
                                     @case('M')
-                                        <i class="fas fa-mars text-primary me-1"></i>Masculino
+                                        <i class="fas fa-mars text-success me-1"></i>Masculino
                                         @break
                                     @case('F')
-                                        <i class="fas fa-venus text-danger me-1"></i>Femenino
+                                        <i class="fas fa-venus text-success me-1"></i>Femenino
                                         @break
                                     @default
                                         <i class="fas fa-genderless text-secondary me-1"></i>{{ $socio->gender }}
@@ -129,26 +133,29 @@
 
         <!-- Información de Membresía -->
         <div class="col-lg-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">Información de Membresía</h6>
+            <div class="card-modern mb-4">
+                <div class="card-modern-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-modern-title mb-0">
+                        <i class="fas fa-id-badge text-success me-2"></i>
+                        Información de Membresía
+                    </h3>
                     @if($socio->membershipPlan)
-                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#renovarModal">
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#renovarModal">
                             <i class="fas fa-sync me-1"></i>Renovar Membresía
                         </button>
                     @else
-                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#asignarModal">
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#asignarModal">
                             <i class="fas fa-plus me-1"></i>Asignar Plan
                         </button>
                     @endif
                 </div>
-                <div class="card-body">
+                <div class="card-modern-body">
                     @if($socio->membershipPlan)
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="card bg-light">
+                                <div class="card border-success bg-light">
                                     <div class="card-body">
-                                        <h5 class="card-title text-primary">
+                                        <h5 class="card-title text-success">
                                             <i class="fas fa-calendar-check me-2"></i>
                                             {{ $socio->membershipPlan->plan_name }}
                                         </h5>
@@ -161,9 +168,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="card">
+                                <div class="card border-info">
                                     <div class="card-body">
-                                        <h6 class="card-title">Fechas de Membresía</h6>
+                                        <h6 class="card-title text-success">Fechas de Membresía</h6>
                                         <div class="mb-2">
                                             <strong>Inicio:</strong>
                                             <span class="text-success">
@@ -213,7 +220,7 @@
                             <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
                             <h5>Sin Plan de Membresía</h5>
                             <p class="text-muted">Este socio no tiene un plan de membresía asignado.</p>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asignarModal">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#asignarModal">
                                 <i class="fas fa-plus me-1"></i>Asignar Plan de Membresía
                             </button>
                         </div>
@@ -222,13 +229,16 @@
             </div>
 
             <!-- Historial (placeholder para futuras funcionalidades) -->
-            <div class="card shadow">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Historial de Actividad</h6>
+            <div class="card-modern">
+                <div class="card-modern-header">
+                    <h3 class="card-modern-title">
+                        <i class="fas fa-history text-success me-2"></i>
+                        Historial de Actividad
+                    </h3>
                 </div>
-                <div class="card-body">
+                <div class="card-modern-body">
                     <div class="text-center py-3">
-                        <i class="fas fa-history fa-2x text-gray-300 mb-2"></i>
+                        <i class="fas fa-history fa-2x text-muted mb-2"></i>
                         <p class="text-muted">Próximamente: Historial de pagos, asistencias y actividades.</p>
                     </div>
                 </div>
@@ -241,9 +251,11 @@
 <div class="modal fade" id="renovarModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Renovar Membresía</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-sync me-2"></i>Renovar Membresía
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('admin.socios.renovar-membresia', $socio) }}" method="POST">
                 @csrf
@@ -263,14 +275,18 @@
                         <input type="date" class="form-control" id="subscription_start_date_renovar" 
                                name="subscription_start_date" value="{{ now()->format('Y-m-d') }}" required>
                     </div>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-1"></i>
-                        La fecha de vencimiento se calculará automáticamente según el plan seleccionado.
+                    <div class="alert alert-info d-flex align-items-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>La fecha de vencimiento se calculará automáticamente según el plan seleccionado.</div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Renovar Membresía</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-sync me-1"></i>Renovar Membresía
+                    </button>
                 </div>
             </form>
         </div>
@@ -281,9 +297,11 @@
 <div class="modal fade" id="asignarModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Asignar Plan de Membresía</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>Asignar Plan de Membresía
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('admin.socios.renovar-membresia', $socio) }}" method="POST">
                 @csrf
@@ -306,8 +324,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Asignar Plan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i>Asignar Plan
+                    </button>
                 </div>
             </form>
         </div>

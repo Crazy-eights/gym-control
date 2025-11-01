@@ -1,36 +1,41 @@
-@extends('layouts.admin')
+@extends('layouts.admin-modern')
 
 @section('title', 'Crear Nuevo Plan de Membresía')
+@section('page-title', 'Crear Nuevo Plan de Membresía')
 
 @section('content')
-<div class="container-fluid">
+<div class="animate-fade-in-up">
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-0 text-gray-800">Crear Nuevo Plan de Membresía</h1>
-            <p class="mb-0 text-muted">Completa la información para crear un nuevo plan</p>
+            <h2 class="text-success mb-1">
+                <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Plan de Membresía
+            </h2>
+            <p class="text-muted mb-0">Completa la información para crear un nuevo plan</p>
         </div>
-        <a href="{{ route('admin.membership-plans.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Volver al listado
+        <a href="{{ route('admin.membership-plans.index') }}" class="btn btn-secondary btn-modern">
+            <i class="fas fa-arrow-left me-2"></i>Volver al listado
         </a>
     </div>
 
     <div class="row">
         <div class="col-lg-8">
             <!-- Formulario Principal -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Información del Plan</h6>
+            <div class="modern-card mb-4">
+                <div class="modern-card-header">
+                    <h6 class="mb-0 fw-bold text-success">
+                        <i class="fas fa-info-circle me-2"></i>Información del Plan
+                    </h6>
                 </div>
-                <div class="card-body">
+                <div class="modern-card-body">
                     <form action="{{ route('admin.membership-plans.store') }}" method="POST">
                         @csrf
                         
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label for="plan_name" class="form-label">Nombre del Plan <span class="text-danger">*</span></label>
+                                <label for="plan_name" class="form-label fw-semibold text-success">Nombre del Plan <span class="text-danger">*</span></label>
                                 <input type="text" 
-                                       class="form-control @error('plan_name') is-invalid @enderror" 
+                                       class="form-control form-control-sm @error('plan_name') is-invalid @enderror" 
                                        id="plan_name" 
                                        name="plan_name" 
                                        value="{{ old('plan_name') }}" 
@@ -44,11 +49,11 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="price" class="form-label">Precio <span class="text-danger">*</span></label>
-                                <div class="input-group">
+                                <label for="price" class="form-label fw-semibold text-success">Precio <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-sm">
                                     <span class="input-group-text">$</span>
                                     <input type="number" 
-                                           class="form-control @error('price') is-invalid @enderror" 
+                                           class="form-control form-control-sm @error('price') is-invalid @enderror" 
                                            id="price" 
                                            name="price" 
                                            value="{{ old('price') }}" 
@@ -64,9 +69,9 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="duration_days" class="form-label">Duración (días) <span class="text-danger">*</span></label>
+                                <label for="duration_days" class="form-label fw-semibold text-success">Duración (días) <span class="text-danger">*</span></label>
                                 <input type="number" 
-                                       class="form-control @error('duration_days') is-invalid @enderror" 
+                                       class="form-control form-control-sm @error('duration_days') is-invalid @enderror" 
                                        id="duration_days" 
                                        name="duration_days" 
                                        value="{{ old('duration_days') }}" 
@@ -85,8 +90,8 @@
 
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label for="description" class="form-label">Descripción <span class="text-danger">*</span></label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" 
+                                <label for="description" class="form-label fw-semibold text-success">Descripción <span class="text-danger">*</span></label>
+                                <textarea class="form-control form-control-sm @error('description') is-invalid @enderror" 
                                           id="description" 
                                           name="description" 
                                           rows="4" 
@@ -104,11 +109,11 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('admin.membership-plans.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-times"></i> Cancelar
+                                    <a href="{{ route('admin.membership-plans.index') }}" class="btn btn-secondary btn-modern">
+                                        <i class="fas fa-times me-2"></i>Cancelar
                                     </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> Guardar Plan
+                                    <button type="submit" class="btn btn-success btn-modern">
+                                        <i class="fas fa-save me-2"></i>Guardar Plan
                                     </button>
                                 </div>
                             </div>
@@ -120,14 +125,16 @@
 
         <div class="col-lg-4">
             <!-- Panel de Ayuda -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-info">Consejos para Crear Planes</h6>
+            <div class="modern-card mb-4">
+                <div class="modern-card-header">
+                    <h6 class="mb-0 fw-bold text-info">
+                        <i class="fas fa-lightbulb me-2"></i>Consejos para Crear Planes
+                    </h6>
                 </div>
-                <div class="card-body">
+                <div class="modern-card-body">
                     <div class="mb-3">
-                        <h6 class="text-primary"><i class="fas fa-lightbulb"></i> Nombres Sugeridos</h6>
-                        <ul class="list-unstyled">
+                        <h6 class="text-success fw-semibold"><i class="fas fa-tag me-2"></i>Nombres Sugeridos</h6>
+                        <ul class="list-unstyled text-muted small">
                             <li>• Membresía Básica</li>
                             <li>• Plan Premium</li>
                             <li>• Acceso VIP</li>
@@ -136,8 +143,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <h6 class="text-success"><i class="fas fa-clock"></i> Duraciones Comunes</h6>
-                        <ul class="list-unstyled">
+                        <h6 class="text-success fw-semibold"><i class="fas fa-clock me-2"></i>Duraciones Comunes</h6>
+                        <ul class="list-unstyled text-muted small">
                             <li>• 1 día = Pase diario</li>
                             <li>• 7 días = Semanal</li>
                             <li>• 30 días = Mensual</li>

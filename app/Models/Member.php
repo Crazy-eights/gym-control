@@ -52,6 +52,65 @@ class Member extends Authenticatable
     }
 
     /**
+     * RELACIÓN: Un miembro puede tener muchas asistencias.
+     */
+    public function attendances()
+    {
+        return $this->hasMany(MemberAttendance::class);
+    }
+
+    /**
+     * RELACIÓN: Un miembro puede tener muchas reservas de clases.
+     */
+    public function classBookings()
+    {
+        return $this->hasMany(ClassBooking::class);
+    }
+
+    /**
+     * Obtener reservas de clases confirmadas.
+     */
+    public function confirmedBookings()
+    {
+        return $this->classBookings()->confirmed();
+    }
+
+    /**
+     * Obtener próximas clases reservadas.
+     */
+    public function upcomingClasses()
+    {
+        return $this->classBookings()
+            ->upcoming()
+            ->with(['classSchedule.gymClass'])
+            ->orderBy('booking_date')
+            ->orderBy('created_at');
+    }
+
+    /**
+     * Obtener historial de clases asistidas.
+     */
+    public function attendedClasses()
+    {
+        return $this->classBookings()
+            ->attended()
+            ->with(['classSchedule.gymClass'])
+            ->orderBy('booking_date', 'desc');
+    }
+
+    /**
+     * Verificar si el miembro puede reservar más clases según su plan.
+     */
+    public function canBookClass()
+    {
+        if (!$this->is_active) return false;
+        
+        // Aquí se pueden agregar lógicas específicas según el plan
+        // Por ejemplo, límites mensuales de clases según el tipo de membresía
+        return true;
+    }
+
+    /**
      * Obtiene el nombre completo del socio.
      */
     public function getFullNameAttribute()
@@ -64,8 +123,15 @@ class Member extends Authenticatable
      */
     public function getIsActiveAttribute()
     {
-        return $this->subscription_end_date && 
-               now()->lessThanOrEqualTo($this->subscription_end_date);
+        if (!$this->subscription_end_date || !$this->plan_id) {
+            return false;
+        }
+
+        $endDate = $this->subscription_end_date instanceof \Carbon\Carbon 
+            ? $this->subscription_end_date 
+            : \Carbon\Carbon::parse($this->subscription_end_date);
+
+        return $endDate->isAfter(now());
     }
 
     /**
@@ -73,14 +139,16 @@ class Member extends Authenticatable
      */
     public function getStatusAttribute()
     {
-        if (!$this->subscription_end_date) {
+        if (!$this->subscription_end_date || !$this->plan_id) {
             return 'sin_plan';
         }
 
         $now = now();
-        $endDate = \Carbon\Carbon::parse($this->subscription_end_date);
+        $endDate = $this->subscription_end_date instanceof \Carbon\Carbon 
+            ? $this->subscription_end_date 
+            : \Carbon\Carbon::parse($this->subscription_end_date);
 
-        if ($endDate->isFuture()) {
+        if ($endDate->isAfter($now)) {
             // Verificar si está próximo a vencer (7 días)
             if ($endDate->diffInDays($now) <= 7) {
                 return 'proximo_vencimiento';

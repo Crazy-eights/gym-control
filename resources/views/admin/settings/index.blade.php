@@ -1,17 +1,19 @@
-@extends('layouts.admin')
+@extends('layouts.admin-modern')
 
 @section('title', 'Configuraciones')
+
+@section('header-color', 'bg-success')
 
 @section('content')
     <div class="content-header">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h1 class="h3 mb-0">Configuraciones del Sistema</h1>
+                <h1 class="h3 mb-0 text-success">Configuraciones del Sistema</h1>
                 <p class="text-muted mb-0">Personaliza las configuraciones generales</p>
             </div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-success"><i class="fa fa-dashboard"></i> Inicio</a></li>
                     <li class="breadcrumb-item active">Configuraciones</li>
                 </ol>
             </nav>
@@ -25,12 +27,12 @@
         <div class="row">
             <!-- Información General -->
             <div class="col-md-8">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Información General</h3>
+                <div class="card-modern">
+                    <div class="card-modern-header">
+                        <h3 class="card-modern-title">Información General</h3>
                     </div>
                     
-                    <div class="box-body">
+                    <div class="card-modern-body">
                         @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <i class="fas fa-check-circle"></i> {{ session('success') }}
@@ -148,12 +150,12 @@
 
             <!-- Archivos y Multimedia -->
             <div class="col-md-4">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Logo y Favicon</h3>
+                <div class="card-modern">
+                    <div class="card-modern-header">
+                        <h3 class="card-modern-title">Logo y Favicon</h3>
                     </div>
                     
-                    <div class="box-body">
+                    <div class="card-modern-body">
                         <!-- Logo -->
                         <div class="mb-4">
                             <label for="logo" class="form-label">Logo del Sitio</label>
@@ -219,14 +221,14 @@
                 </div>
 
                 <!-- Acciones -->
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Acciones</h3>
+                <div class="card-modern">
+                    <div class="card-modern-header">
+                        <h3 class="card-modern-title">Acciones</h3>
                     </div>
                     
-                    <div class="box-body">
+                    <div class="card-modern-body">
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save"></i> Guardar Configuraciones
                             </button>
                             
@@ -243,22 +245,34 @@
     </form>
 
     <!-- Modal de confirmación de reset -->
-    <div class="modal fade" id="resetModal" tabindex="-1">
+    <div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true" role="dialog">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar Restauración</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header bg-gradient-warning text-white py-2">
+                    <h6 class="modal-title fw-bold mb-0" id="resetModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Restauración
+                    </h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <div class="modal-body">
-                    <p>¿Estás seguro de que deseas restaurar todas las configuraciones a sus valores por defecto?</p>
-                    <p class="text-warning"><i class="fas fa-exclamation-triangle"></i> Esta acción sobrescribirá todas las configuraciones actuales.</p>
+                <div class="modal-body p-3">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-undo-alt fa-3x text-warning mb-3"></i>
+                    </div>
+                    <p class="text-center mb-2">¿Estás seguro de que deseas restaurar todas las configuraciones a sus valores por defecto?</p>
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <div>Esta acción sobrescribirá todas las configuraciones actuales.</div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <div class="modal-footer bg-light border-0 py-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
                     <form action="{{ route('admin.settings.reset') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" class="btn btn-warning">Restaurar</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-undo me-1"></i>Restaurar
+                        </button>
                     </form>
                 </div>
             </div>
@@ -286,7 +300,9 @@ function previewImage(event, previewId) {
 }
 
 function confirmReset() {
-    new bootstrap.Modal(document.getElementById('resetModal')).show();
+    const modal = new bootstrap.Modal(document.getElementById('resetModal'));
+    setupModalAccessibility(modal._element);
+    modal.show();
 }
 </script>
 @endpush

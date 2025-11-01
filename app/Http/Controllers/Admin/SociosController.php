@@ -134,9 +134,16 @@ class SociosController extends Controller
                 $validated['photo'] = $photoPath;
             }
 
+            // Calcular fecha de fin automáticamente si se selecciona un plan
+            if ($validated['plan_id'] && $validated['subscription_start_date']) {
+                $plan = MembershipPlan::find($validated['plan_id']);
+                if ($plan) {
+                    $startDate = \Carbon\Carbon::parse($validated['subscription_start_date']);
+                    $validated['subscription_end_date'] = $startDate->copy()->addDays($plan->duration_days)->format('Y-m-d');
+                }
+            }
+
             $socio = Member::create($validated);
-
-
 
             return redirect()->route('admin.socios.index')
                 ->with('success', 'Socio registrado exitosamente.');
@@ -161,8 +168,39 @@ class SociosController extends Controller
     /**
      * Mostrar formulario para editar socio.
      */
-    public function edit(Member $socio)
+    public function edit(Request $request, Member $socio)
     {
+        // Si es una petición AJAX, devolver datos JSON
+        if ($request->ajax() || $request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            try {
+                return response()->json([
+                    'success' => true,
+                    'socio' => [
+                        'id' => $socio->id,
+                        'member_id' => $socio->member_id,
+                        'firstname' => $socio->firstname,
+                        'lastname' => $socio->lastname,
+                        'contact_info' => $socio->contact_info,
+                        'gender' => $socio->gender,
+                        'birthdate' => $socio->birthdate,
+                        'address' => $socio->address,
+                        'plan_id' => $socio->plan_id,
+                        'subscription_start_date' => $socio->subscription_start_date,
+                        'subscription_end_date' => $socio->subscription_end_date,
+                        'status' => 'active', // Por defecto activo ya que no hay campo status en la BD
+                        'photo' => $socio->photo,
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Error al obtener datos del socio para edición: ' . $e->getMessage());
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Error al cargar los datos del socio'
+                ], 500);
+            }
+        }
+
+        // Si es una petición normal, devolver vista
         $planes = MembershipPlan::all();
         return view('admin.socios.edit', compact('socio', 'planes'));
     }
@@ -219,9 +257,25 @@ class SociosController extends Controller
                 $validated['photo'] = $photoPath;
             }
 
+            // Calcular fecha de fin automáticamente si se selecciona un plan
+            if ($validated['plan_id'] && $validated['subscription_start_date']) {
+                $plan = MembershipPlan::find($validated['plan_id']);
+                if ($plan) {
+                    $startDate = \Carbon\Carbon::parse($validated['subscription_start_date']);
+                    // Solo recalcular si la fecha de fin no se proporcionó o es diferente al cálculo
+                    $calculatedEndDate = $startDate->copy()->addDays($plan->duration_days);
+                    if (!isset($validated['subscription_end_date']) || 
+                        \Carbon\Carbon::parse($validated['subscription_end_date'])->ne($calculatedEndDate)) {
+                        $validated['subscription_end_date'] = $calculatedEndDate->format('Y-m-d');
+                    }
+                }
+            } elseif (!$validated['plan_id']) {
+                // Si no hay plan, limpiar las fechas
+                $validated['subscription_start_date'] = null;
+                $validated['subscription_end_date'] = null;
+            }
+
             $socio->update($validated);
-
-
 
             return redirect()->route('admin.socios.index')
                 ->with('success', 'Datos del socio actualizados exitosamente.');

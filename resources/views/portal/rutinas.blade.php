@@ -1,6 +1,6 @@
-@extends('layouts.portal')
+@extends('layouts.portal-modern')
 
-@section('title', 'Rutinas')
+@section('title', 'Mis Rutinas')
 
 @section('content')
 <!-- Header -->

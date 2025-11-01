@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 use Exception;
 
 class MailConfigController extends Controller
@@ -33,7 +34,9 @@ class MailConfigController extends Controller
         Log::info('=== UPDATE METHOD CALLED ===', [
             'method' => $request->method(),
             'url' => $request->url(),
-            'all_data' => $request->all()
+            'has_auth_method' => $request->has('auth_method'),
+            'auth_method' => $request->input('auth_method'),
+            'mail_driver' => $request->input('mail_driver')
         ]);
         
         $validated = $request->validate([
@@ -120,7 +123,7 @@ class MailConfigController extends Controller
         } catch (ValidationException $e) {
             Log::error('Validation Error in update:', [
                 'errors' => $e->errors(),
-                'input' => $request->all()
+                'failed_fields' => array_keys($e->errors())
             ]);
             
             return redirect()->route('admin.mail.config.index')
@@ -148,6 +151,9 @@ class MailConfigController extends Controller
      */
     public function testEmail(Request $request)
     {
+        // Establecer un límite de tiempo para evitar timeouts
+        set_time_limit(30); // 30 segundos máximo
+        
         $validated = $request->validate([
             'test_email' => 'required|email',
             'test_subject' => 'required|string|max:255',
@@ -155,25 +161,39 @@ class MailConfigController extends Controller
         ]);
 
         try {
-            // Obtener configuración actual
+            // Obtener configuración actual con timeout
             $mailConfig = MailSetting::getConfig();
+            if (!$mailConfig) {
+                throw new Exception('No se pudo obtener la configuración de correo');
+            }
 
             // Verificar si se debe usar OAuth Microsoft
-            if ($mailConfig->auth_method === 'oauth_microsoft' && 
-                !empty($mailConfig->getDecryptedMicrosoftAccessToken())) {
+            $useOAuth = $mailConfig->auth_method === 'oauth_microsoft' && 
+                       !empty($mailConfig->getDecryptedMicrosoftAccessToken());
+            
+            if ($useOAuth) {
+                Log::info('Test Email: Enviando via Microsoft Graph API (OAuth con token almacenado)');
                 
-                Log::info('Test Email: Enviando via Microsoft Graph API (OAuth)');
+                // Verificar si el token necesita renovación
+                if ($this->tokenNeedsRefresh($mailConfig)) {
+                    Log::info('Token expirado, intentando renovar...');
+                    $renewed = $mailConfig->refreshMicrosoftAccessToken();
+                    if (!$renewed) {
+                        Log::warning('No se pudo renovar el token, intentando con token actual');
+                    }
+                }
                 
-                // Enviar usando Microsoft Graph API
-                $success = $this->sendEmailViaMicrosoftGraph(
+                // Usar token almacenado (desencriptado)
+                $success = $this->sendEmailViaMicrosoftGraphWithStoredToken(
                     $validated['test_email'],
                     $validated['test_subject'],
                     $validated['test_message'],
-                    $mailConfig
+                    $mailConfig,
+                    20 // 20 segundos timeout
                 );
                 
                 if (!$success) {
-                    throw new Exception('Error enviando email via Microsoft Graph API');
+                    throw new Exception('Error enviando email via Microsoft Graph API con token almacenado');
                 }
                 
             } else {
@@ -181,6 +201,9 @@ class MailConfigController extends Controller
                 
                 // Actualizar configuración antes de enviar
                 $this->updateLaravelMailConfig();
+
+                // Configurar timeout para el envío de correo
+                ini_set('default_socket_timeout', 20);
 
                 // Crear y enviar correo de prueba usando Mailable
                 $testEmail = new TestEmail(
@@ -207,19 +230,23 @@ class MailConfigController extends Controller
 
             return redirect()->back()
                 ->with('success', 'Correo de prueba enviado exitosamente a ' . $validated['test_email'] . 
-                       ($mailConfig->auth_method === 'oauth_microsoft' ? ' (via OAuth Microsoft)' : ' (via SMTP)'));
+                       ($useOAuth ? ' (via OAuth Microsoft con ENV)' : ' (via SMTP)'));
             
         } catch (Exception $e) {
             Log::error('Error sending test email: ' . $e->getMessage());
             
             // Registrar prueba fallida
-            $mailConfig = MailSetting::getConfig();
-            $mailConfig->recordEmailTest('failed', $e->getMessage());
-            $mailConfig->incrementEmailStats('failed');
+            try {
+                $mailConfig = MailSetting::getConfig();
+                $mailConfig->recordEmailTest('failed', $e->getMessage());
+                $mailConfig->incrementEmailStats('failed');
+            } catch (Exception $logError) {
+                Log::error('Error logging test failure: ' . $logError->getMessage());
+            }
 
             // Analizar el tipo de error para dar mejor orientación
             $errorMessage = $e->getMessage();
-            $suggestion = $this->getErrorSuggestion($errorMessage, $mailConfig);
+            $suggestion = $this->getErrorSuggestion($errorMessage, $mailConfig ?? null);
 
             return redirect()->back()
                 ->with('error', 'Error al enviar correo de prueba: ' . $suggestion);
@@ -418,62 +445,75 @@ class MailConfigController extends Controller
      */
     private function updateLaravelMailConfig()
     {
-        $mailConfig = MailSetting::getConfig();
-        
-        // Verificar si se debe usar OAuth Microsoft
-        if ($mailConfig->auth_method === 'oauth_microsoft' && 
-            !empty($mailConfig->getDecryptedMicrosoftAccessToken())) {
+        try {
+            $mailConfig = MailSetting::getConfig();
             
-            Log::info('Mail Config: Configurando OAuth Microsoft para envío de emails');
+            if (!$mailConfig) {
+                Log::warning('No mail config available, skipping update');
+                return;
+            }
             
-            // Para OAuth Microsoft, usamos un transport personalizado o configuramos SMTP con OAuth
-            // Por ahora, configuramos SMTP con los datos de Outlook
-            Config::set('mail.mailers.smtp', [
-                'transport' => 'smtp',
-                'host' => 'smtp-mail.outlook.com',
-                'port' => 587,
-                'encryption' => 'tls',
-                'username' => $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address,
-                'password' => $mailConfig->getDecryptedMicrosoftAccessToken(), // Usar token como "password"
-                'timeout' => $mailConfig->email_timeout ?? 60,
-                'verify_peer' => true,
-                'auth_mode' => 'xoauth2', // Indicar que use OAuth2
-            ]);
-            
-            // Actualizar el from address para que coincida con la cuenta OAuth
-            Config::set('mail.from', [
-                'address' => $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address,
-                'name' => $mailConfig->mail_from_name,
-            ]);
-            
-        } else {
-            Log::info('Mail Config: Configurando SMTP tradicional');
-            
-            // Configuración SMTP tradicional
-            Config::set('mail.mailers.smtp', [
-                'transport' => 'smtp',
-                'host' => $mailConfig->mail_host,
-                'port' => $mailConfig->mail_port,
-                'encryption' => $mailConfig->mail_encryption,
-                'username' => $mailConfig->mail_username,
-                'password' => $mailConfig->getDecryptedPassword(),
-                'timeout' => $mailConfig->email_timeout,
-                'verify_peer' => $mailConfig->verify_ssl,
-            ]);
-            
-            // Actualizar configuración de from
-            Config::set('mail.from', [
-                'address' => $mailConfig->mail_from_address,
-                'name' => $mailConfig->mail_from_name,
-            ]);
-        }
+            // Verificar si se debe usar OAuth Microsoft
+            if ($mailConfig->auth_method === 'oauth_microsoft' && 
+                !empty($mailConfig->getDecryptedMicrosoftAccessToken())) {
+                
+                Log::info('Mail Config: Configurando OAuth Microsoft para envío de emails');
+                
+                // Para OAuth Microsoft, usamos un transport personalizado o configuramos SMTP con OAuth
+                // Por ahora, configuramos SMTP con los datos de Outlook
+                Config::set('mail.mailers.smtp', [
+                    'transport' => 'smtp',
+                    'host' => 'smtp-mail.outlook.com',
+                    'port' => 587,
+                    'encryption' => 'tls',
+                    'username' => $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address,
+                    'password' => $mailConfig->getDecryptedMicrosoftAccessToken(), // Usar token como "password"
+                    'timeout' => min($mailConfig->email_timeout ?? 30, 30), // Máximo 30 segundos
+                    'verify_peer' => true,
+                    'auth_mode' => 'xoauth2', // Indicar que use OAuth2
+                ]);
+                
+                // Actualizar el from address para que coincida con la cuenta OAuth
+                Config::set('mail.from', [
+                    'address' => $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address,
+                    'name' => $mailConfig->mail_from_name,
+                ]);
+                
+            } else {
+                Log::info('Mail Config: Configurando SMTP tradicional');
+                
+                // Configuración SMTP tradicional
+                Config::set('mail.mailers.smtp', [
+                    'transport' => 'smtp',
+                    'host' => $mailConfig->mail_host ?? 'localhost',
+                    'port' => $mailConfig->mail_port ?? 587,
+                    'encryption' => $mailConfig->mail_encryption,
+                    'username' => $mailConfig->mail_username,
+                    'password' => $mailConfig->getDecryptedPassword(),
+                    'timeout' => min($mailConfig->email_timeout ?? 30, 30), // Máximo 30 segundos
+                    'verify_peer' => $mailConfig->verify_ssl ?? true,
+                ]);
+                
+                // Actualizar configuración de from
+                Config::set('mail.from', [
+                    'address' => $mailConfig->mail_from_address ?? 'noreply@example.com',
+                    'name' => $mailConfig->mail_from_name ?? 'Gym Control',
+                ]);
+            }
 
-        // Actualizar mailer por defecto
-        Config::set('mail.default', $mailConfig->mail_driver);
-        
-        // Purgar instancias de Mail para forzar reconfiguración
-        app()->forgetInstance('mail.manager');
-        app()->forgetInstance('mailer');
+            // Actualizar mailer por defecto
+            Config::set('mail.default', $mailConfig->mail_driver ?? 'smtp');
+            
+            // Purgar instancias de Mail para forzar reconfiguración
+            app()->forgetInstance('mail.manager');
+            app()->forgetInstance('mailer');
+            
+        } catch (Exception $e) {
+            Log::error('Error updating Laravel mail config: ' . $e->getMessage());
+            // Configurar valores por defecto seguros si hay error
+            Config::set('mail.default', 'log');
+            Config::set('mail.mailers.smtp.timeout', 30);
+        }
     }
 
     /**
@@ -800,5 +840,310 @@ class MailConfigController extends Controller
         }
 
         return $errorMessage;
+    }
+    
+    /**
+     * Verificar si el token necesita renovación
+     */
+    private function tokenNeedsRefresh($mailConfig)
+    {
+        if (!$mailConfig->microsoft_token_expires_at) {
+            return true; // Si no hay fecha de expiración, asumir que necesita renovación
+        }
+        
+        $expiresAt = \Carbon\Carbon::parse($mailConfig->microsoft_token_expires_at);
+        $now = \Carbon\Carbon::now();
+        
+        // Renovar si expira en los próximos 5 minutos
+        return $expiresAt->subMinutes(5)->isPast();
+    }
+    
+    /**
+     * Enviar email via Microsoft Graph API con token almacenado
+     */
+    private function sendEmailViaMicrosoftGraphWithStoredToken($to, $subject, $message, $mailConfig, $timeout = 20)
+    {
+        try {
+            $accessToken = $mailConfig->getDecryptedMicrosoftAccessToken();
+            
+            if (empty($accessToken)) {
+                throw new Exception('Token de acceso de Microsoft no disponible en base de datos');
+            }
+
+            // Verificar que el token tenga el formato correcto y no haya expirado
+            $tokenExpiry = $mailConfig->microsoft_token_expires_at;
+            if ($tokenExpiry && now()->isAfter($tokenExpiry)) {
+                Log::info('Token expirado, intentando renovar...', [
+                    'expiry' => $tokenExpiry,
+                    'now' => now(),
+                    'token_preview' => substr($accessToken, 0, 30) . '...'
+                ]);
+                
+                // Intentar renovar el token
+                $newToken = $mailConfig->refreshMicrosoftAccessToken();
+                if ($newToken) {
+                    Log::info('Token renovado exitosamente');
+                    $accessToken = $newToken; // Usar el token renovado directamente
+                } else {
+                    throw new Exception('No se pudo renovar el token de acceso');
+                }
+            }
+
+            // Validar que el token no esté vacío
+            if (empty($accessToken)) {
+                throw new Exception('Token de acceso no disponible');
+            }
+
+            // Los tokens de Microsoft Graph pueden ser JWT u opacos, ambos son válidos
+            Log::info('Enviando email via Microsoft Graph API con token válido...', [
+                'to' => $to,
+                'from' => $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address,
+                'subject' => $subject,
+                'token_format_valid' => !empty($accessToken)
+            ]);
+
+            $fromEmail = $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address;
+            $fromName = $mailConfig->mail_from_name ?? 'Gym Control';
+
+            $emailData = [
+                'message' => [
+                    'subject' => $subject,
+                    'body' => [
+                        'contentType' => 'HTML',
+                        'content' => nl2br(htmlspecialchars($message))
+                    ],
+                    'toRecipients' => [
+                        [
+                            'emailAddress' => [
+                                'address' => $to
+                            ]
+                        ]
+                    ],
+                    'from' => [
+                        'emailAddress' => [
+                            'address' => $fromEmail,
+                            'name' => $fromName
+                        ]
+                    ]
+                ]
+            ];
+
+            Log::info('Enviando email via Microsoft Graph API con token válido...', [
+                'to' => $to,
+                'from' => $fromEmail,
+                'subject' => $subject,
+                'token_format_valid' => count(explode('.', $accessToken)) === 3
+            ]);
+
+            $response = Http::timeout($timeout)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ])
+                ->post('https://graph.microsoft.com/v1.0/users/' . urlencode($fromEmail) . '/sendMail', $emailData);
+
+            if ($response->successful()) {
+                Log::info('Email enviado exitosamente via Microsoft Graph API');
+                return true;
+            } else {
+                Log::error('Error en Microsoft Graph API', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            Log::error('Error en sendEmailViaMicrosoftGraphWithStoredToken: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Enviar email via OAuth con credenciales del ENV
+     */
+    private function sendEmailViaOAuthWithEnvCredentials($to, $subject, $message, $mailConfig, $timeout = 20)
+    {
+        try {
+            Log::info('Obteniendo token de acceso usando credenciales ENV...');
+            
+            // Obtener token de acceso usando Client Credentials Flow
+            $accessToken = $this->getAccessTokenFromEnv();
+            
+            if (empty($accessToken)) {
+                throw new Exception('No se pudo obtener token de acceso desde ENV');
+            }
+
+            $fromEmail = $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address;
+            $fromName = $mailConfig->mail_from_name ?? 'Gym Control';
+
+            $emailData = [
+                'message' => [
+                    'subject' => $subject,
+                    'body' => [
+                        'contentType' => 'HTML',
+                        'content' => nl2br(htmlspecialchars($message))
+                    ],
+                    'toRecipients' => [
+                        [
+                            'emailAddress' => [
+                                'address' => $to
+                            ]
+                        ]
+                    ],
+                    'from' => [
+                        'emailAddress' => [
+                            'address' => $fromEmail,
+                            'name' => $fromName
+                        ]
+                    ]
+                ]
+            ];
+
+            Log::info('Enviando email via Microsoft Graph API...', [
+                'to' => $to,
+                'from' => $fromEmail,
+                'subject' => $subject
+            ]);
+
+            $response = Http::timeout($timeout)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ])
+                ->post('https://graph.microsoft.com/v1.0/users/' . urlencode($fromEmail) . '/sendMail', $emailData);
+
+            if ($response->successful()) {
+                Log::info('Email enviado exitosamente via Microsoft Graph API');
+                return true;
+            } else {
+                Log::error('Error en Microsoft Graph API', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            Log::error('Error en sendEmailViaOAuthWithEnvCredentials: ' . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Obtener token de acceso usando credenciales del ENV
+     */
+    private function getAccessTokenFromEnv()
+    {
+        try {
+            $clientId = env('MS_CLIENT_ID');
+            $clientSecret = env('MS_CLIENT_SECRET');
+            $authority = env('MS_AUTHORITY', 'https://login.microsoftonline.com/common/');
+            
+            if (empty($clientId) || empty($clientSecret)) {
+                throw new Exception('Credenciales de Microsoft no configuradas en ENV');
+            }
+
+            $tokenUrl = $authority . "oauth2/v2.0/token";
+            
+            $postData = [
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'grant_type' => 'client_credentials',
+                'scope' => 'https://graph.microsoft.com/.default'
+            ];
+
+            Log::info('Solicitando token de acceso a Microsoft...', [
+                'url' => $tokenUrl,
+                'client_id' => $clientId
+            ]);
+
+            $response = Http::timeout(30)
+                ->asForm()
+                ->post($tokenUrl, $postData);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['access_token'])) {
+                    Log::info('Token de acceso obtenido exitosamente');
+                    return $data['access_token'];
+                } else {
+                    Log::error('No se encontró access_token en la respuesta', $data);
+                    return null;
+                }
+            } else {
+                Log::error('Error obteniendo token de acceso', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return null;
+            }
+            
+        } catch (Exception $e) {
+            Log::error('Error en getAccessTokenFromEnv: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Enviar email via Microsoft Graph API con timeout
+     */
+    private function sendEmailViaMicrosoftGraphWithTimeout($to, $subject, $message, $mailConfig, $timeout = 20)
+    {
+        try {
+            $accessToken = $mailConfig->getDecryptedMicrosoftAccessToken();
+            
+            if (empty($accessToken)) {
+                throw new Exception('Token de acceso de Microsoft no disponible');
+            }
+
+            $fromEmail = $mailConfig->microsoft_user_email ?? $mailConfig->mail_from_address;
+            $fromName = $mailConfig->mail_from_name ?? 'Gym Control';
+
+            $emailData = [
+                'message' => [
+                    'subject' => $subject,
+                    'body' => [
+                        'contentType' => 'HTML',
+                        'content' => nl2br(htmlspecialchars($message))
+                    ],
+                    'toRecipients' => [
+                        [
+                            'emailAddress' => [
+                                'address' => $to
+                            ]
+                        ]
+                    ],
+                    'from' => [
+                        'emailAddress' => [
+                            'address' => $fromEmail,
+                            'name' => $fromName
+                        ]
+                    ]
+                ]
+            ];
+
+            $response = Http::timeout($timeout)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ])
+                ->post('https://graph.microsoft.com/v1.0/me/sendMail', $emailData);
+
+            if ($response->successful()) {
+                Log::info('Email enviado exitosamente via Microsoft Graph API');
+                return true;
+            } else {
+                Log::error('Error en Microsoft Graph API', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            Log::error('Error en sendEmailViaMicrosoftGraphWithTimeout: ' . $e->getMessage());
+            return false;
+        }
     }
 }

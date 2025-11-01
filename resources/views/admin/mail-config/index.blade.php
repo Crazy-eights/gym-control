@@ -1,13 +1,16 @@
-@extends('layouts.admin')
+@extends('layouts.admin-modern')
 
 @section('title', 'Configuración de Email')
+@section('page-title', 'Configuración de Email')
+
+@section('header-color', 'bg-success')
 
 @push('styles')
 <style>
 .form-check-card .form-check-input:checked + .form-check-label {
-    border-color: #007bff !important;
+    border-color: #28a745 !important;
     background-color: #f8f9fa;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
 }
 
 .form-check-card .form-check-input {
@@ -25,7 +28,7 @@
 }
 
 .form-check-card .form-check-label:hover {
-    border-color: #007bff !important;
+    border-color: #28a745 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -45,38 +48,25 @@
 @endpush
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">
-                        <i class="fas fa-envelope me-2"></i>Configuración de Email
-                    </h3>
-                    <div>
-                        <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#testEmailModal">
-                            <i class="fas fa-paper-plane me-1"></i>Enviar Email de Prueba
-                        </button>
-                    </div>
-                </div>
+<div class="animate-fade-in-up">
+    <!-- Header Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-success mb-1">
+                <i class="fas fa-envelope me-2"></i>Configuración de Email
+            </h2>
+            <p class="text-muted mb-0">Configura el sistema de correo electrónico para tu gimnasio</p>
+        </div>
+        <button type="button" class="btn btn-success btn-modern" data-bs-toggle="modal" data-bs-target="#testEmailModal">
+            <i class="fas fa-paper-plane me-2"></i>Enviar Prueba
+        </button>
+    </div>
 
-                <div class="card-body">
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('admin.mail.config.update') }}">
-                        @csrf
+    <!-- Main Configuration Card -->
+    <div class="card-modern">
+        <div class="p-4">
+            <form method="POST" action="{{ route('admin.mail.config.update') }}">
+                @csrf
                         @method('PUT')
                         
                         <!-- Campos ocultos para OAuth -->
@@ -94,7 +84,7 @@
                         <!-- Método de Autenticación -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary border-bottom pb-2">
+                                <h5 class="text-success border-bottom pb-2">
                                     <i class="fas fa-key me-2"></i>Método de Autenticación
                                 </h5>
                             </div>
@@ -107,7 +97,7 @@
                                                    onchange="window.toggleAuthMethod()">
                                             <label class="form-check-label card p-3 border" for="auth_smtp">
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fas fa-envelope fa-2x text-primary me-3"></i>
+                                                    <i class="fas fa-envelope fa-2x text-success me-3"></i>
                                                     <div>
                                                         <h6 class="mb-1">SMTP Tradicional</h6>
                                                         <small class="text-muted">Usar usuario y contraseña</small>
@@ -138,7 +128,7 @@
                         <!-- Proveedor de Email - Solo visible para SMTP -->
                         <div class="row mb-4" id="provider-config">
                             <div class="col-12">
-                                <h5 class="text-primary border-bottom pb-2">
+                                <h5 class="text-success border-bottom pb-2">
                                     <i class="fas fa-server me-2"></i>Proveedor de Email
                                 </h5>
                             </div>
@@ -175,7 +165,7 @@
                         <!-- Configuración SMTP -->
                         <div class="row mb-4" id="smtp-config" style="display: none;">
                             <div class="col-12">
-                                <h5 class="text-primary border-bottom pb-2">
+                                <h5 class="text-success border-bottom pb-2">
                                     <i class="fas fa-cog me-2"></i>Configuración SMTP
                                 </h5>
                             </div>
@@ -222,7 +212,7 @@
                         <!-- Configuración de Identidad -->
                         <div class="row mb-4" id="identity-config">
                             <div class="col-12">
-                                <h5 class="text-primary border-bottom pb-2">
+                                <h5 class="text-success border-bottom pb-2">
                                     <i class="fas fa-id-card me-2"></i>Identidad del Remitente
                                 </h5>
                             </div>
@@ -254,7 +244,7 @@
                         <!-- OAuth Microsoft -->
                         <div class="row mb-4" id="oauth-config" style="display: none;">
                             <div class="col-12">
-                                <h5 class="text-primary border-bottom pb-2">
+                                <h5 class="text-success border-bottom pb-2">
                                     <i class="fab fa-microsoft me-2"></i>Autenticación OAuth Microsoft
                                     <span class="badge bg-success ms-2">RECOMENDADO</span>
                                     
@@ -340,7 +330,7 @@
                         <!-- Configuraciones Adicionales -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary border-bottom pb-2">
+                                <h5 class="text-success border-bottom pb-2">
                                     <i class="fas fa-cogs me-2"></i>Configuraciones Adicionales
                                 </h5>
                             </div>
@@ -383,7 +373,7 @@
                                     <div>
                                         <!-- Botones para SMTP -->
                                         <div id="smtp-actions" style="display: none;">
-                                            <button type="submit" class="btn btn-primary">
+                                            <button type="submit" class="btn btn-success">
                                                 <i class="fas fa-save me-2"></i>Guardar Configuración SMTP
                                             </button>
                                             <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm()">
@@ -398,7 +388,7 @@
                                                     <i class="fas fa-save me-2"></i>Guardar Configuración OAuth
                                                 </button>
                                             @else
-                                                <button type="button" class="btn btn-primary btn-lg" onclick="startOAuthFlow()" id="btn-start-oauth">
+                                                <button type="button" class="btn btn-success btn-lg" onclick="startOAuthFlow()" id="btn-start-oauth">
                                                     <i class="fab fa-microsoft me-2"></i>Conectar con Microsoft
                                                 </button>
                                                 <button type="button" class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#oauthHelpModal">
@@ -431,22 +421,22 @@
 </div>
 
 <!-- Modal de Ayuda OAuth Microsoft -->
-<div class="modal fade" id="oauthHelpModal" tabindex="-1" aria-labelledby="oauthHelpModalLabel" aria-hidden="true">
+<div class="modal fade" id="oauthHelpModal" tabindex="-1" aria-labelledby="oauthHelpModalLabel" aria-hidden="true" role="dialog">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="oauthHelpModalLabel">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-gradient-primary text-white py-2">
+                <h6 class="modal-title fw-bold mb-0" id="oauthHelpModalLabel">
                     <i class="fab fa-microsoft me-2"></i>Configurar OAuth Microsoft - Guía Paso a Paso
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-3">
                 <div class="alert alert-info">
                     <strong><i class="fas fa-info-circle me-2"></i>¿Por qué OAuth?</strong><br>
                     Microsoft ha deshabilitado la autenticación básica (usuario/contraseña) para cuentas personales por seguridad. OAuth es más seguro y es el método recomendado.
                 </div>
 
-                <h6 class="text-primary"><i class="fas fa-step-forward me-2"></i>Paso 1: Crear Aplicación en Azure</h6>
+                <h6 class="text-success"><i class="fas fa-step-forward me-2"></i>Paso 1: Crear Aplicación en Azure</h6>
                 <ol>
                     <li>Ve a <a href="https://portal.azure.com" target="_blank">Azure Portal</a> e inicia sesión</li>
                     <li>Busca "Azure Active Directory" o "App registrations"</li>
@@ -461,7 +451,7 @@
                     <li>Haz clic en "Register"</li>
                 </ol>
 
-                <h6 class="text-primary"><i class="fas fa-step-forward me-2"></i>Paso 2: Obtener Credenciales</h6>
+                <h6 class="text-success"><i class="fas fa-step-forward me-2"></i>Paso 2: Obtener Credenciales</h6>
                 <ol>
                     <li>En tu aplicación registrada, ve a "Overview"</li>
                     <li>Copia el <strong>Application (client) ID</strong></li>
@@ -471,7 +461,7 @@
                     <li>Copia el <strong>Value</strong> del secreto (¡no el ID!)</li>
                 </ol>
 
-                <h6 class="text-primary"><i class="fas fa-step-forward me-2"></i>Paso 3: Configurar Permisos</h6>
+                <h6 class="text-success"><i class="fas fa-step-forward me-2"></i>Paso 3: Configurar Permisos</h6>
                 <ol>
                     <li>Ve a "API permissions"</li>
                     <li>Haz clic en "Add a permission"</li>
@@ -481,7 +471,7 @@
                     <li>Haz clic en "Grant admin consent" si aparece</li>
                 </ol>
 
-                <h6 class="text-primary"><i class="fas fa-step-forward me-2"></i>Paso 4: Configurar en Gym Control</h6>
+                <h6 class="text-success"><i class="fas fa-step-forward me-2"></i>Paso 4: Configurar en Gym Control</h6>
                 <ol>
                     <li>Pega el <strong>Client ID</strong> en el campo correspondiente</li>
                     <li>Pega el <strong>Client Secret</strong> en el campo correspondiente</li>
@@ -502,7 +492,7 @@
                     <li><strong>Tenant incorrecto:</strong> Para cuentas personales, usa el tenant ID mostrado en Overview</li>
                 </ul>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer bg-light border-0 py-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times me-1"></i>Cerrar
                 </button>
@@ -515,33 +505,33 @@
 </div>
 
 <!-- Modal para Prueba de Email -->
-<div class="modal fade" id="testEmailModal" tabindex="-1" aria-labelledby="testEmailModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="testEmailModalLabel">
+<div class="modal fade" id="testEmailModal" tabindex="-1" aria-labelledby="testEmailModalLabel" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-gradient-success text-white py-2">
+                <h6 class="modal-title fw-bold mb-0" id="testEmailModalLabel">
                     <i class="fas fa-paper-plane me-2"></i>Enviar Email de Prueba
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <form method="POST" action="{{ route('admin.mail.config.test') }}">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body p-3">
                     <div class="mb-3">
-                        <label for="test_email" class="form-label">Dirección de Email para Prueba</label>
-                        <input type="email" class="form-control" id="test_email" name="test_email" 
+                        <label for="test_email" class="form-label fw-semibold">Dirección de Email para Prueba</label>
+                        <input type="email" class="form-control form-control-sm" id="test_email" name="test_email" 
                                value="{{ old('test_email', $mailSettings['test_email_address'] ?? '') }}" 
                                placeholder="prueba@ejemplo.com" required>
                         <small class="form-text text-muted">Se enviará un email de prueba a esta dirección</small>
                     </div>
                     <div class="mb-3">
-                        <label for="test_subject" class="form-label">Asunto del Email</label>
-                        <input type="text" class="form-control" id="test_subject" name="test_subject" 
+                        <label for="test_subject" class="form-label fw-semibold">Asunto del Email</label>
+                        <input type="text" class="form-control form-control-sm" id="test_subject" name="test_subject" 
                                value="Prueba de Configuración de Email - Gym Control" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="test_message" class="form-label">Mensaje</label>
-                        <textarea class="form-control" id="test_message" name="test_message" rows="4" required>
+                    <div class="mb-0">
+                        <label for="test_message" class="form-label fw-semibold">Mensaje</label>
+                        <textarea class="form-control form-control-sm" id="test_message" name="test_message" rows="4" required>
 Este es un email de prueba enviado desde Gym Control System.
 Si recibes este mensaje, la configuración de email está funcionando correctamente.
 
@@ -549,11 +539,11 @@ Fecha y hora: {{ now()->format('d/m/Y H:i:s') }}
                         </textarea>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer bg-light border-0 py-2">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i>Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-success">
                         <i class="fas fa-paper-plane me-1"></i>Enviar Prueba
                     </button>
                 </div>

@@ -228,4 +228,16 @@ class MembershipPlansController extends Controller
                 ->withErrors(['error' => 'Error al duplicar el plan de membresía.']);
         }
     }
+
+    /**
+     * API: Obtener duración de un plan específico.
+     */
+    public function getDuration(MembershipPlan $plan)
+    {
+        return response()->json([
+            'duration_days' => $plan->duration_days,
+            'plan_name' => $plan->plan_name,
+            'price' => $plan->price
+        ]);
+    }
 }

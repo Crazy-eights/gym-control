@@ -1,0 +1,376 @@
+/* ===================================
+   🎨 GYM CONTROL - MODERN UI THEME
+   Diseño moderno con paleta profesional
+   =================================== */
+
+/* Importar Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ===================================
+   🎯 VARIABLES DE DISEÑO MODERNO
+   =================================== */
+:root {
+  /* === PALETA DE COLORES === */
+  --primary-color: #4CAF50;           /* Verde menta vibrante */
+  --primary-hover: #45a049;           /* Verde más oscuro para hover */
+  --primary-light: #e8f5e8;           /* Verde muy claro para fondos */
+  
+  --secondary-color: #00BCD4;         /* Azul turquesa alternativo */
+  --secondary-hover: #00acc1;         /* Turquesa hover */
+  --secondary-light: #e0f2f1;         /* Turquesa claro */
+  
+  /* === FONDOS Y PANELES === */
+  --bg-primary: #ffffff;              /* Blanco puro */
+  --bg-secondary: #F8F9FA;            /* Gris muy claro */
+  --bg-tertiary: #E9ECEF;             /* Gris claro para divisores */
+  --bg-dark: #2c3e50;                 /* Azul noche para sidebar */
+  --bg-dark-light: #34495e;           /* Azul noche más claro */
+  
+  /* === TEXTO === */
+  --text-primary: #343A40;            /* Negro suave principal */
+  --text-secondary: #6C757D;          /* Gris para detalles */
+  --text-light: #ADB5BD;              /* Gris claro */
+  --text-white: #ffffff;              /* Blanco para sidebar */
+  --text-muted: #868e96;              /* Texto muy sutil */
+  
+  /* === ALERTAS Y ESTADOS === */
+  --success: #28a745;                 /* Verde éxito */
+  --warning: #ffc107;                 /* Amarillo advertencia */
+  --danger: #dc3545;                  /* Rojo controlado */
+  --info: #17a2b8;                    /* Azul información */
+  
+  /* === TIPOGRAFÍA === */
+  --font-headline: 'Poppins', sans-serif;     /* Para títulos y números */
+  --font-body: 'Inter', sans-serif;           /* Para texto de cuerpo */
+  
+  --font-size-xs: 0.75rem;            /* 12px */
+  --font-size-sm: 0.875rem;           /* 14px */
+  --font-size-base: 1rem;             /* 16px */
+  --font-size-lg: 1.125rem;           /* 18px */
+  --font-size-xl: 1.25rem;            /* 20px */
+  --font-size-2xl: 1.5rem;            /* 24px */
+  --font-size-3xl: 1.875rem;          /* 30px */
+  --font-size-4xl: 2.25rem;           /* 36px */
+  
+  /* === ESPACIADO === */
+  --spacing-xs: 0.25rem;              /* 4px */
+  --spacing-sm: 0.5rem;               /* 8px */
+  --spacing-md: 1rem;                 /* 16px */
+  --spacing-lg: 1.5rem;               /* 24px */
+  --spacing-xl: 2rem;                 /* 32px */
+  --spacing-2xl: 3rem;                /* 48px */
+  
+  /* === BORDES Y SOMBRAS === */
+  --border-radius-sm: 4px;            /* Bordes sutiles */
+  --border-radius-md: 8px;            /* Bordes estándar */
+  --border-radius-lg: 12px;           /* Bordes grandes */
+  --border-radius-xl: 16px;           /* Bordes muy grandes */
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1);
+  
+  /* === LAYOUT === */
+  --sidebar-width: 280px;             /* Ancho sidebar expandido */
+  --sidebar-collapsed-width: 70px;    /* Ancho sidebar colapsado */
+  --header-height: 70px;              /* Altura del header */
+  --transition-speed: 0.3s;           /* Velocidad de transiciones */
+}
+
+/* ===================================
+   🏗️ RESET Y BASE GLOBAL
+   =================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === TIPOGRAFÍA GLOBAL === */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+h5 { font-size: var(--font-size-lg); }
+h6 { font-size: var(--font-size-base); }
+
+.text-muted { color: var(--text-secondary); }
+.text-light { color: var(--text-light); }
+
+/* ===================================
+   🎯 CLASES UTILITARIAS MODERNAS
+   =================================== */
+.card-modern {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  border: none;
+  transition: box-shadow var(--transition-speed) ease;
+}
+
+.card-modern:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-modern {
+  border-radius: var(--border-radius-md);
+  font-family: var(--font-headline);
+  font-weight: 500;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  transition: all var(--transition-speed) ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary-modern {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary-modern:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.badge-modern {
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* === ESTADÍSTICAS MODERNAS === */
+.stat-card {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-speed) ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-number {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: var(--spacing-xs);
+}
+
+/* === INPUTS MODERNOS === */
+.form-control-modern {
+  border: 2px solid var(--bg-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-family: var(--font-body);
+  transition: border-color var(--transition-speed) ease;
+}
+
+.form-control-modern:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  outline: none;
+}
+
+/* ===================================
+   � DASHBOARD GRID
+   =================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* ===================================
+   �📋 BADGES MODERNOS
+   =================================== */
+.badge-modern {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  font-family: var(--font-headline);
+  border-radius: var(--border-radius-lg);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-speed) ease;
+}
+
+.badge-primary { 
+  background-color: var(--primary-light); 
+  color: var(--primary-color); 
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.badge-success { 
+  background-color: rgba(40, 167, 69, 0.1); 
+  color: var(--success); 
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.badge-warning { 
+  background-color: rgba(255, 193, 7, 0.1); 
+  color: #d39e00; 
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.badge-danger { 
+  background-color: rgba(220, 53, 69, 0.1); 
+  color: var(--danger); 
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.badge-secondary { 
+  background-color: rgba(108, 117, 125, 0.1); 
+  color: var(--text-secondary); 
+  border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+/* ===================================
+   🔘 BOTONES DE ACCIÓN
+   =================================== */
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.action-buttons .btn {
+  border-radius: var(--border-radius-md);
+  transition: all var(--transition-speed) ease;
+  border-width: 1px;
+}
+
+.action-buttons .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===================================
+   📊 TABLA MODERNA
+   =================================== */
+.table-modern {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.table-modern thead th {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: var(--font-headline);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: var(--spacing-lg) var(--spacing-md);
+  border: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table-modern tbody td {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--bg-tertiary);
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.table-modern tbody tr {
+  transition: background-color var(--transition-speed) ease;
+}
+
+.table-modern tbody tr:hover {
+  background-color: var(--primary-light);
+}
+
+/* ===================================
+   🚫 ESTADO VACÍO
+   =================================== */
+.empty-state {
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  opacity: 0.6;
+  margin-bottom: var(--spacing-lg);
+}
+
+.empty-state h5 {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 100%;
+    --sidebar-collapsed-width: 100%;
+  }
+  
+  .stat-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .stat-number {
+    font-size: var(--font-size-2xl);
+  }
+}

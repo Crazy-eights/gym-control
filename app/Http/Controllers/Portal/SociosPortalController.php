@@ -27,39 +27,27 @@ class SociosPortalController extends Controller
             $diasRestantes = now()->diffInDays($socio->subscription_end_date, false);
         }
         
-        // Simulamos datos de asistencias recientes
-        $asistenciasRecientes = collect([
-            (object)['fecha' => now()->subDays(1), 'hora' => '08:30', 'tipo' => 'entrada'],
-            (object)['fecha' => now()->subDays(1), 'hora' => '10:15', 'tipo' => 'salida'],
-            (object)['fecha' => now()->subDays(2), 'hora' => '07:45', 'tipo' => 'entrada'],
-            (object)['fecha' => now()->subDays(2), 'hora' => '09:30', 'tipo' => 'salida'],
-            (object)['fecha' => now()->subDays(3), 'hora' => '18:00', 'tipo' => 'entrada'],
-        ]);
+        // Asistencias reales recientes del socio
+        $asistenciasRecientes = \App\Models\MemberAttendance::where('member_id', $socio->id)
+            ->whereNotNull('checkin_time')
+            ->orderBy('checkin_time', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function($asistencia) {
+                // Usar checkin_time para fecha y hora ya que attendance_date está en NULL
+                if ($asistencia->checkin_time) {
+                    return (object)[
+                        'fecha' => $asistencia->checkin_time,
+                        'hora' => $asistencia->checkin_time->format('H:i'),
+                        'tipo' => 'entrada' // Por ahora solo manejamos entradas
+                    ];
+                }
+                return null;
+            })
+            ->filter(); // Remover elementos null
         
-        // Próximas clases (simuladas)
-        $proximasClases = collect([
-            (object)[
-                'nombre' => 'Yoga Matutino',
-                'instructor' => 'María González',
-                'fecha' => now()->addDay(),
-                'hora' => '08:00',
-                'duracion' => '60 min'
-            ],
-            (object)[
-                'nombre' => 'CrossFit',
-                'instructor' => 'Carlos Ruiz',
-                'fecha' => now()->addDays(2),
-                'hora' => '19:00',
-                'duracion' => '45 min'
-            ],
-            (object)[
-                'nombre' => 'Spinning',
-                'instructor' => 'Ana López',
-                'fecha' => now()->addDays(3),
-                'hora' => '07:30',
-                'duracion' => '50 min'
-            ]
-        ]);
+        // Próximas clases - por ahora empty hasta crear el módulo de clases
+        $proximasClases = collect([]);
         
         return view('portal.dashboard', compact(
             'socio',

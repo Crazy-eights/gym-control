@@ -48,8 +48,8 @@
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                             @php
-                                // Simulamos asistencias por ahora
-                                $asistenciasHoy = rand(45, 85);
+                                // Asistencias reales de hoy usando la tabla member_attendance
+                                $asistenciasHoy = \App\Models\MemberAttendance::whereDate('attendance_date', today())->count();
                             @endphp
                             {{ $asistenciasHoy }}
                         </div>
@@ -98,6 +98,109 @@
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clases Activas Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Clases Activas
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ \App\Models\GymClass::where('active', true)->count() }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dumbbell fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Segunda fila de estadísticas -->
+<div class="row">
+    <!-- Reservas de Hoy Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Reservas de Hoy
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ \App\Models\ClassBooking::whereDate('booking_date', today())->where('status', 'confirmed')->count() }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ingresos del Mes por Clases Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Ingresos Clases (Mes)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            ${{ number_format(\Illuminate\Support\Facades\DB::table('class_bookings')
+                                ->join('class_schedules', 'class_bookings.class_schedule_id', '=', 'class_schedules.id')
+                                ->join('gym_classes', 'class_schedules.gym_class_id', '=', 'gym_classes.id')
+                                ->where('class_bookings.booking_date', '>=', now()->startOfMonth())
+                                ->where('class_bookings.status', '!=', 'cancelled')
+                                ->sum('gym_classes.price'), 2) }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clases Más Populares Card -->
+    <div class="col-xl-6 col-md-12 mb-4">
+        <div class="card border-left-dark shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                            Clase Más Popular
+                        </div>
+                        @php
+                            $popularClass = \App\Models\GymClass::withCount(['bookings' => function($query) {
+                                $query->where('booking_date', '>=', now()->subMonth())
+                                      ->where('status', '!=', 'cancelled');
+                            }])->orderBy('bookings_count', 'desc')->first();
+                        @endphp
+                        @if($popularClass)
+                            <div class="h6 mb-0 font-weight-bold text-gray-800">
+                                {{ $popularClass->name }}
+                                <small class="text-muted">({{ $popularClass->bookings_count }} reservas)</small>
+                            </div>
+                        @else
+                            <div class="h6 mb-0 font-weight-bold text-gray-800">Sin datos</div>
+                        @endif
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-trophy fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
@@ -173,34 +276,32 @@
             </div>
             <div class="card-body">
                 @php
-                    // Simulamos datos de asistencias recientes
-                    $asistenciasRecientes = collect([
-                        (object)['socio' => 'Juan Pérez', 'hora' => '08:30', 'tipo' => 'entrada'],
-                        (object)['socio' => 'María García', 'hora' => '09:15', 'tipo' => 'entrada'], 
-                        (object)['socio' => 'Carlos López', 'hora' => '10:45', 'tipo' => 'salida'],
-                        (object)['socio' => 'Ana Martínez', 'hora' => '11:20', 'tipo' => 'entrada'],
-                        (object)['socio' => 'Luis Rodríguez', 'hora' => '12:00', 'tipo' => 'entrada'],
-                    ]);
+                    // Asistencias reales recientes de hoy
+                    $asistenciasRecientes = \App\Models\MemberAttendance::with('member')
+                        ->whereDate('attendance_date', today())
+                        ->orderBy('attendance_date', 'desc')
+                        ->take(5)
+                        ->get();
                 @endphp
                 
                 @if($asistenciasRecientes->count() > 0)
                     @foreach($asistenciasRecientes as $asistencia)
                         <div class="d-flex align-items-center mb-3">
                             <div class="me-3">
-                                <div class="rounded-circle {{ $asistencia->tipo == 'entrada' ? 'bg-success' : 'bg-warning' }} d-flex align-items-center justify-content-center text-white"
+                                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white"
                                      style="width: 40px; height: 40px;">
-                                    <i class="fas {{ $asistencia->tipo == 'entrada' ? 'fa-sign-in-alt' : 'fa-sign-out-alt' }}"></i>
+                                    <i class="fas fa-check"></i>
                                 </div>
                             </div>
                             <div class="flex-grow-1">
-                                <h6 class="mb-0">{{ $asistencia->socio }}</h6>
+                                <h6 class="mb-0">{{ $asistencia->member->full_name ?? 'Socio no encontrado' }}</h6>
                                 <small class="text-muted">
-                                    {{ ucfirst($asistencia->tipo) }} - {{ $asistencia->hora }}
+                                    Registrado - {{ $asistencia->attendance_date->format('H:i') }}
                                 </small>
                             </div>
                             <div>
-                                <span class="badge {{ $asistencia->tipo == 'entrada' ? 'bg-success' : 'bg-warning' }}">
-                                    {{ ucfirst($asistencia->tipo) }}
+                                <span class="badge bg-success">
+                                    Presente
                                 </span>
                             </div>
                         </div>
@@ -213,8 +314,8 @@
                 @endif
                 
                 <div class="text-center mt-3">
-                    <button class="btn btn-primary btn-sm" onclick="alert('Próximamente: Control de Asistencias')">
-                        <i class="fas fa-plus"></i> Registrar Asistencia
+                    <button class="btn btn-primary btn-sm" disabled>
+                        <i class="fas fa-clock"></i> Módulo de Asistencias (Próximamente)
                     </button>
                 </div>
             </div>
@@ -284,15 +385,28 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gráfica de Asistencias Semanales
+    // Gráfica de Asistencias Semanales - Datos reales
     const ctxAsistencias = document.getElementById('asistenciasChart').getContext('2d');
+    
+    // Obtener datos reales de asistencias de los últimos 7 días
+    @php
+        $diasSemana = [];
+        $asistenciasDatos = [];
+        
+        for ($i = 6; $i >= 0; $i--) {
+            $fecha = now()->subDays($i);
+            $diasSemana[] = $fecha->locale('es')->dayName;
+            $asistenciasDatos[] = \App\Models\MemberAttendance::whereDate('attendance_date', $fecha)->count();
+        }
+    @endphp
+    
     const asistenciasChart = new Chart(ctxAsistencias, {
         type: 'line',
         data: {
-            labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+            labels: {!! json_encode($diasSemana) !!},
             datasets: [{
                 label: 'Asistencias',
-                data: [65, 78, 90, 81, 95, 72, 45], // Datos simulados
+                data: {!! json_encode($asistenciasDatos) !!},
                 borderColor: '#4e73df',
                 backgroundColor: 'rgba(78, 115, 223, 0.1)',
                 borderWidth: 2,

@@ -62,6 +62,15 @@ class Initialize extends Command
         // Crear configuraciones básicas del sistema
         $this->createBasicSettings();
         
+        // Crear configuraciones visuales predeterminadas
+        $this->createVisualSettings();
+        
+        // Crear datos de ejemplo de asistencias si no existen
+        $this->createSampleAttendances();
+        
+        // Crear clases de ejemplo si no existen
+        $this->createSampleClasses();
+        
         // Crear planes de membresía por defecto
         $this->createDefaultMembershipPlans();
         
@@ -230,5 +239,64 @@ class Initialize extends Command
         );
 
         $this->info("   ✅ Usuario administrador creado: {$email}");
+    }
+
+    /**
+     * Crear configuraciones visuales predeterminadas
+     */
+    private function createVisualSettings()
+    {
+        $this->info('🎨 Creando configuraciones visuales predeterminadas...');
+
+        try {
+            \App\Models\VisualConfig::seedDefaults();
+            $this->info('   ✅ Configuraciones visuales creadas correctamente');
+        } catch (\Exception $e) {
+            $this->warn('   ⚠️  Error al crear configuraciones visuales: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Crear datos de ejemplo de asistencias si no existen
+     */
+    private function createSampleAttendances()
+    {
+        $this->info('📊 Verificando datos de asistencia...');
+
+        $attendanceCount = \App\Models\MemberAttendance::count();
+        
+        if ($attendanceCount === 0) {
+            $this->info('   📝 Creando datos de ejemplo de asistencias...');
+            try {
+                $this->call('db:seed', ['--class' => 'MemberAttendanceSeeder']);
+                $this->info('   ✅ Datos de ejemplo de asistencias creados');
+            } catch (\Exception $e) {
+                $this->warn('   ⚠️  Error al crear datos de asistencia: ' . $e->getMessage());
+            }
+        } else {
+            $this->info("   ✅ Ya existen {$attendanceCount} registros de asistencia");
+        }
+    }
+
+    /**
+     * Crear clases de ejemplo si no existen
+     */
+    private function createSampleClasses()
+    {
+        $this->info('🏋️ Verificando clases del gimnasio...');
+
+        $classCount = \App\Models\GymClass::count();
+        
+        if ($classCount === 0) {
+            $this->info('   📝 Creando clases de ejemplo...');
+            try {
+                $this->call('db:seed', ['--class' => 'GymClassSeeder']);
+                $this->info('   ✅ Clases de ejemplo creadas');
+            } catch (\Exception $e) {
+                $this->warn('   ⚠️  Error al crear clases: ' . $e->getMessage());
+            }
+        } else {
+            $this->info("   ✅ Ya existen {$classCount} clases registradas");
+        }
     }
 }

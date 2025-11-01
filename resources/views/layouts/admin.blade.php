@@ -48,6 +48,15 @@
 
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1rem 0.75rem 1.5rem !important;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 0.75rem;
+        }
+
+        .sidebar .sidebar-brand {
+            padding: 1rem 1.5rem !important;
         }
 
         /* Estilos para las gráficas del dashboard */
@@ -235,6 +244,11 @@
         }
     </style>
 
+    <!-- CSS Dinámico Personalizado -->
+    @if(file_exists(public_path('storage/css/dynamic-theme.css')))
+        <link href="{{ asset('storage/css/dynamic-theme.css') }}" rel="stylesheet" type="text/css">
+    @endif
+
     @stack('styles')
 </head>
 
@@ -286,6 +300,14 @@
                 </a>
             </li>
 
+            <!-- Nav Item - Clases -->
+            <li class="nav-item {{ request()->routeIs('admin.classes.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.classes.index') }}">
+                    <i class="fas fa-fw fa-dumbbell"></i>
+                    <span>Clases</span>
+                </a>
+            </li>
+
             <!-- Nav Item - Asistencias -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="alert('Próximamente: Control de Asistencias')">
@@ -334,12 +356,20 @@
                 </a>
             </li>
 
+            <!-- Nav Item - Configuración Visual -->
+            <li class="nav-item {{ request()->routeIs('admin.visual.config.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.visual.config.index') }}">
+                    <i class="fas fa-fw fa-palette"></i>
+                    <span>Configuración Visual</span>
+                </a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
-                <button class="btn btn-link rounded-circle text-white" id="sidebarToggle">
+                <button class="btn btn-link rounded-circle text-white" id="sidebarToggle" title="Colapsar/Expandir Sidebar">
                     <i class="fas fa-angle-left"></i>
                 </button>
             </div>
@@ -500,27 +530,131 @@
             const sidebar = document.getElementById('accordionSidebar');
             const contentWrapper = document.getElementById('content-wrapper');
 
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    if (window.innerWidth > 768) {
-                        // Desktop: toggle sidebar width
-                        const contentWrapper = document.querySelector('.content-wrapper');
-                        if (sidebar.style.width === '80px') {
-                            sidebar.style.width = '250px';
-                            contentWrapper.style.marginLeft = '250px';
-                        } else {
-                            sidebar.style.width = '80px';
-                            contentWrapper.style.marginLeft = '80px';
-                        }
+            // Añadir clases CSS para el comportamiento del sidebar colapsado
+            const style = document.createElement('style');
+            style.textContent = `
+                /* Estilos para sidebar colapsado */
+                .sidebar-collapsed {
+                    width: 80px !important;
+                    transition: width 0.3s ease;
+                }
+                
+                .sidebar-collapsed .nav-item .nav-link span {
+                    display: none !important;
+                }
+                
+                .sidebar-collapsed .nav-item .nav-link {
+                    text-align: center !important;
+                    padding: 0.75rem 0 !important;
+                }
+                
+                .sidebar-collapsed .nav-item .nav-link i {
+                    margin-right: 0 !important;
+                    font-size: 1.2rem !important;
+                }
+                
+                .sidebar-collapsed .sidebar-brand {
+                    padding: 0 !important;
+                    justify-content: center !important;
+                }
+                
+                .sidebar-collapsed .sidebar-brand-text {
+                    display: none !important;
+                }
+                
+                .sidebar-collapsed .sidebar-divider {
+                    margin: 0.5rem 0.5rem !important;
+                }
+                
+                .sidebar-collapsed #sidebarToggle i {
+                    transform: rotate(180deg);
+                }
+                
+                /* Efecto hover para mostrar texto cuando está colapsado */
+                .sidebar-collapsed .nav-item {
+                    position: relative;
+                }
+                
+                .sidebar-collapsed .nav-item:hover::after {
+                    content: attr(data-title);
+                    position: absolute;
+                    left: 100%;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: #333;
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.375rem;
+                    white-space: nowrap;
+                    z-index: 1000;
+                    margin-left: 0.5rem;
+                    font-size: 0.875rem;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                
+                /* Transición suave para el contenido */
+                .content-wrapper {
+                    transition: margin-left 0.3s ease;
+                }
+                
+                /* Estilos para mobile */
+                @media (max-width: 768px) {
+                    .sidebar-collapsed {
+                        display: none !important;
                     }
-                });
+                    
+                    .content-wrapper {
+                        margin-left: 0 !important;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Función para toggle del sidebar
+            function toggleSidebar() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.toggle('sidebar-collapsed');
+                    
+                    if (sidebar.classList.contains('sidebar-collapsed')) {
+                        contentWrapper.style.marginLeft = '80px';
+                        // Añadir atributos data-title para tooltips
+                        const navItems = sidebar.querySelectorAll('.nav-item');
+                        navItems.forEach(item => {
+                            const link = item.querySelector('.nav-link');
+                            const span = link.querySelector('span');
+                            if (span) {
+                                item.setAttribute('data-title', span.textContent.trim());
+                            }
+                        });
+                    } else {
+                        contentWrapper.style.marginLeft = '250px';
+                    }
+                }
+            }
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
             }
 
             if (sidebarToggleTop) {
                 sidebarToggleTop.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.toggle('show');
+                    } else {
+                        toggleSidebar();
+                    }
                 });
             }
+
+            // Ajustar en resize de ventana
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('sidebar-collapsed');
+                    contentWrapper.style.marginLeft = '0';
+                } else if (!sidebar.classList.contains('sidebar-collapsed')) {
+                    contentWrapper.style.marginLeft = '250px';
+                }
+            });
 
             // Scroll to top functionality
             const scrollToTop = document.querySelector('.scroll-to-top');

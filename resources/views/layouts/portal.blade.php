@@ -223,6 +223,11 @@
         }
     </style>
 
+    <!-- CSS Dinámico Personalizado -->
+    @if(file_exists(public_path('storage/css/dynamic-theme.css')))
+        <link href="{{ asset('storage/css/dynamic-theme.css') }}" rel="stylesheet" type="text/css">
+    @endif
+
     @stack('styles')
 </head>
 
@@ -253,11 +258,25 @@
                             <i class="fas fa-id-card me-1"></i>Mi Membresía
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('portal.clases') ? 'active' : '' }}" 
-                           href="{{ route('portal.clases') }}">
-                            <i class="fas fa-calendar-alt me-1"></i>Clases
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->routeIs('portal.clases*') || request()->routeIs('portal.classes.*') ? 'active' : '' }}" 
+                           href="#" id="clasesDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-dumbbell me-1"></i>Clases
                         </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item {{ request()->routeIs('portal.clases') ? 'active' : '' }}" 
+                                   href="{{ route('portal.clases') }}">
+                                    <i class="fas fa-calendar-alt me-1"></i>Clases Disponibles
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {{ request()->routeIs('portal.classes.bookings') ? 'active' : '' }}" 
+                                   href="{{ route('portal.classes.bookings') }}">
+                                    <i class="fas fa-bookmark me-1"></i>Mis Reservas
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('portal.rutinas') ? 'active' : '' }}" 
