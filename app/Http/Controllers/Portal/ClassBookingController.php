@@ -18,18 +18,18 @@ class ClassBookingController extends Controller
         $status = $request->get('status', 'upcoming');
         
         $query = ClassBooking::where('member_id', $member->id)
-            ->with(['schedule.class']);
+            ->with(['classSchedule.gymClass']);
 
         // Filtrar por estado
         switch ($status) {
             case 'upcoming':
-                $query->whereHas('schedule', function($q) {
-                    $q->where('date', '>=', Carbon::today());
+                $query->whereHas('classSchedule', function($q) {
+                    $q->where('start_date', '>=', Carbon::today());
                 })->where('status', 'confirmed');
                 break;
             case 'completed':
-                $query->whereHas('schedule', function($q) {
-                    $q->where('date', '<', Carbon::today());
+                $query->whereHas('classSchedule', function($q) {
+                    $q->where('start_date', '<', Carbon::today());
                 })->where('status', 'confirmed');
                 break;
             case 'cancelled':
@@ -44,15 +44,15 @@ class ClassBookingController extends Controller
 
         // Contadores para las pestañas
         $upcomingCount = ClassBooking::where('member_id', $member->id)
-            ->whereHas('schedule', function($q) {
-                $q->where('date', '>=', Carbon::today());
+            ->whereHas('classSchedule', function($q) {
+                $q->where('start_date', '>=', Carbon::today());
             })
             ->where('status', 'confirmed')
             ->count();
 
         $completedCount = ClassBooking::where('member_id', $member->id)
-            ->whereHas('schedule', function($q) {
-                $q->where('date', '<', Carbon::today());
+            ->whereHas('classSchedule', function($q) {
+                $q->where('start_date', '<', Carbon::today());
             })
             ->where('status', 'confirmed')
             ->count();
@@ -79,16 +79,16 @@ class ClassBookingController extends Controller
         ]);
 
         $member = Auth::user();
-        $schedule = ClassSchedule::with('class')->findOrFail($request->schedule_id);
+        $schedule = ClassSchedule::with('gymClass')->findOrFail($request->schedule_id);
 
         // Verificar si la clase está activa
-        if (!$schedule->class->is_active) {
+        if (!$schedule->gymClass->active) {
             return back()->with('error', 'Esta clase no está disponible actualmente.');
         }
 
         // Verificar si ya tiene una reserva para esta sesión
         $existingBooking = ClassBooking::where('member_id', $member->id)
-            ->where('schedule_id', $schedule->id)
+            ->where('class_schedule_id', $schedule->id)
             ->where('status', 'confirmed')
             ->first();
 
@@ -97,16 +97,16 @@ class ClassBookingController extends Controller
         }
 
         // Verificar capacidad disponible
-        $currentBookings = ClassBooking::where('schedule_id', $schedule->id)
+        $currentBookings = ClassBooking::where('class_schedule_id', $schedule->id)
             ->where('status', 'confirmed')
             ->count();
 
-        if ($currentBookings >= $schedule->class->max_capacity) {
+        if ($currentBookings >= $schedule->gymClass->max_participants) {
             return back()->with('error', 'Esta sesión está llena. No hay cupos disponibles.');
         }
 
         // Verificar que la sesión no haya comenzado
-        $sessionDateTime = Carbon::parse($schedule->date . ' ' . $schedule->start_time);
+        $sessionDateTime = Carbon::parse($schedule->start_date . ' ' . $schedule->start_time);
         if ($sessionDateTime <= now()) {
             return back()->with('error', 'No se puede reservar una sesión que ya comenzó.');
         }
@@ -114,12 +114,13 @@ class ClassBookingController extends Controller
         // Crear la reserva
         ClassBooking::create([
             'member_id' => $member->id,
-            'schedule_id' => $schedule->id,
+            'class_schedule_id' => $schedule->id,
+            'booking_date' => now()->toDateString(),
             'status' => 'confirmed',
-            'booking_date' => now()
+            'booked_at' => now()
         ]);
 
-        return back()->with('success', 'Reserva confirmada exitosamente para ' . $schedule->class->name . ' el ' . Carbon::parse($schedule->date)->format('d/m/Y') . ' a las ' . Carbon::parse($schedule->start_time)->format('H:i') . '.');
+        return back()->with('success', 'Reserva confirmada exitosamente para ' . $schedule->gymClass->name . ' el ' . Carbon::parse($schedule->start_date)->format('d/m/Y') . ' a las ' . Carbon::parse($schedule->start_time)->format('H:i') . '.');
     }
 
     public function cancel(ClassBooking $booking)
@@ -137,8 +138,8 @@ class ClassBookingController extends Controller
         }
 
         // Verificar que falten al menos 2 horas para la clase
-        $schedule = $booking->schedule;
-        $sessionDateTime = Carbon::parse($schedule->date . ' ' . $schedule->start_time);
+        $schedule = $booking->classSchedule;
+        $sessionDateTime = Carbon::parse($schedule->start_date . ' ' . $schedule->start_time);
         $now = now();
 
         if ($sessionDateTime->subHours(2) <= $now) {
@@ -159,16 +160,21 @@ class ClassBookingController extends Controller
     {
         $date = $request->get('date', Carbon::today()->toDateString());
         
-        $schedules = ClassSchedule::where('class_id', $classId)
-            ->where('date', $date)
-            ->with(['bookings' => function($q) {
-                $q->where('status', 'confirmed');
+        $schedules = ClassSchedule::where('gym_class_id', $classId)
+            ->where('start_date', '<=', $date)
+            ->where(function($query) use ($date) {
+                $query->whereNull('end_date')
+                      ->orWhere('end_date', '>=', $date);
+            })
+            ->with(['bookings' => function($q) use ($date) {
+                $q->where('status', 'confirmed')
+                  ->where('booking_date', $date);
             }])
             ->get();
 
         $availability = $schedules->map(function($schedule) {
             $confirmedBookings = $schedule->bookings->count();
-            $capacity = $schedule->class->max_capacity;
+            $capacity = $schedule->gymClass->max_participants;
             
             return [
                 'schedule_id' => $schedule->id,

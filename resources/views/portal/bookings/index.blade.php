@@ -1,8 +1,94 @@
-@extends('layouts.socios')
+@extends('layouts.portal-modern')
 
 @section('title', 'Mis Reservas')
 
 @section('content')
+
+<!-- CSS PARA MIS RESERVAS - LAYOUT CORRECTO -->
+<style>
+    /* LAYOUT CORRECTO - CONTENIDO COMPLETAMENTE A LA DERECHA DEL SIDEBAR */
+    .main-content {
+        margin-left: 300px !important; /* 20px extra de separación */
+        width: calc(100% - 300px) !important;
+        position: relative !important;
+        z-index: 1 !important;
+        min-height: 100vh !important;
+    }
+    
+    .content-area {
+        padding-top: 90px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        padding-bottom: 20px !important;
+        position: relative !important;
+        z-index: 10 !important;
+        margin-left: 0 !important;
+    }
+    
+    .sidebar-modern {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+        z-index: 1000 !important;
+    }
+    
+    .header-modern {
+        position: fixed !important;
+        top: 0 !important;
+        left: 300px !important; /* Alineado con el contenido */
+        width: calc(100% - 300px) !important;
+        height: 70px !important;
+        z-index: 900 !important;
+        background: white !important;
+        border-bottom: 1px solid #e9ecef !important;
+    }
+    
+    .container-fluid {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+        position: relative !important;
+        z-index: 20 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* ASEGURAR QUE TODAS LAS TARJETAS ESTÉN COMPLETAMENTE A LA DERECHA */
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+    }
+    
+    .col, .col-md-4, .col-lg-4, .col-xl-4, [class*="col-"] {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    
+    /* RESPONSIVE PARA MÓVILES */
+    @media (max-width: 768px) {
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+        
+        .header-modern {
+            left: 0 !important;
+            width: 100% !important;
+        }
+        
+        .content-area {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+    }
+</style>
+
 <div class="container-fluid">
     <!-- Page Header -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -65,12 +151,12 @@
         <div class="row">
             @foreach($bookings as $booking)
                 @php
-                    $schedule = $booking->schedule;
-                    $class = $schedule->class;
-                    $isUpcoming = \Carbon\Carbon::parse($schedule->date . ' ' . $schedule->start_time) > now();
-                    $isPast = \Carbon\Carbon::parse($schedule->date . ' ' . $schedule->end_time) < now();
+                    $schedule = $booking->classSchedule;
+                    $class = $schedule->gymClass;
+                    $isUpcoming = \Carbon\Carbon::parse($schedule->start_date . ' ' . $schedule->start_time) > now();
+                    $isPast = \Carbon\Carbon::parse($schedule->start_date . ' ' . $schedule->end_time) < now();
                     $canCancel = $isUpcoming && $booking->status === 'confirmed' && 
-                                \Carbon\Carbon::parse($schedule->date . ' ' . $schedule->start_time)->subHours(2) > now();
+                                \Carbon\Carbon::parse($schedule->start_date . ' ' . $schedule->start_time)->subHours(2) > now();
                 @endphp
                 
                 <div class="col-lg-6 col-xl-4 mb-4">
@@ -105,7 +191,7 @@
                                             <i class="fas fa-calendar text-primary"></i> 
                                             <strong>Fecha:</strong>
                                         </small>
-                                        <small>{{ \Carbon\Carbon::parse($schedule->date)->format('d/m/Y') }}</small>
+                                        <small>{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}</small>
                                     </div>
                                     <div class="col-sm-6">
                                         <small class="text-muted d-block">
@@ -156,7 +242,7 @@
                             <!-- Time Status -->
                             @if($isUpcoming && $booking->status === 'confirmed')
                                 @php
-                                    $timeUntilClass = \Carbon\Carbon::parse($schedule->date . ' ' . $schedule->start_time)->diffForHumans();
+                                    $timeUntilClass = \Carbon\Carbon::parse($schedule->start_date . ' ' . $schedule->start_time)->diffForHumans();
                                 @endphp
                                 <div class="alert alert-info mt-3 mb-0">
                                     <small>
@@ -180,7 +266,7 @@
                                         <button class="btn btn-sm btn-outline-danger cancel-booking-btn" 
                                                 data-booking-id="{{ $booking->id }}"
                                                 data-class-name="{{ $class->name }}"
-                                                data-date="{{ \Carbon\Carbon::parse($schedule->date)->format('d/m/Y') }}"
+                                                data-date="{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y') }}"
                                                 data-time="{{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}">
                                             <i class="fas fa-times"></i> Cancelar
                                         </button>

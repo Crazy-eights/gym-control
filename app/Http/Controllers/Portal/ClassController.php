@@ -13,25 +13,25 @@ class ClassController extends Controller
     public function index(Request $request)
     {
         $query = GymClass::with(['schedules' => function($q) {
-            $q->where('date', '>=', Carbon::today())
-              ->orderBy('date')
+            $q->where('start_date', '>=', Carbon::today())
+              ->orderBy('start_date')
               ->orderBy('start_time');
         }])
-        ->where('is_active', true);
+        ->where('active', true);
 
         // Filtros
         if ($request->filled('date')) {
             $query->whereHas('schedules', function($q) use ($request) {
-                $q->where('date', $request->date);
+                $q->where('start_date', $request->date);
             });
         }
 
         if ($request->filled('instructor')) {
-            $query->where('instructor', $request->instructor);
+            $query->where('instructor_name', $request->instructor);
         }
 
         if ($request->filled('duration')) {
-            $query->where('duration', $request->duration);
+            $query->where('duration_minutes', $request->duration);
         }
 
         $classes = $query->paginate(12);
@@ -42,16 +42,16 @@ class ClassController extends Controller
                 ->with(['bookings' => function($q) {
                     $q->where('status', 'confirmed');
                 }])
-                ->where('date', '>=', Carbon::today())
-                ->orderBy('date')
+                ->where('start_date', '>=', Carbon::today())
+                ->orderBy('start_date')
                 ->orderBy('start_time')
                 ->get();
         }
 
         // Obtener lista de instructores para el filtro
-        $instructors = GymClass::where('is_active', true)
+        $instructors = GymClass::where('active', true)
                               ->distinct()
-                              ->pluck('instructor')
+                              ->pluck('instructor_name')
                               ->filter()
                               ->sort()
                               ->values();
@@ -62,7 +62,7 @@ class ClassController extends Controller
     public function show(GymClass $class)
     {
         $class->load(['schedules' => function($q) {
-            $q->orderBy('date')->orderBy('start_time');
+            $q->orderBy('start_date')->orderBy('start_time');
         }]);
 
         // Obtener próximos horarios
@@ -70,8 +70,8 @@ class ClassController extends Controller
             ->with(['bookings' => function($q) {
                 $q->where('status', 'confirmed');
             }])
-            ->where('date', '>=', Carbon::today())
-            ->orderBy('date')
+            ->where('start_date', '>=', Carbon::today())
+            ->orderBy('start_date')
             ->orderBy('start_time')
             ->get();
 
@@ -91,14 +91,14 @@ class ClassController extends Controller
             ->with(['bookings' => function($q) {
                 $q->where('status', 'confirmed');
             }])
-            ->where('date', '<', Carbon::today())
+            ->where('start_date', '<', Carbon::today())
             ->get();
 
         $averageOccupancy = 0;
         if ($schedulesWithBookings->count() > 0) {
             $totalOccupancy = $schedulesWithBookings->sum(function($schedule) use ($class) {
                 $bookings = $schedule->bookings->where('status', 'confirmed')->count();
-                return ($bookings / $class->max_capacity) * 100;
+                return ($bookings / $class->max_participants) * 100;
             });
             $averageOccupancy = $totalOccupancy / $schedulesWithBookings->count();
         }

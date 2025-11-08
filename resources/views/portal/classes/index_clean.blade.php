@@ -204,15 +204,15 @@
                                         <div class="schedule-card">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div>
-                                                    <strong>{{ \Carbon\Carbon::parse($session->start_time)->format('d/m/Y') }}</strong><br>
-                                                    <small>{{ \Carbon\Carbon::parse($session->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($session->end_time)->format('H:i') }}</small>
+                                                    <strong>{{ $session->start_time->format('d/m/Y') }}</strong><br>
+                                                    <small>{{ $session->start_time->format('H:i') }} - {{ $session->end_time->format('H:i') }}</small>
                                                 </div>
                                                 <div class="text-end">
                                                     @php
                                                         $availableSpots = ($class->capacity ?? 15) - $session->bookings()->where('status', 'confirmed')->count();
                                                     @endphp
                                                     <span class="badge bg-info">{{ $availableSpots }} cupos</span>
-                                                    @if(\Carbon\Carbon::parse($session->start_time)->isPast())
+                                                    @if($session->start_time->isPast())
                                                         <span class="badge bg-secondary">Expirado</span>
                                                     @endif
                                                 </div>

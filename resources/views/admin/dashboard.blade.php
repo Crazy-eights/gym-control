@@ -114,7 +114,14 @@
                             Clases Activas
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ \App\Models\GymClass::where('active', true)->count() }}
+                            @php
+                                try {
+                                    $clasesActivas = \App\Models\GymClass::where('active', true)->count();
+                                    echo $clasesActivas;
+                                } catch (\Exception $e) {
+                                    echo '0';
+                                }
+                            @endphp
                         </div>
                     </div>
                     <div class="col-auto">
@@ -138,7 +145,14 @@
                             Reservas de Hoy
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ \App\Models\ClassBooking::whereDate('booking_date', today())->where('status', 'confirmed')->count() }}
+                            @php
+                                try {
+                                    $reservasHoy = \App\Models\ClassBooking::whereDate('booking_date', today())->where('status', 'confirmed')->count();
+                                    echo $reservasHoy;
+                                } catch (\Exception $e) {
+                                    echo '0';
+                                }
+                            @endphp
                         </div>
                     </div>
                     <div class="col-auto">
@@ -159,12 +173,19 @@
                             Ingresos Clases (Mes)
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            ${{ number_format(\Illuminate\Support\Facades\DB::table('class_bookings')
-                                ->join('class_schedules', 'class_bookings.class_schedule_id', '=', 'class_schedules.id')
-                                ->join('gym_classes', 'class_schedules.gym_class_id', '=', 'gym_classes.id')
-                                ->where('class_bookings.booking_date', '>=', now()->startOfMonth())
-                                ->where('class_bookings.status', '!=', 'cancelled')
-                                ->sum('gym_classes.price'), 2) }}
+                            @php
+                                try {
+                                    $ingresos = \Illuminate\Support\Facades\DB::table('class_bookings')
+                                        ->join('class_schedules', 'class_bookings.class_schedule_id', '=', 'class_schedules.id')
+                                        ->join('gym_classes', 'class_schedules.gym_class_id', '=', 'gym_classes.id')
+                                        ->where('class_bookings.booking_date', '>=', now()->startOfMonth())
+                                        ->where('class_bookings.status', '!=', 'cancelled')
+                                        ->sum('gym_classes.price');
+                                    echo '$' . number_format($ingresos, 2);
+                                } catch (\Exception $e) {
+                                    echo '$0.00';
+                                }
+                            @endphp
                         </div>
                     </div>
                     <div class="col-auto">
@@ -185,10 +206,14 @@
                             Clase Más Popular
                         </div>
                         @php
-                            $popularClass = \App\Models\GymClass::withCount(['bookings' => function($query) {
-                                $query->where('booking_date', '>=', now()->subMonth())
-                                      ->where('status', '!=', 'cancelled');
-                            }])->orderBy('bookings_count', 'desc')->first();
+                            try {
+                                $popularClass = \App\Models\GymClass::withCount(['bookings' => function($query) {
+                                    $query->where('booking_date', '>=', now()->subMonth())
+                                          ->where('status', '!=', 'cancelled');
+                                }])->orderBy('bookings_count', 'desc')->first();
+                            } catch (\Exception $e) {
+                                $popularClass = null;
+                            }
                         @endphp
                         @if($popularClass)
                             <div class="h6 mb-0 font-weight-bold text-gray-800">

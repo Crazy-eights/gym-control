@@ -58,15 +58,60 @@
         }
 
         /* Layout adjustments */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
         .main-content {
-            margin-left: var(--sidebar-width);
-            padding-top: var(--header-height);
+            margin-left: 280px;
+            width: calc(100vw - 280px);
             min-height: 100vh;
-            transition: margin-left var(--transition-speed) ease;
+            overflow-x: hidden;
+            z-index: 1;
+            background: #f8f9fa;
+            position: relative;
         }
 
         .sidebar-modern.collapsed + .main-content {
-            margin-left: var(--sidebar-collapsed-width);
+            left: 70px;
+            width: calc(100vw - 70px);
+        }
+
+        /* Ensure sidebar stays in place */
+        .sidebar-modern {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            z-index: 1000;
+            transition: width var(--transition-speed) ease;
+        }
+
+        .sidebar-modern.collapsed {
+            width: 70px;
+        }
+
+        /* Content area with proper spacing */
+        .content-area {
+            padding: 90px 20px 20px 20px;
+            min-height: calc(100vh - 70px);
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Ensure all containers respect the layout */
+        .content-area .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+            max-width: 100%;
+        }
+
+        .content-area .container {
+            max-width: 100%;
         }
 
         /* Welcome section styling */
@@ -76,6 +121,31 @@
             padding: 2rem 0;
             margin: -1.5rem -1.5rem 2rem -1.5rem;
             border-radius: 0 0 20px 20px;
+        }
+
+        /* Header adjustments */
+        .header-modern {
+            position: fixed !important;
+            top: 0 !important;
+            left: 280px !important;
+            right: 0 !important;
+            height: var(--header-height);
+            background: white;
+            border-bottom: 1px solid var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-xl);
+            z-index: 900;
+            transition: left var(--transition-speed) ease;
+            box-shadow: var(--shadow-sm);
+            width: calc(100% - 280px) !important;
+        }
+
+        .sidebar-modern.collapsed ~ .main-content .header-modern,
+        .sidebar-modern.collapsed + .main-content .header-modern {
+            left: 70px !important;
+            width: calc(100% - 70px) !important;
         }
 
         .profile-avatar {
@@ -129,7 +199,19 @@
         /* Mobile responsive */
         @media (max-width: 768px) {
             .main-content {
-                margin-left: 0;
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            .header-modern {
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+            }
+            
+            .content-area {
+                padding: calc(var(--header-height) + 1rem) 1rem 1rem 1rem;
             }
             
             .sidebar-modern {
@@ -157,6 +239,10 @@
             .sidebar-overlay.show {
                 opacity: 1;
                 visibility: visible;
+            }
+
+            .welcome-section {
+                margin: -1rem -1rem 1.5rem -1rem;
             }
         }
 

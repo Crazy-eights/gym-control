@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\MailConfigController;
 use App\Http\Controllers\Admin\SociosController;
 use App\Http\Controllers\Admin\MembershipPlansController;
+use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Portal\SociosPortalController;
 
 /*
@@ -183,9 +184,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         // === MÓDULO DE CLASES ===
         Route::resource('classes', \App\Http\Controllers\Admin\GymClassController::class);
+        Route::post('classes/{class}/schedules', [\App\Http\Controllers\Admin\GymClassController::class, 'storeSchedule'])->name('classes.store-schedule');
+        Route::delete('classes/{class}/schedules/{schedule}', [\App\Http\Controllers\Admin\GymClassController::class, 'destroySchedule'])->name('classes.destroy-schedule');
         
         // === MÓDULO DE HORARIOS ===
-        Route::resource('schedules', \App\Http\Controllers\Admin\ClassScheduleController::class);
+        Route::resource('schedules', ScheduleController::class);
         
         // Route::resource('employees', EmployeeController::class);  // Comentado hasta crear el controlador
     });

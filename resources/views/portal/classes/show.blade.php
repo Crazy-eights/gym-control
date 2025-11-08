@@ -37,8 +37,8 @@
             <div class="card shadow mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h1 class="h3 mb-0 text-gray-800">{{ $class->name }}</h1>
-                    <span class="badge badge-{{ $class->is_active ? 'success' : 'secondary' }} badge-lg">
-                        {{ $class->is_active ? 'Activa' : 'Inactiva' }}
+                    <span class="badge badge-{{ $class->active ? 'success' : 'secondary' }} badge-lg">
+                        {{ $class->active ? 'Activa' : 'Inactiva' }}
                     </span>
                 </div>
                 <div class="card-body">

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.admin-modern')
 
 @section('title', 'Nueva Clase')
 
@@ -177,7 +177,32 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Horarios de la Clase -->
+                    <div class="col-lg-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    <i class="fas fa-calendar-alt"></i> Horarios de la Clase
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="schedules-container">
+                                    <div class="text-center py-3">
+                                        <i class="fas fa-calendar-plus fa-2x text-muted mb-2"></i>
+                                        <p class="text-muted">No hay horarios configurados</p>
+                                    </div>
+                                </div>
+                                
+                                <button type="button" id="add-schedule" class="btn btn-outline-primary btn-sm w-100">
+                                    <i class="fas fa-plus"></i> Agregar Horario
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
                     <!-- Configuración -->
                     <div class="col-lg-4">
                         <div class="card shadow mb-4">
@@ -269,21 +294,217 @@
 
 @push('scripts')
 <script>
-$(document).ready(function() {
+console.log('Script de creación cargado'); // Debug
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado en create'); // Debug
+    
+    let scheduleIndex = 0;
+    console.log('Schedule index inicial:', scheduleIndex); // Debug
+    
     // Actualizar vista previa en tiempo real
     function updatePreview() {
-        $('#preview-name').text($('#name').val() || 'Nombre de la Clase');
-        $('#preview-instructor').text($('#instructor_name').val() || 'Instructor');
-        $('#preview-duration').text($('#duration_minutes').val() || '60');
-        $('#preview-capacity').text($('#max_participants').val() || '20');
-        $('#preview-price').text(parseFloat($('#price').val() || 0).toFixed(2));
+        const nameEl = document.getElementById('preview-name');
+        const instructorEl = document.getElementById('preview-instructor');
+        const durationEl = document.getElementById('preview-duration');
+        const capacityEl = document.getElementById('preview-capacity');
+        const priceEl = document.getElementById('preview-price');
+        
+        if (nameEl) nameEl.textContent = document.getElementById('name').value || 'Nombre de la Clase';
+        if (instructorEl) instructorEl.textContent = document.getElementById('instructor_name').value || 'Instructor';
+        if (durationEl) durationEl.textContent = document.getElementById('duration_minutes').value || '60';
+        if (capacityEl) capacityEl.textContent = document.getElementById('max_participants').value || '20';
+        if (priceEl) priceEl.textContent = parseFloat(document.getElementById('price').value || 0).toFixed(2);
     }
 
     // Eventos para actualizar la vista previa
-    $('#name, #instructor_name, #duration_minutes, #max_participants, #price').on('input', updatePreview);
+    const previewInputs = ['name', 'instructor_name', 'duration_minutes', 'max_participants', 'price'];
+    previewInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('input', updatePreview);
+        }
+    });
     
     // Actualizar al cargar la página
     updatePreview();
+
+    // Agregar nuevo horario - CON DEBUG
+    const addScheduleBtn = document.getElementById('add-schedule');
+    console.log('Botón agregar horario (create):', addScheduleBtn); // Debug
+    
+    if (addScheduleBtn) {
+        console.log('Botón encontrado, agregando evento (create)'); // Debug
+        addScheduleBtn.addEventListener('click', function(e) {
+            console.log('Click en agregar horario detectado (create)'); // Debug
+            e.preventDefault();
+            
+            // Ocultar mensaje de "no hay horarios" si existe
+            const emptyMessage = document.querySelector('#schedules-container .text-center');
+            if (emptyMessage) {
+                emptyMessage.style.display = 'none';
+            }
+            
+            const currentDate = new Date().toISOString().split('T')[0];
+            
+            const scheduleHtml = `
+                <div class="schedule-item border rounded p-3 mb-3" style="background-color: #f8f9fa;">
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <label class="form-label"><strong>Día de la Semana</strong></label>
+                            <select name="schedules[${scheduleIndex}][day_of_week]" class="form-control form-control-sm" required>
+                                <option value="">Seleccionar día</option>
+                                <option value="0">Domingo</option>
+                                <option value="1">Lunes</option>
+                                <option value="2">Martes</option>
+                                <option value="3">Miércoles</option>
+                                <option value="4">Jueves</option>
+                                <option value="5">Viernes</option>
+                                <option value="6">Sábado</option>
+                            </select>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label class="form-label"><strong>Hora Inicio</strong></label>
+                            <input type="time" 
+                                   name="schedules[${scheduleIndex}][start_time]" 
+                                   class="form-control form-control-sm"
+                                   required>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label class="form-label"><strong>Hora Fin</strong></label>
+                            <input type="time" 
+                                   name="schedules[${scheduleIndex}][end_time]" 
+                                   class="form-control form-control-sm"
+                                   required>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label class="form-label">Fecha Inicio</label>
+                            <input type="date" 
+                                   name="schedules[${scheduleIndex}][start_date]" 
+                                   class="form-control form-control-sm"
+                                   value="${currentDate}">
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label class="form-label">Fecha Fin (opcional)</label>
+                            <input type="date" 
+                                   name="schedules[${scheduleIndex}][end_date]" 
+                                   class="form-control form-control-sm">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" 
+                                       name="schedules[${scheduleIndex}][is_recurring]" 
+                                       class="form-check-input"
+                                       id="recurring_${scheduleIndex}">
+                                <label class="form-check-label" for="recurring_${scheduleIndex}">Recurrente</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" 
+                                       name="schedules[${scheduleIndex}][active]" 
+                                       class="form-check-input"
+                                       id="active_${scheduleIndex}"
+                                       checked>
+                                <label class="form-check-label" for="active_${scheduleIndex}">Activo</label>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-danger float-end remove-schedule">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const container = document.getElementById('schedules-container');
+            console.log('Container (create):', container); // Debug
+            
+            if (container) {
+                container.insertAdjacentHTML('beforeend', scheduleHtml);
+                scheduleIndex++;
+                console.log('Horario agregado (create), nuevo índice:', scheduleIndex); // Debug
+            } else {
+                console.error('No se encontró el contenedor schedules-container (create)'); // Debug
+            }
+        });
+    } else {
+        console.error('No se encontró el botón add-schedule (create)'); // Debug
+    }
+
+    // Eliminar horario (usando delegación de eventos) - CON DEBUG
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-schedule')) {
+            console.log('Click en eliminar horario detectado (create)'); // Debug
+            if (confirm('¿Está seguro de eliminar este horario?')) {
+                const scheduleItem = e.target.closest('.schedule-item');
+                if (scheduleItem) {
+                    scheduleItem.remove();
+                    console.log('Horario eliminado (create)'); // Debug
+                    
+                    // Mostrar mensaje si no hay horarios
+                    if (document.querySelectorAll('.schedule-item').length === 0) {
+                        const container = document.getElementById('schedules-container');
+                        if (container) {
+                            container.innerHTML = `
+                                <div class="text-center py-3">
+                                    <i class="fas fa-calendar-plus fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted">No hay horarios configurados</p>
+                                </div>
+                            `;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Validación de horarios - CON DEBUG
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            console.log('Enviando formulario (create), validando horarios'); // Debug
+            
+            let valid = true;
+            let errorMessage = '';
+            
+            const scheduleItems = document.querySelectorAll('.schedule-item');
+            console.log('Horarios a validar (create):', scheduleItems.length); // Debug
+            
+            scheduleItems.forEach((item, index) => {
+                const daySelect = item.querySelector('select[name*="[day_of_week]"]');
+                const startTime = item.querySelector('input[name*="[start_time]"]');
+                const endTime = item.querySelector('input[name*="[end_time]"]');
+                
+                if (daySelect && daySelect.value === '') {
+                    errorMessage = `Horario ${index + 1}: Debe seleccionar un día de la semana.`;
+                    valid = false;
+                    return;
+                }
+                
+                if (startTime && endTime && (startTime.value === '' || endTime.value === '')) {
+                    errorMessage = `Horario ${index + 1}: Debe completar la hora de inicio y fin.`;
+                    valid = false;
+                    return;
+                }
+                
+                if (startTime && endTime && startTime.value >= endTime.value) {
+                    errorMessage = `Horario ${index + 1}: La hora de fin debe ser posterior a la hora de inicio.`;
+                    valid = false;
+                    return;
+                }
+            });
+            
+            if (!valid) {
+                console.log('Validación falló (create):', errorMessage); // Debug
+                alert(errorMessage);
+                e.preventDefault();
+            } else {
+                console.log('Validación exitosa (create)'); // Debug
+            }
+        });
+    } else {
+        console.error('No se encontró el formulario (create)'); // Debug
+    }
+    
+    console.log('Script de creación completamente inicializado'); // Debug
 });
 </script>
 @endpush

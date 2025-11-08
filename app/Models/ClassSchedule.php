@@ -22,8 +22,6 @@ class ClassSchedule extends Model
     ];
 
     protected $casts = [
-        'start_time' => 'datetime:H:i',
-        'end_time' => 'datetime:H:i',
         'start_date' => 'date',
         'end_date' => 'date',
         'is_recurring' => 'boolean',

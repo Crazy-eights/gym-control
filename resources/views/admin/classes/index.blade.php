@@ -39,7 +39,7 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <div class="stat-number">{{ $classes->where('status', 'activa')->count() }}</div>
+                    <div class="stat-number">{{ $classes->where('active', true)->count() }}</div>
                     <div class="stat-label">Clases Activas</div>
                 </div>
                 <div class="stat-icon">
@@ -55,16 +55,21 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <div class="stat-number">{{ $classes->sum('max_participants') }}</div>
-                    <div class="stat-label">Capacidad Total</div>
+                    <div class="stat-number">{{ isset($availableSpots) ? $availableSpots : $classes->sum('max_participants') }}</div>
+                    <div class="stat-label">Plazas Disponibles</div>
                 </div>
                 <div class="stat-icon">
                     <i class="fas fa-users" style="color: var(--primary-color); font-size: 2rem;"></i>
                 </div>
             </div>
             <div class="mt-3">
-                <small class="text-success">
-                    <i class="fas fa-expand"></i> Plazas disponibles
+                <small class="text-info">
+                    <i class="fas fa-info-circle"></i> 
+                    @if(isset($totalCapacity))
+                        {{ $totalCapacity - (isset($availableSpots) ? $availableSpots : 0) }} reservadas
+                    @else
+                        Capacidad total
+                    @endif
                 </small>
             </div>
         </div>
