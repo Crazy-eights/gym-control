@@ -23,7 +23,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error loading schedules: ' . $e->getMessage());
-            
+
             return redirect()->back()
                 ->with('error', 'Error al cargar los horarios: ' . $e->getMessage());
         }
@@ -254,7 +254,7 @@ class ScheduleController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error loading schedule: ' . $e->getMessage());
-            
+
             return redirect()->back()
                 ->with('error', 'Error al cargar el horario: ' . $e->getMessage());
         }
@@ -299,7 +299,7 @@ class ScheduleController extends Controller
         try {
             $timeIn = \Carbon\Carbon::createFromFormat('H:i:s', $schedule->time_in);
             $timeOut = \Carbon\Carbon::createFromFormat('H:i:s', $schedule->time_out);
-            
+
             $duration = $timeOut->diff($timeIn);
             $hours = $duration->h;
             $minutes = $duration->i;

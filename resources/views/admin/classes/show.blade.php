@@ -143,7 +143,7 @@
                                                         @php
                                                             $days = [
                                                                 0 => 'Domingo',
-                                                                1 => 'Lunes', 
+                                                                1 => 'Lunes',
                                                                 2 => 'Martes',
                                                                 3 => 'Miércoles',
                                                                 4 => 'Jueves',
@@ -181,11 +181,11 @@
                                                     </td>
                                                     <td>
                                                         <div class="btn-group btn-group-sm">
-                                                            <button class="btn btn-outline-primary" 
+                                                            <button class="btn btn-outline-primary"
                                                                     onclick="editSchedule({{ $schedule->id }})">
                                                                 <i class="fas fa-edit"></i>
                                                             </button>
-                                                            <button class="btn btn-outline-danger" 
+                                                            <button class="btn btn-outline-danger"
                                                                     onclick="deleteSchedule({{ $schedule->id }})">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
@@ -402,15 +402,15 @@ document.addEventListener('DOMContentLoaded', function() {
         scheduleForm.addEventListener('submit', function(e) {
             console.log('Enviando formulario de horario'); // Debug
             e.preventDefault();
-            
+
             const formData = new FormData(this);
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            
+
             // Mostrar estado de carga
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
             submitBtn.disabled = true;
-            
+
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
@@ -422,15 +422,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 console.log('Respuesta del servidor:', data); // Debug
-                
+
                 if (data.success) {
                     // Cerrar modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('addScheduleModal'));
                     modal.hide();
-                    
+
                     // Mostrar mensaje de éxito
                     showAlert('success', data.message || 'Horario agregado exitosamente');
-                    
+
                     // Recargar página después de un momento
                     setTimeout(() => {
                         window.location.reload();
@@ -450,14 +450,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
+
     console.log('Script de show completamente inicializado'); // Debug
 });
 
 // Función para editar horario
 function editSchedule(scheduleId) {
     console.log('Editando horario:', scheduleId); // Debug
-    
+
     // Aquí puedes implementar un modal de edición o redirigir
     if (confirm('¿Deseas editar este horario? Te redirigiremos a la página de edición de la clase.')) {
         window.location.href = `{{ route('admin.classes.edit', $class->id) }}`;
@@ -467,10 +467,10 @@ function editSchedule(scheduleId) {
 // Función para eliminar horario
 function deleteSchedule(scheduleId) {
     console.log('Eliminando horario:', scheduleId); // Debug
-    
+
     if (confirm('¿Estás seguro de que deseas eliminar este horario? Esta acción no se puede deshacer.')) {
         const deleteUrl = `{{ route('admin.classes.destroy-schedule', ['class' => $class->id, 'schedule' => ':scheduleId']) }}`.replace(':scheduleId', scheduleId);
-        
+
         fetch(deleteUrl, {
             method: 'DELETE',
             headers: {
@@ -482,7 +482,7 @@ function deleteSchedule(scheduleId) {
         .then(response => response.json())
         .then(data => {
             console.log('Respuesta de eliminación:', data); // Debug
-            
+
             if (data.success) {
                 showAlert('success', data.message || 'Horario eliminado exitosamente');
                 setTimeout(() => {
@@ -508,9 +508,9 @@ function showAlert(type, message) {
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    
+
     document.body.appendChild(alertDiv);
-    
+
     // Auto-remove after 5 seconds
     setTimeout(() => {
         if (alertDiv.parentNode) {
@@ -525,7 +525,7 @@ document.addEventListener('input', function(e) {
         const form = e.target.closest('form');
         const startTime = form.querySelector('input[name="start_time"]');
         const endTime = form.querySelector('input[name="end_time"]');
-        
+
         if (startTime.value && endTime.value) {
             if (startTime.value >= endTime.value) {
                 endTime.setCustomValidity('La hora de fin debe ser posterior a la hora de inicio');

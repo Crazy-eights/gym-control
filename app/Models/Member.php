@@ -104,7 +104,7 @@ class Member extends Authenticatable
     public function canBookClass()
     {
         if (!$this->is_active) return false;
-        
+
         // Aquí se pueden agregar lógicas específicas según el plan
         // Por ejemplo, límites mensuales de clases según el tipo de membresía
         return true;
@@ -127,8 +127,8 @@ class Member extends Authenticatable
             return false;
         }
 
-        $endDate = $this->subscription_end_date instanceof \Carbon\Carbon 
-            ? $this->subscription_end_date 
+        $endDate = $this->subscription_end_date instanceof \Carbon\Carbon
+            ? $this->subscription_end_date
             : \Carbon\Carbon::parse($this->subscription_end_date);
 
         return $endDate->isAfter(now());
@@ -144,8 +144,8 @@ class Member extends Authenticatable
         }
 
         $now = now();
-        $endDate = $this->subscription_end_date instanceof \Carbon\Carbon 
-            ? $this->subscription_end_date 
+        $endDate = $this->subscription_end_date instanceof \Carbon\Carbon
+            ? $this->subscription_end_date
             : \Carbon\Carbon::parse($this->subscription_end_date);
 
         if ($endDate->isAfter($now)) {

@@ -23,14 +23,14 @@ class AuthenticateAdmin
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Unauthenticated.'], 401);
             }
-            
+
             // Redirigir al login de admin
             return redirect()->guest(route('login'));
         }
 
         // Agregar header de seguridad para admins
         $response = $next($request);
-        
+
         if (method_exists($response, 'header')) {
             $response->header('X-Admin-Access', 'true');
             $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');

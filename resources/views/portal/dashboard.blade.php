@@ -11,7 +11,7 @@
     .border-left-warning { border-left: 0.25rem solid #f6c23e !important; }
     .border-left-danger { border-left: 0.25rem solid #e74a3b !important; }
     .border-left-dark { border-left: 0.25rem solid #5a5c69 !important; }
-    
+
     .text-primary { color: #4e73df !important; }
     .text-success { color: #1cc88a !important; }
     .text-info { color: #36b9cc !important; }
@@ -20,7 +20,7 @@
     .text-dark { color: #5a5c69 !important; }
     .text-gray-800 { color: #5a5c69 !important; }
     .text-gray-300 { color: #dddfeb !important; }
-    
+
     .font-weight-bold { font-weight: 700 !important; }
     .text-xs { font-size: 0.7rem; }
     .text-uppercase { text-transform: uppercase; }
@@ -43,7 +43,7 @@
         z-index: 1 !important;
         min-height: 100vh !important;
     }
-    
+
     .content-area {
         padding-top: 90px !important;
         padding-left: 20px !important;
@@ -53,7 +53,7 @@
         z-index: 10 !important;
         margin-left: 0 !important;
     }
-    
+
     .sidebar-modern {
         position: fixed !important;
         left: 0 !important;
@@ -62,7 +62,7 @@
         height: 100vh !important;
         z-index: 1000 !important;
     }
-    
+
     .header-modern {
         position: fixed !important;
         top: 0 !important;
@@ -73,7 +73,7 @@
         background: white !important;
         border-bottom: 1px solid #e9ecef !important;
     }
-    
+
     .container-fluid {
         opacity: 1 !important;
         visibility: visible !important;
@@ -86,42 +86,42 @@
         margin-right: 0 !important;
         width: 100% !important;
     }
-    
+
     /* ASEGURAR QUE TODAS LAS TARJETAS ESTÉN COMPLETAMENTE A LA DERECHA */
     .row {
         margin-left: 0 !important;
         margin-right: 0 !important;
         padding-left: 0 !important;
     }
-    
+
     .col, .col-md-3, .col-md-6, .col-xl-3, [class*="col-"] {
         padding-left: 15px !important;
         padding-right: 15px !important;
     }
-    
+
     /* RESPONSIVE PARA MÓVILES */
     @media (max-width: 768px) {
         .main-content {
             margin-left: 0 !important;
             width: 100% !important;
         }
-        
+
         .header-modern {
             left: 0 !important;
             width: 100% !important;
         }
-        
+
         .content-area {
             padding-left: 15px !important;
             padding-right: 15px !important;
         }
     }
-    
+
     /* DEBUG TEMPORAL - BORDES PARA VER EL POSICIONAMIENTO */
     /* .main-content {
         border-left: 2px solid red !important;
     }
-    
+
     .content-area {
         border: 1px solid blue !important;
     } */
@@ -361,8 +361,8 @@
                 </div>
                 <div class="card-body text-center">
                     @if($socio->photo)
-                        <img src="{{ asset('storage/' . $socio->photo) }}" 
-                             alt="Foto de {{ $socio->full_name }}" 
+                        <img src="{{ asset('storage/' . $socio->photo) }}"
+                             alt="Foto de {{ $socio->full_name }}"
                              class="rounded-circle mb-3"
                              style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #e3e6f0;">
                     @else
@@ -378,7 +378,7 @@
                     </small>
                 </div>
             </div>
-            
+
             <!-- Quick Actions -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-transparent border-0 pt-4">
@@ -430,7 +430,7 @@
                                         <i class="fas fa-user me-1"></i>{{ $clase->instructor }}
                                     </small>
                                     <small class="text-muted d-block">
-                                        <i class="fas fa-calendar me-1"></i>{{ $clase->fecha ? $clase->fecha->format('d/m') : '--/--' }} 
+                                        <i class="fas fa-calendar me-1"></i>{{ $clase->fecha ? $clase->fecha->format('d/m') : '--/--' }}
                                         <i class="fas fa-clock ms-2 me-1"></i>{{ $clase->hora ?? '--:--' }}
                                     </small>
                                 </div>
@@ -469,10 +469,10 @@
                     @endif
                 </strong>
                 @if($estadoMembresia == 'vencido')
-                    Tu membresía venció el {{ $socio->subscription_end_date ? \Carbon\Carbon::parse($socio->subscription_end_date)->format('d/m/Y') : 'fecha no disponible' }}. 
+                    Tu membresía venció el {{ $socio->subscription_end_date ? \Carbon\Carbon::parse($socio->subscription_end_date)->format('d/m/Y') : 'fecha no disponible' }}.
                     Contacta con el gimnasio para renovarla.
                 @else
-                    Tu membresía vence el {{ $socio->subscription_end_date ? \Carbon\Carbon::parse($socio->subscription_end_date)->format('d/m/Y') : 'fecha no disponible' }} 
+                    Tu membresía vence el {{ $socio->subscription_end_date ? \Carbon\Carbon::parse($socio->subscription_end_date)->format('d/m/Y') : 'fecha no disponible' }}
                     (en {{ $diasRestantes }} días). No olvides renovarla.
                 @endif
                 <div class="mt-2">

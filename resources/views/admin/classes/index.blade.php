@@ -64,7 +64,7 @@
             </div>
             <div class="mt-3">
                 <small class="text-info">
-                    <i class="fas fa-info-circle"></i> 
+                    <i class="fas fa-info-circle"></i>
                     @if(isset($totalCapacity))
                         {{ $totalCapacity - (isset($availableSpots) ? $availableSpots : 0) }} reservadas
                     @else
@@ -181,7 +181,7 @@
                                                     <div class="d-flex flex-wrap">
                                                         @foreach($class->schedules->take(3) as $schedule)
                                                             <small class="badge badge-modern badge-secondary me-1 mb-1">
-                                                                {{ ucfirst($schedule->day_of_week) }} 
+                                                                {{ ucfirst($schedule->day_of_week) }}
                                                                 {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}
                                                             </small>
                                                         @endforeach
@@ -206,19 +206,19 @@
                                             </td>
                                             <td>
                                                 <div class="action-buttons">
-                                                    <a href="{{ route('admin.classes.show', $class) }}" 
-                                                       class="btn btn-sm btn-outline-success" 
+                                                    <a href="{{ route('admin.classes.show', $class) }}"
+                                                       class="btn btn-sm btn-outline-success"
                                                        title="Ver detalles">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <button type="button" 
-                                                            class="btn btn-sm btn-outline-warning" 
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-warning"
                                                             title="Editar"
                                                             onclick="editClass('{{ $class->id }}', '{{ $class->name }}', '{{ $class->instructor_name }}', '{{ $class->duration_minutes }}', '{{ $class->max_participants }}', '{{ $class->price }}', '{{ $class->difficulty_level }}', '{{ $class->active }}', '{{ addslashes($class->description ?? '') }}')">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <button type="button" 
-                                                            class="btn btn-sm btn-outline-danger" 
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-danger"
                                                             title="Eliminar"
                                                             onclick="confirmDelete({{ $class->id }}, '{{ $class->name }}')">
                                                         <i class="fas fa-trash"></i>
@@ -256,7 +256,7 @@
     </div>
 
     <!-- Modal Crear Clase -->
-    <div class="modal fade" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true" role="dialog">
+    <div class="modal fade" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content shadow-lg border-0">
                 <div class="modal-header bg-gradient-success text-white py-2">
@@ -271,58 +271,58 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="create_name" class="form-label fw-semibold">Nombre de la Clase <span class="text-danger">*</span></label>
-                                <input type="text" 
-                                       class="form-control form-control-sm" 
-                                       id="create_name" 
-                                       name="name" 
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       id="create_name"
+                                       name="name"
                                        placeholder="Ej: Yoga Matutino"
                                        required>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="create_instructor_name" class="form-label fw-semibold">Instructor <span class="text-danger">*</span></label>
-                                <input type="text" 
-                                       class="form-control form-control-sm" 
-                                       id="create_instructor_name" 
-                                       name="instructor_name" 
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       id="create_instructor_name"
+                                       name="instructor_name"
                                        placeholder="Nombre del instructor"
                                        required>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="create_duration_minutes" class="form-label fw-semibold">Duración (minutos) <span class="text-danger">*</span></label>
-                                <input type="number" 
-                                       class="form-control form-control-sm" 
-                                       id="create_duration_minutes" 
-                                       name="duration_minutes" 
+                                <input type="number"
+                                       class="form-control form-control-sm"
+                                       id="create_duration_minutes"
+                                       name="duration_minutes"
                                        placeholder="60"
                                        min="15"
                                        max="300"
                                        required>
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="create_max_participants" class="form-label fw-semibold">Capacidad Máxima <span class="text-danger">*</span></label>
-                                <input type="number" 
-                                       class="form-control form-control-sm" 
-                                       id="create_max_participants" 
-                                       name="max_participants" 
+                                <input type="number"
+                                       class="form-control form-control-sm"
+                                       id="create_max_participants"
+                                       name="max_participants"
                                        placeholder="20"
                                        min="1"
                                        max="100"
                                        required>
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="create_price" class="form-label fw-semibold">Precio <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" 
-                                           class="form-control" 
-                                           id="create_price" 
-                                           name="price" 
+                                    <input type="number"
+                                           class="form-control"
+                                           id="create_price"
+                                           name="price"
                                            placeholder="0.00"
                                            step="0.01"
                                            min="0"
@@ -330,7 +330,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="create_difficulty_level" class="form-label fw-semibold">Nivel de Dificultad <span class="text-danger">*</span></label>
@@ -341,7 +341,7 @@
                                     <option value="avanzado">Avanzado</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="create_active" class="form-label fw-semibold">Estado</label>
                                 <select class="form-select form-select-sm" id="create_active" name="active">
@@ -350,14 +350,14 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-12 mb-0">
                                 <label for="create_description" class="form-label fw-semibold">Descripción</label>
-                                <textarea class="form-control form-control-sm" 
-                                          id="create_description" 
-                                          name="description" 
-                                          rows="3" 
+                                <textarea class="form-control form-control-sm"
+                                          id="create_description"
+                                          name="description"
+                                          rows="3"
                                           placeholder="Describe la clase, objetivos y beneficios..."></textarea>
                             </div>
                         </div>
@@ -376,7 +376,7 @@
     </div>
 
     <!-- Modal Editar Clase -->
-    <div class="modal fade" id="editClassModal" tabindex="-1" aria-labelledby="editClassModalLabel" aria-hidden="true" role="dialog">
+    <div class="modal fade" id="editClassModal" tabindex="-1" aria-labelledby="editClassModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content shadow-lg border-0">
                 <div class="modal-header bg-gradient-warning text-white py-2">
@@ -392,61 +392,61 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="edit_name" class="form-label fw-semibold">Nombre de la Clase <span class="text-danger">*</span></label>
-                                <input type="text" 
-                                       class="form-control form-control-sm" 
-                                       id="edit_name" 
-                                       name="name" 
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       id="edit_name"
+                                       name="name"
                                        required>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="edit_instructor_name" class="form-label fw-semibold">Instructor <span class="text-danger">*</span></label>
-                                <input type="text" 
-                                       class="form-control form-control-sm" 
-                                       id="edit_instructor_name" 
-                                       name="instructor_name" 
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       id="edit_instructor_name"
+                                       name="instructor_name"
                                        required>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="edit_duration_minutes" class="form-label fw-semibold">Duración (minutos) <span class="text-danger">*</span></label>
-                                <input type="number" 
-                                       class="form-control form-control-sm" 
-                                       id="edit_duration_minutes" 
-                                       name="duration_minutes" 
+                                <input type="number"
+                                       class="form-control form-control-sm"
+                                       id="edit_duration_minutes"
+                                       name="duration_minutes"
                                        min="15"
                                        max="300"
                                        required>
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="edit_max_participants" class="form-label fw-semibold">Capacidad Máxima <span class="text-danger">*</span></label>
-                                <input type="number" 
-                                       class="form-control form-control-sm" 
-                                       id="edit_max_participants" 
-                                       name="max_participants" 
+                                <input type="number"
+                                       class="form-control form-control-sm"
+                                       id="edit_max_participants"
+                                       name="max_participants"
                                        min="1"
                                        max="100"
                                        required>
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="edit_price" class="form-label fw-semibold">Precio <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" 
-                                           class="form-control" 
-                                           id="edit_price" 
-                                           name="price" 
+                                    <input type="number"
+                                           class="form-control"
+                                           id="edit_price"
+                                           name="price"
                                            step="0.01"
                                            min="0"
                                            required>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="edit_difficulty_level" class="form-label fw-semibold">Nivel de Dificultad <span class="text-danger">*</span></label>
@@ -456,7 +456,7 @@
                                     <option value="avanzado">Avanzado</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="edit_active" class="form-label fw-semibold">Estado</label>
                                 <select class="form-select form-select-sm" id="edit_active" name="active">
@@ -465,13 +465,13 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-12 mb-0">
                                 <label for="edit_description" class="form-label fw-semibold">Descripción</label>
-                                <textarea class="form-control form-control-sm" 
-                                          id="edit_description" 
-                                          name="description" 
+                                <textarea class="form-control form-control-sm"
+                                          id="edit_description"
+                                          name="description"
                                           rows="3"></textarea>
                             </div>
                         </div>
@@ -490,7 +490,7 @@
     </div>
 
 <!-- Modal de confirmación para eliminar -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" role="dialog">
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header bg-gradient-danger text-white py-2">
@@ -549,14 +549,14 @@ $(document).ready(function() {
 function confirmDelete(classId, className) {
     document.getElementById('className').textContent = className;
     document.getElementById('deleteForm').action = '/admin/classes/' + classId;
-    
+
     const modalElement = document.getElementById('deleteModal');
-    
+
     // Configurar accesibilidad
     if (window.setupModalAccessibility) {
         window.setupModalAccessibility(modalElement);
     }
-    
+
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
 }
@@ -571,10 +571,10 @@ function editClass(id, name, instructorName, durationMinutes, maxParticipants, p
     document.getElementById('edit_difficulty_level').value = difficultyLevel;
     document.getElementById('edit_active').value = active;
     document.getElementById('edit_description').value = description;
-    
+
     // Actualizar action del formulario
     document.getElementById('editClassForm').action = `/admin/classes/${id}`;
-    
+
     // Mostrar modal
     const modal = new bootstrap.Modal(document.getElementById('editClassModal'));
     setupModalAccessibility(modal._element);

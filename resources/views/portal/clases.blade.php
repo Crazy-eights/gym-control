@@ -32,7 +32,7 @@
                             <option value="avanzado">Avanzado</option>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-3 mb-2 mb-md-0">
                         <select class="form-select" id="filterInstructor">
                             <option value="">Todos los instructores</option>
@@ -42,7 +42,7 @@
                             <option value="laura">Laura Fernández</option>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-3 mb-2 mb-md-0">
                         <select class="form-select" id="filterTime">
                             <option value="">Cualquier horario</option>
@@ -51,7 +51,7 @@
                             <option value="evening">Noche (18:00 - 22:00)</option>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-3">
                         <button class="btn btn-primary w-100" onclick="applyFilters()">
                             <i class="fas fa-filter me-2"></i>Filtrar
@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-4">
         <div class="card bg-light">
             <div class="card-body text-center">
@@ -78,8 +78,8 @@
 <!-- Classes Grid -->
 <div class="row" id="classesGrid">
     @foreach($clases as $clase)
-        <div class="col-lg-6 mb-4 class-card" 
-             data-level="{{ strtolower($clase->nivel) }}" 
+        <div class="col-lg-6 mb-4 class-card"
+             data-level="{{ strtolower($clase->nivel) }}"
              data-instructor="{{ strtolower(str_replace(' ', '', $clase->instructor)) }}">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #28a745 0%, #007bff 100%);">
@@ -88,7 +88,7 @@
                         <span class="badge bg-light text-dark">{{ $clase->nivel }}</span>
                     </div>
                 </div>
-                
+
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-6">
@@ -98,7 +98,7 @@
                             </div>
                             <div class="fw-bold">{{ $clase->instructor }}</div>
                         </div>
-                        
+
                         <div class="col-6">
                             <div class="d-flex align-items-center mb-2">
                                 <i class="fas fa-clock text-success me-2"></i>
@@ -107,23 +107,23 @@
                             <div class="fw-bold">{{ $clase->duracion }}</div>
                         </div>
                     </div>
-                    
+
                     <p class="text-muted mb-3">{{ $clase->descripcion }}</p>
-                    
+
                     <!-- Schedule -->
                     <div class="mb-3">
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-calendar text-info me-2"></i>
                             <small class="text-muted">Horarios:</small>
                         </div>
-                        
+
                         <div class="d-flex flex-wrap gap-1">
                             @foreach($clase->horarios as $horario)
                                 <span class="badge bg-light text-dark border">{{ $horario }}</span>
                             @endforeach
                         </div>
                     </div>
-                    
+
                     <!-- Capacity -->
                     <div class="row mb-3">
                         <div class="col-6">
@@ -132,12 +132,12 @@
                                 @php
                                     $porcentaje = ($clase->inscritos / $clase->cupo_maximo) * 100;
                                 @endphp
-                                <div class="progress-bar bg-{{ $porcentaje > 80 ? 'danger' : ($porcentaje > 60 ? 'warning' : 'success') }}" 
+                                <div class="progress-bar bg-{{ $porcentaje > 80 ? 'danger' : ($porcentaje > 60 ? 'warning' : 'success') }}"
                                      style="width: {{ $porcentaje }}%"></div>
                             </div>
                             <small class="text-muted">{{ $clase->inscritos }}/{{ $clase->cupo_maximo }}</small>
                         </div>
-                        
+
                         <div class="col-6 text-end">
                             <small class="text-muted">Disponibles:</small>
                             <div class="fw-bold text-{{ $clase->cupo_maximo - $clase->inscritos > 0 ? 'success' : 'danger' }}">
@@ -146,7 +146,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card-footer bg-transparent">
                     <div class="d-grid gap-2">
                         @if($clase->cupo_maximo - $clase->inscritos > 0)
@@ -158,7 +158,7 @@
                                 <i class="fas fa-times me-2"></i>Sin Cupo Disponible
                             </button>
                         @endif
-                        
+
                         <button class="btn btn-outline-info btn-sm" onclick="viewClassDetails('{{ $clase->nombre }}')">
                             <i class="fas fa-info-circle me-2"></i>Ver Detalles
                         </button>
@@ -193,7 +193,7 @@
                 <h6 class="text-primary border-bottom pb-2 mb-3">
                     <i class="fas fa-clock me-2"></i>Próximas Clases
                 </h6>
-                
+
                 <div id="upcomingClasses">
                     <!-- Simulated reservations -->
                     <div class="d-flex align-items-center mb-3 border-bottom pb-3">
@@ -218,7 +218,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="d-flex align-items-center mb-3">
                         <div class="flex-shrink-0 me-3">
                             <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white"
@@ -242,7 +242,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Reservation Limits -->
                 <div class="alert alert-info">
                     <h6><i class="fas fa-info-circle me-2"></i>Información de Reservas</h6>
@@ -296,36 +296,36 @@ function applyFilters() {
     const level = document.getElementById('filterLevel').value.toLowerCase();
     const instructor = document.getElementById('filterInstructor').value;
     const time = document.getElementById('filterTime').value;
-    
+
     const cards = document.querySelectorAll('.class-card');
-    
+
     cards.forEach(card => {
         let show = true;
-        
+
         // Filter by level
         if (level && !card.dataset.level.includes(level)) {
             show = false;
         }
-        
+
         // Filter by instructor
         if (instructor && !card.dataset.instructor.includes(instructor)) {
             show = false;
         }
-        
+
         // Show/hide card
         card.style.display = show ? 'block' : 'none';
     });
-    
+
     // Show message if no results
     const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
     const grid = document.getElementById('classesGrid');
-    
+
     // Remove existing no-results message
     const existingMessage = document.getElementById('no-results-message');
     if (existingMessage) {
         existingMessage.remove();
     }
-    
+
     if (visibleCards.length === 0) {
         const noResultsHTML = `
             <div id="no-results-message" class="col-12 text-center py-5">
@@ -345,12 +345,12 @@ function clearFilters() {
     document.getElementById('filterLevel').value = '';
     document.getElementById('filterInstructor').value = '';
     document.getElementById('filterTime').value = '';
-    
+
     const cards = document.querySelectorAll('.class-card');
     cards.forEach(card => {
         card.style.display = 'block';
     });
-    
+
     const noResultsMessage = document.getElementById('no-results-message');
     if (noResultsMessage) {
         noResultsMessage.remove();
@@ -361,17 +361,17 @@ function reserveClass(className) {
     // Check reservation limits
     const currentReservations = 2; // This would come from the backend
     const maxReservations = 3;
-    
+
     if (currentReservations >= maxReservations) {
         alert('Has alcanzado el límite de ' + maxReservations + ' reservas por semana.\nCancela una reserva existente para agregar una nueva.');
         return;
     }
-    
+
     if (confirm('¿Deseas reservar la clase "' + className + '"?\n\nRecuerda que puedes cancelar hasta 2 horas antes del inicio.')) {
         // Simulate API call
         setTimeout(() => {
             alert('¡Reserva confirmada!\n\nClase: ' + className + '\nRecibirás un recordatorio 30 minutos antes.');
-            
+
             // Update UI (in a real app, this would refresh the data)
             updateReservationCount();
         }, 1000);
@@ -380,18 +380,18 @@ function reserveClass(className) {
 
 function viewClassDetails(className) {
     const classData = classesData.find(c => c.nombre === className);
-    
+
     if (classData) {
-        document.getElementById('classDetailsTitle').innerHTML = 
+        document.getElementById('classDetailsTitle').innerHTML =
             '<i class="fas fa-info-circle me-2"></i>' + classData.nombre;
-        
+
         document.getElementById('classDetailsBody').innerHTML = `
             <div class="row">
                 <div class="col-12 mb-3">
                     <h6 class="text-primary">Descripción</h6>
                     <p>${classData.descripcion}</p>
                 </div>
-                
+
                 <div class="col-md-6 mb-3">
                     <h6 class="text-primary">Instructor</h6>
                     <div class="d-flex align-items-center">
@@ -405,7 +405,7 @@ function viewClassDetails(className) {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-6 mb-3">
                     <h6 class="text-primary">Información</h6>
                     <ul class="list-unstyled">
@@ -414,27 +414,27 @@ function viewClassDetails(className) {
                         <li><i class="fas fa-users text-muted me-2"></i>Cupo: ${classData.cupo_maximo} personas</li>
                     </ul>
                 </div>
-                
+
                 <div class="col-12 mb-3">
                     <h6 class="text-primary">Horarios Disponibles</h6>
                     <div class="d-flex flex-wrap gap-2">
-                        ${classData.horarios.map(horario => 
+                        ${classData.horarios.map(horario =>
                             `<span class="badge bg-light text-dark border">${horario}</span>`
                         ).join('')}
                     </div>
                 </div>
-                
+
                 <div class="col-12">
                     <h6 class="text-primary">Disponibilidad</h6>
                     <div class="progress mb-2">
-                        <div class="progress-bar bg-${classData.inscritos / classData.cupo_maximo > 0.8 ? 'danger' : 'success'}" 
+                        <div class="progress-bar bg-${classData.inscritos / classData.cupo_maximo > 0.8 ? 'danger' : 'success'}"
                              style="width: ${(classData.inscritos / classData.cupo_maximo) * 100}%"></div>
                     </div>
                     <small class="text-muted">${classData.inscritos} de ${classData.cupo_maximo} cupos ocupados</small>
                 </div>
             </div>
         `;
-        
+
         // Update reserve button
         const reserveBtn = document.getElementById('reserveFromDetailsBtn');
         if (classData.cupo_maximo - classData.inscritos > 0) {
@@ -446,7 +446,7 @@ function viewClassDetails(className) {
         } else {
             reserveBtn.style.display = 'none';
         }
-        
+
         const modal = new bootstrap.Modal(document.getElementById('classDetailsModal'));
         modal.show();
     }

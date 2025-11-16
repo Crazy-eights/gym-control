@@ -17,7 +17,7 @@ class CreateAdminPasswordResetsTable extends Migration
             $table->string('email')->index();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
-            
+
             // Índices para optimizar consultas
             $table->index(['email', 'token']);
         });

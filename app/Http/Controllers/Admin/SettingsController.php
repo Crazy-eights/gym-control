@@ -16,7 +16,7 @@ class SettingsController extends Controller
     {
         // Obtener todas las configuraciones como array asociativo
         $settings = Setting::all_settings();
-        
+
         return view('admin.settings.index', compact('settings'));
     }
 
@@ -44,7 +44,7 @@ class SettingsController extends Controller
             if ($oldLogo && $oldLogo->setting_value && Storage::disk('public')->exists($oldLogo->setting_value)) {
                 Storage::disk('public')->delete($oldLogo->setting_value);
             }
-            
+
             $logoPath = $request->file('logo')->store('settings', 'public');
             Setting::set('site_logo', $logoPath);
         }
@@ -56,7 +56,7 @@ class SettingsController extends Controller
             if ($oldFavicon && $oldFavicon->setting_value && Storage::disk('public')->exists($oldFavicon->setting_value)) {
                 Storage::disk('public')->delete($oldFavicon->setting_value);
             }
-            
+
             $faviconPath = $request->file('favicon')->store('settings', 'public');
             Setting::set('site_favicon', $faviconPath);
         }

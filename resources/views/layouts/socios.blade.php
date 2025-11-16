@@ -11,12 +11,12 @@
     <title>@yield('title', 'Portal de Socios') - Gym Control</title>
 
     <!-- Custom fonts for this template-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
     <!-- Portal de Socios CSS -->
     <style>
         :root {
@@ -211,11 +211,11 @@
             .navbar-nav {
                 text-align: center;
             }
-            
+
             .welcome-section {
                 padding: 2rem 0;
             }
-            
+
             .stats-card {
                 padding: 1.5rem;
                 margin-bottom: 1rem;
@@ -239,39 +239,39 @@
                 <i class="fas fa-dumbbell me-2"></i>
                 <strong>Gym Control</strong>
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('portal.dashboard') ? 'active' : '' }}" 
+                        <a class="nav-link {{ request()->routeIs('portal.dashboard') ? 'active' : '' }}"
                            href="{{ route('portal.dashboard') }}">
                             <i class="fas fa-home me-1"></i>Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('portal.membresia') ? 'active' : '' }}" 
+                        <a class="nav-link {{ request()->routeIs('portal.membresia') ? 'active' : '' }}"
                            href="{{ route('portal.membresia') }}">
                             <i class="fas fa-id-card me-1"></i>Mi Membresía
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {{ request()->routeIs('portal.classes*') || request()->routeIs('portal.class-bookings*') ? 'active' : '' }}" 
+                        <a class="nav-link dropdown-toggle {{ request()->routeIs('portal.classes*') || request()->routeIs('portal.class-bookings*') ? 'active' : '' }}"
                            href="#" id="clasesDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-dumbbell me-1"></i>Clases
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item {{ request()->routeIs('portal.classes.index') ? 'active' : '' }}" 
+                                <a class="dropdown-item {{ request()->routeIs('portal.classes.index') ? 'active' : '' }}"
                                    href="{{ route('portal.classes.index') }}">
                                     <i class="fas fa-calendar-alt me-1"></i>Clases Disponibles
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item {{ request()->routeIs('portal.class-bookings.my-bookings') ? 'active' : '' }}" 
+                                <a class="dropdown-item {{ request()->routeIs('portal.class-bookings.my-bookings') ? 'active' : '' }}"
                                    href="{{ route('portal.class-bookings.my-bookings') }}">
                                     <i class="fas fa-bookmark me-1"></i>Mis Reservas
                                 </a>
@@ -279,20 +279,20 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('portal.rutinas') ? 'active' : '' }}" 
+                        <a class="nav-link {{ request()->routeIs('portal.rutinas') ? 'active' : '' }}"
                            href="{{ route('portal.rutinas') }}">
                             <i class="fas fa-list-alt me-1"></i>Rutinas
                         </a>
                     </li>
                 </ul>
-                
+
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-bs-toggle="dropdown">
                             @if(auth()->user()->photo)
-                                <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
-                                     alt="Perfil" class="rounded-circle me-1" 
+                                <img src="{{ asset('storage/' . auth()->user()->photo) }}"
+                                     alt="Perfil" class="rounded-circle me-1"
                                      style="width: 30px; height: 30px; object-fit: cover;">
                             @else
                                 <i class="fas fa-user-circle me-1"></i>
@@ -312,7 +312,7 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('login') }}" 
+                                <a class="dropdown-item" href="{{ route('login') }}"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                                 </a>
@@ -383,8 +383,8 @@
     </form>
 
     <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
     <!-- Custom Scripts -->
     <script>
         // Auto-hide alerts after 5 seconds

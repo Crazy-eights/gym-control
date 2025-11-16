@@ -101,7 +101,7 @@
         <!-- Content -->
         <div class="content">
             <div class="success-badge">✓ PRUEBA EXITOSA</div>
-            
+
             <div class="message-box">
                 <h2>¡Configuración de Email Funcionando Correctamente!</h2>
                 <p>{{ $content }}</p>

@@ -24,7 +24,7 @@ class CreateVisualConfigsTable extends Migration
             $table->json('options')->nullable(); // Opciones adicionales (para selects, validaciones, etc.)
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             $table->index(['category', 'is_active']);
         });
     }

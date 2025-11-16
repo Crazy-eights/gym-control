@@ -13,7 +13,7 @@ class Schedule extends Model
      * La tabla se llama 'schedules', Laravel la encuentra automáticamente.
      * public $timestamps = false;
      */
-    
+
     /**
      * La tabla no usa 'created_at' y 'updated_at'.
      */

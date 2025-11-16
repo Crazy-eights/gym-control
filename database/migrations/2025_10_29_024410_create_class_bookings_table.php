@@ -23,7 +23,7 @@ class CreateClassBookingsTable extends Migration
             $table->timestamp('cancelled_at')->nullable(); // Si fue cancelada
             $table->text('notes')->nullable(); // Notas adicionales
             $table->timestamps();
-            
+
             // Un miembro no puede reservar la misma clase el mismo día
             $table->unique(['member_id', 'class_schedule_id', 'booking_date']);
             $table->index(['booking_date', 'status']);

@@ -11,12 +11,12 @@
     <title>@yield('title', 'Panel de Administración') - Gym Control</title>
 
     <!-- Custom fonts for this template-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
     <!-- SB Admin 2 CSS (Adaptado para Bootstrap 5) -->
     <style>
         :root {
@@ -224,11 +224,11 @@
                 transition: left 0.3s;
                 width: 250px;
             }
-            
+
             .sidebar.show {
                 left: 0;
             }
-            
+
             .content-wrapper {
                 margin-left: 0 !important;
             }
@@ -519,8 +519,8 @@
     </div>
 
     <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
     <!-- Custom scripts -->
     <script>
         // Sidebar toggle functionality
@@ -538,43 +538,43 @@
                     width: 80px !important;
                     transition: width 0.3s ease;
                 }
-                
+
                 .sidebar-collapsed .nav-item .nav-link span {
                     display: none !important;
                 }
-                
+
                 .sidebar-collapsed .nav-item .nav-link {
                     text-align: center !important;
                     padding: 0.75rem 0 !important;
                 }
-                
+
                 .sidebar-collapsed .nav-item .nav-link i {
                     margin-right: 0 !important;
                     font-size: 1.2rem !important;
                 }
-                
+
                 .sidebar-collapsed .sidebar-brand {
                     padding: 0 !important;
                     justify-content: center !important;
                 }
-                
+
                 .sidebar-collapsed .sidebar-brand-text {
                     display: none !important;
                 }
-                
+
                 .sidebar-collapsed .sidebar-divider {
                     margin: 0.5rem 0.5rem !important;
                 }
-                
+
                 .sidebar-collapsed #sidebarToggle i {
                     transform: rotate(180deg);
                 }
-                
+
                 /* Efecto hover para mostrar texto cuando está colapsado */
                 .sidebar-collapsed .nav-item {
                     position: relative;
                 }
-                
+
                 .sidebar-collapsed .nav-item:hover::after {
                     content: attr(data-title);
                     position: absolute;
@@ -591,18 +591,18 @@
                     font-size: 0.875rem;
                     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 }
-                
+
                 /* Transición suave para el contenido */
                 .content-wrapper {
                     transition: margin-left 0.3s ease;
                 }
-                
+
                 /* Estilos para mobile */
                 @media (max-width: 768px) {
                     .sidebar-collapsed {
                         display: none !important;
                     }
-                    
+
                     .content-wrapper {
                         margin-left: 0 !important;
                     }
@@ -614,7 +614,7 @@
             function toggleSidebar() {
                 if (window.innerWidth > 768) {
                     sidebar.classList.toggle('sidebar-collapsed');
-                    
+
                     if (sidebar.classList.contains('sidebar-collapsed')) {
                         contentWrapper.style.marginLeft = '80px';
                         // Añadir atributos data-title para tooltips

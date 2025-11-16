@@ -22,21 +22,21 @@ class SecureHeaders
         if (method_exists($response, 'header')) {
             // Protección contra clickjacking
             $response->header('X-Frame-Options', 'DENY');
-            
+
             // Protección XSS
             $response->header('X-XSS-Protection', '1; mode=block');
-            
+
             // Prevenir sniffing de MIME types
             $response->header('X-Content-Type-Options', 'nosniff');
-            
+
             // Política de referrer
             $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
-            
+
             // Protección HTTPS (solo si está en HTTPS)
             if ($request->secure()) {
                 $response->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
             }
-            
+
             // Content Security Policy más permisivo para CDNs necesarios
             $csp = "default-src 'self'; " .
                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' " .
@@ -48,9 +48,9 @@ class SecureHeaders
                    "img-src 'self' data: blob: cdn.jsdelivr.net cdnjs.cloudflare.com; " .
                    "connect-src 'self' graph.microsoft.com login.microsoftonline.com " .
                    "cdn.jsdelivr.net cdnjs.cloudflare.com";
-            
+
             $response->header('Content-Security-Policy', $csp);
-            
+
             // Permissions Policy (antes Feature Policy)
             $response->header('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
         }

@@ -299,23 +299,23 @@
     left: 0;
     padding: 0 var(--spacing-lg);
   }
-  
+
   .header-mobile-toggle {
     display: flex;
   }
-  
+
   .header-search {
     display: none;
   }
-  
+
   .header-date {
     display: none;
   }
-  
+
   .header-user-info {
     display: none;
   }
-  
+
   .header-title {
     font-size: var(--font-size-lg);
   }
@@ -325,7 +325,7 @@
   .header-right {
     gap: var(--spacing-sm);
   }
-  
+
   .header-breadcrumb {
     display: none;
   }

@@ -308,7 +308,7 @@
                         ->take(5)
                         ->get();
                 @endphp
-                
+
                 @if($asistenciasRecientes->count() > 0)
                     @foreach($asistenciasRecientes as $asistencia)
                         <div class="d-flex align-items-center mb-3">
@@ -337,7 +337,7 @@
                         <p>No hay asistencias registradas hoy</p>
                     </div>
                 @endif
-                
+
                 <div class="text-center mt-3">
                     <button class="btn btn-primary btn-sm" disabled>
                         <i class="fas fa-clock"></i> Módulo de Asistencias (Próximamente)
@@ -360,7 +360,7 @@
                         ->take(5)
                         ->get();
                 @endphp
-                
+
                 @if($membresiasProximas->count() > 0)
                     <h6 class="text-warning mb-3">
                         <i class="fas fa-exclamation-triangle"></i> Membresías que vencen esta semana
@@ -392,7 +392,7 @@
                         <p>No hay membresías próximas a vencer</p>
                     </div>
                 @endif
-                
+
                 <div class="text-center mt-3">
                     <a href="{{ route('admin.socios.index') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-users"></i> Ver Todos los Socios
@@ -406,25 +406,25 @@
 
 @push('scripts')
 <!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" integrity="sha256-SERKgtTty1vsDxll+qzd4Y2cF9swY9BCq62i9wXJ9Uo=" crossorigin="anonymous"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Gráfica de Asistencias Semanales - Datos reales
     const ctxAsistencias = document.getElementById('asistenciasChart').getContext('2d');
-    
+
     // Obtener datos reales de asistencias de los últimos 7 días
     @php
         $diasSemana = [];
         $asistenciasDatos = [];
-        
+
         for ($i = 6; $i >= 0; $i--) {
             $fecha = now()->subDays($i);
             $diasSemana[] = $fecha->locale('es')->dayName;
             $asistenciasDatos[] = \App\Models\MemberAttendance::whereDate('attendance_date', $fecha)->count();
         }
     @endphp
-    
+
     const asistenciasChart = new Chart(ctxAsistencias, {
         type: 'line',
         data: {

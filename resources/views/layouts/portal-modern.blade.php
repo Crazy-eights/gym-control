@@ -11,16 +11,16 @@
     <title>@yield('title', 'Portal de Socios') - Gym Control</title>
 
     <!-- Modern Fonts -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css">
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
     <!-- Modern Theme CSS -->
     <link href="{{ asset('css/modern-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar-modern.css') }}" rel="stylesheet">
     <link href="{{ asset('css/header-modern.css') }}" rel="stylesheet">
-    
+
     <!-- Portal-specific styles -->
     <style>
         /* Portal specific color scheme */
@@ -63,7 +63,7 @@
             padding: 0;
             overflow-x: hidden;
         }
-        
+
         .main-content {
             margin-left: 280px;
             width: calc(100vw - 280px);
@@ -203,26 +203,26 @@
                 width: 100% !important;
                 max-width: 100% !important;
             }
-            
+
             .header-modern {
                 left: 0 !important;
                 right: 0 !important;
                 width: 100% !important;
             }
-            
+
             .content-area {
                 padding: calc(var(--header-height) + 1rem) 1rem 1rem 1rem;
             }
-            
+
             .sidebar-modern {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
             }
-            
+
             .sidebar-modern.show-mobile {
                 transform: translateX(0);
             }
-            
+
             .sidebar-overlay {
                 position: fixed;
                 top: 0;
@@ -235,7 +235,7 @@
                 visibility: hidden;
                 transition: all 0.3s ease;
             }
-            
+
             .sidebar-overlay.show {
                 opacity: 1;
                 visibility: visible;
@@ -362,14 +362,14 @@
             font-size: 0.875rem;
         }
     </style>
-    
+
     @stack('styles')
 </head>
 
 <body class="modern-layout">
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
+
     <!-- Modern Sidebar -->
     <nav class="sidebar-modern" id="sidebar">
         <!-- Logo Section -->
@@ -383,8 +383,8 @@
         <!-- User Info -->
         <div class="sidebar-user">
             @if(auth()->user()->photo)
-                <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
-                     alt="Foto de {{ auth()->user()->firstname }}" 
+                <img src="{{ asset('storage/' . auth()->user()->photo) }}"
+                     alt="Foto de {{ auth()->user()->firstname }}"
                      class="sidebar-user-avatar">
             @else
                 <div class="sidebar-user-avatar">
@@ -426,7 +426,7 @@
             <!-- Actividades Section -->
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Actividades</div>
-                
+
                 <div class="sidebar-item">
                     <a href="{{ route('portal.clases') }}" class="sidebar-link {{ request()->routeIs('portal.clases*') ? 'active' : '' }}">
                         <div class="sidebar-icon">
@@ -461,7 +461,7 @@
             <!-- Cuenta Section -->
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Mi Cuenta</div>
-                
+
                 <div class="sidebar-item">
                     <a href="{{ route('portal.perfil') }}" class="sidebar-link {{ request()->routeIs('portal.perfil') ? 'active' : '' }}">
                         <div class="sidebar-icon">
@@ -520,7 +520,7 @@
                     @endisset
                 </div>
             </div>
-            
+
             <div class="header-right">
                 <!-- Notifications -->
                 <div class="header-item dropdown">
@@ -561,7 +561,7 @@
                 <div class="header-item dropdown">
                     <button class="header-user" data-bs-toggle="dropdown">
                         @if(auth()->user()->photo)
-                            <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
+                            <img src="{{ asset('storage/' . auth()->user()->photo) }}"
                                  alt="Avatar" class="user-avatar">
                         @else
                             <div class="user-avatar">
@@ -606,11 +606,11 @@
     </form>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
     <!-- Modern Theme JS -->
     <script src="{{ asset('js/modern-theme.js') }}"></script>
-    
+
     @stack('scripts')
 </body>
 </html>

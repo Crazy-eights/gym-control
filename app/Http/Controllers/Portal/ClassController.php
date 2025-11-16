@@ -104,10 +104,10 @@ class ClassController extends Controller
         }
 
         return view('portal.classes.show', compact(
-            'class', 
-            'upcomingSchedules', 
-            'nextSchedule', 
-            'totalBookings', 
+            'class',
+            'upcomingSchedules',
+            'nextSchedule',
+            'totalBookings',
             'averageOccupancy'
         ));
     }

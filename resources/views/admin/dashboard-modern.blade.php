@@ -12,7 +12,7 @@
         gap: var(--spacing-xl);
         margin-bottom: var(--spacing-2xl);
     }
-    
+
     .chart-container {
         background: var(--bg-primary);
         border-radius: var(--border-radius-lg);
@@ -20,40 +20,40 @@
         box-shadow: var(--shadow-md);
         height: 400px;
     }
-    
+
     .recent-activity {
         background: var(--bg-primary);
         border-radius: var(--border-radius-lg);
         box-shadow: var(--shadow-md);
         overflow: hidden;
     }
-    
+
     .activity-header {
         padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
         border-bottom: 1px solid var(--bg-tertiary);
     }
-    
+
     .activity-item {
         padding: var(--spacing-md) var(--spacing-xl);
         border-bottom: 1px solid var(--bg-tertiary);
         transition: background-color var(--transition-speed) ease;
     }
-    
+
     .activity-item:hover {
         background: var(--bg-secondary);
     }
-    
+
     .activity-item:last-child {
         border-bottom: none;
     }
-    
+
     .quick-actions {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: var(--spacing-lg);
         margin-bottom: var(--spacing-2xl);
     }
-    
+
     .quick-action-btn {
         display: flex;
         flex-direction: column;
@@ -67,14 +67,14 @@
         color: var(--text-primary);
         transition: all var(--transition-speed) ease;
     }
-    
+
     .quick-action-btn:hover {
         border-color: var(--primary-color);
         color: var(--primary-color);
         transform: translateY(-2px);
         box-shadow: var(--shadow-lg);
     }
-    
+
     .quick-action-icon {
         width: 60px;
         height: 60px;
@@ -96,15 +96,8 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    @php
-                        try {
-                            $memberCount = \App\Models\Member::count();
-                        } catch (Exception $e) {
-                            $memberCount = 0;
-                        }
-                    @endphp
-                    <div class="stat-number">{{ $memberCount }}</div>
-                    <div class="stat-label">Socios Activos</div>
+                    <div class="stat-number">{{ $totalMembers ?? 0 }}</div>
+                    <div class="stat-label">Total Socios</div>
                 </div>
                 <div class="stat-icon">
                     <i class="fas fa-users" style="color: var(--primary-color); font-size: 2rem;"></i>
@@ -112,7 +105,7 @@
             </div>
             <div class="mt-3">
                 <small class="text-success">
-                    <i class="fas fa-arrow-up"></i> +12% este mes
+                    <i class="fas fa-arrow-up"></i> {{ $activeMembers ?? 0 }} activos
                 </small>
             </div>
         </div>
@@ -120,23 +113,16 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    @php
-                        try {
-                            $planCount = \App\Models\MembershipPlan::count();
-                        } catch (Exception $e) {
-                            $planCount = 0;
-                        }
-                    @endphp
-                    <div class="stat-number">{{ $planCount }}</div>
-                    <div class="stat-label">Planes Activos</div>
+                    <div class="stat-number">{{ $todayAttendances ?? 0 }}</div>
+                    <div class="stat-label">Asistencias Hoy</div>
                 </div>
                 <div class="stat-icon">
-                    <i class="fas fa-id-card" style="color: var(--secondary-color); font-size: 2rem;"></i>
+                    <i class="fas fa-calendar-check" style="color: var(--secondary-color); font-size: 2rem;"></i>
                 </div>
             </div>
             <div class="mt-3">
                 <small class="text-info">
-                    <i class="fas fa-arrow-right"></i> Sin cambios
+                    <i class="fas fa-clock"></i> Hoy {{ now()->format('d/m/Y') }}
                 </small>
             </div>
         </div>
@@ -144,7 +130,7 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <div class="stat-number">${{ number_format(45750, 0) }}</div>
+                    <div class="stat-number">${{ number_format($monthlyRevenue ?? 0, 0) }}</div>
                     <div class="stat-label">Ingresos del Mes</div>
                 </div>
                 <div class="stat-icon">
@@ -304,7 +290,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" integrity="sha256-SERKgtTty1vsDxll+qzd4Y2cF9swY9BCq62i9wXJ9Uo=" crossorigin="anonymous"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Chart.js configuration

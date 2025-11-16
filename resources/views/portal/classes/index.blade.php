@@ -11,7 +11,7 @@
         transition: all 0.3s ease;
         overflow: hidden;
     }
-    
+
     .class-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -51,7 +51,7 @@
         padding: 1rem;
         margin: 0.5rem 0;
     }
-    
+
     .btn-reserve {
         background: linear-gradient(135deg, #4CAF50 0%, #00BCD4 100%);
         border: none;
@@ -60,7 +60,7 @@
         padding: 0.5rem 1rem;
         font-weight: 600;
     }
-    
+
     .btn-reserve:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
@@ -161,7 +161,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text text-muted mb-3">{{ $class->description }}</p>
-                            
+
                             <div class="row g-2 mb-3">
                                 <div class="col-4">
                                     <div class="class-info-item">

@@ -30,23 +30,23 @@ class CheckAdminPasswords extends Command
     public function handle()
     {
         $admins = Admin::all(['id', 'username', 'email', 'password']);
-        
+
         $this->info('=== VERIFICACIÓN DE CONTRASEÑAS DE ADMIN ===');
         $this->newLine();
-        
+
         foreach ($admins as $admin) {
             $hasPassword = !empty($admin->password);
             $passwordLength = strlen($admin->password ?? '');
-            
+
             $this->info("Admin ID: {$admin->id}");
             $this->info("Username: {$admin->username}");
             $this->info("Email: {$admin->email}");
             $this->info("Tiene contraseña: " . ($hasPassword ? 'SÍ' : 'NO'));
             $this->info("Longitud password: {$passwordLength}");
-            
+
             if (!$hasPassword) {
                 $this->warn("⚠️  Este admin NO tiene contraseña!");
-                
+
                 if ($this->confirm("¿Quieres establecer la contraseña 'admin123' para {$admin->username}?")) {
                     $admin->password = Hash::make('admin123');
                     $admin->save();
@@ -69,10 +69,10 @@ class CheckAdminPasswords extends Command
                     }
                 }
             }
-            
+
             $this->newLine();
         }
-        
+
         return 0;
     }
 }

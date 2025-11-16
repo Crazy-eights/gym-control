@@ -95,7 +95,7 @@
                         <span class="input-group-text">
                             <i class="fas fa-search"></i>
                         </span>
-                        <input type="text" class="form-control" id="searchSchedules" 
+                        <input type="text" class="form-control" id="searchSchedules"
                                placeholder="Buscar horarios...">
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                                             </div>
                                             <div>
                                                 <div class="fw-semibold">
-                                                    {{ \Carbon\Carbon::parse($schedule->time_in)->format('H:i') }} - 
+                                                    {{ \Carbon\Carbon::parse($schedule->time_in)->format('H:i') }} -
                                                     {{ \Carbon\Carbon::parse($schedule->time_out)->format('H:i') }}
                                                 </div>
                                                 <small class="text-muted">
@@ -165,18 +165,18 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-outline-primary btn-sm" 
+                                            <button type="button" class="btn btn-outline-primary btn-sm"
                                                     onclick="verHorario({{ $schedule->id }})"
                                                     data-bs-toggle="tooltip" title="Ver detalles">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <button type="button" class="btn btn-outline-secondary btn-sm" 
+                                            <button type="button" class="btn btn-outline-secondary btn-sm"
                                                     onclick="editarHorario({{ $schedule->id }})"
                                                     data-bs-toggle="tooltip" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             @if($schedule->employees_count == 0)
-                                                <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
                                                         onclick="eliminarHorario({{ $schedule->id }})"
                                                         data-bs-toggle="tooltip" title="Eliminar">
                                                     <i class="fas fa-trash"></i>
@@ -335,7 +335,7 @@
     document.getElementById('searchSchedules').addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
         const rows = document.querySelectorAll('tbody tr');
-        
+
         rows.forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = text.includes(searchTerm) ? '' : 'none';
@@ -346,7 +346,7 @@
     function crearHorario() {
         const form = document.getElementById('createScheduleForm');
         const formData = new FormData(form);
-        
+
         fetch(form.action, {
             method: 'POST',
             body: formData,
@@ -363,7 +363,7 @@
                 setTimeout(() => location.reload(), 1500);
             } else {
                 showAlert('error', data.message || 'Error al crear el horario');
-                
+
                 if (data.errors) {
                     Object.keys(data.errors).forEach(key => {
                         const input = form.querySelector(`[name="${key}"]`);
@@ -395,7 +395,7 @@
                         document.getElementById('edit_time_in').value = schedule.time_in.substring(0, 5);
                         document.getElementById('edit_time_out').value = schedule.time_out.substring(0, 5);
                         document.getElementById('editScheduleForm').action = `/admin/schedules/${id}`;
-                        
+
                         new bootstrap.Modal(document.getElementById('editScheduleModal')).show();
                     });
             })
@@ -408,7 +408,7 @@
     function actualizarHorario() {
         const form = document.getElementById('editScheduleForm');
         const formData = new FormData(form);
-        
+
         fetch(form.action, {
             method: 'POST',
             body: formData,
@@ -425,7 +425,7 @@
                 setTimeout(() => location.reload(), 1500);
             } else {
                 showAlert('error', data.message || 'Error al actualizar el horario');
-                
+
                 if (data.errors) {
                     Object.keys(data.errors).forEach(key => {
                         const input = form.querySelector(`[name="${key}"]`);
@@ -500,16 +500,16 @@
                         </div>
                         <div class="col-md-6">
                             <h6 class="fw-bold">Empleados Asignados</h6>
-                            ${schedule.employees && schedule.employees.length > 0 ? 
-                                '<ul class="list-unstyled">' + 
-                                schedule.employees.map(emp => `<li><i class="fas fa-user me-2"></i>${emp.firstname} ${emp.lastname}</li>`).join('') + 
-                                '</ul>' : 
+                            ${schedule.employees && schedule.employees.length > 0 ?
+                                '<ul class="list-unstyled">' +
+                                schedule.employees.map(emp => `<li><i class="fas fa-user me-2"></i>${emp.firstname} ${emp.lastname}</li>`).join('') +
+                                '</ul>' :
                                 '<p class="text-muted">No hay empleados asignados</p>'
                             }
                         </div>
                     </div>
                 `;
-                
+
                 document.getElementById('viewScheduleContent').innerHTML = content;
                 new bootstrap.Modal(document.getElementById('viewScheduleModal')).show();
             })
@@ -537,9 +537,9 @@
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
-        
+
         document.body.appendChild(alertDiv);
-        
+
         // Auto-remove after 5 seconds
         setTimeout(() => {
             if (alertDiv.parentNode) {

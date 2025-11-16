@@ -37,7 +37,7 @@
             <form action="{{ route('admin.classes.update', $gymClass) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="row">
                     <!-- Información Básica -->
                     <div class="col-lg-8">
@@ -54,11 +54,11 @@
                                             <label for="name" class="form-label">
                                                 <i class="fas fa-dumbbell text-primary"></i> Nombre de la Clase *
                                             </label>
-                                            <input type="text" 
-                                                   class="form-control @error('name') is-invalid @enderror" 
-                                                   id="name" 
-                                                   name="name" 
-                                                   value="{{ old('name', $gymClass->name) }}" 
+                                            <input type="text"
+                                                   class="form-control @error('name') is-invalid @enderror"
+                                                   id="name"
+                                                   name="name"
+                                                   value="{{ old('name', $gymClass->name) }}"
                                                    placeholder="Ej: Yoga Matutino, CrossFit Avanzado"
                                                    required>
                                             @error('name')
@@ -71,11 +71,11 @@
                                             <label for="instructor_name" class="form-label">
                                                 <i class="fas fa-user-tie text-primary"></i> Instructor *
                                             </label>
-                                            <input type="text" 
-                                                   class="form-control @error('instructor_name') is-invalid @enderror" 
-                                                   id="instructor_name" 
-                                                   name="instructor_name" 
-                                                   value="{{ old('instructor_name', $gymClass->instructor_name) }}" 
+                                            <input type="text"
+                                                   class="form-control @error('instructor_name') is-invalid @enderror"
+                                                   id="instructor_name"
+                                                   name="instructor_name"
+                                                   value="{{ old('instructor_name', $gymClass->instructor_name) }}"
                                                    placeholder="Nombre del instructor"
                                                    required>
                                             @error('instructor_name')
@@ -89,10 +89,10 @@
                                     <label for="description" class="form-label">
                                         <i class="fas fa-align-left text-primary"></i> Descripción
                                     </label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" 
-                                              id="description" 
-                                              name="description" 
-                                              rows="3" 
+                                    <textarea class="form-control @error('description') is-invalid @enderror"
+                                              id="description"
+                                              name="description"
+                                              rows="3"
                                               placeholder="Describe en qué consiste la clase, beneficios, requisitos, etc.">{{ old('description', $gymClass->description) }}</textarea>
                                     @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -105,13 +105,13 @@
                                             <label for="duration_minutes" class="form-label">
                                                 <i class="fas fa-clock text-primary"></i> Duración (min) *
                                             </label>
-                                            <input type="number" 
-                                                   class="form-control @error('duration_minutes') is-invalid @enderror" 
-                                                   id="duration_minutes" 
-                                                   name="duration_minutes" 
-                                                   value="{{ old('duration_minutes', $gymClass->duration_minutes) }}" 
-                                                   min="15" 
-                                                   max="240" 
+                                            <input type="number"
+                                                   class="form-control @error('duration_minutes') is-invalid @enderror"
+                                                   id="duration_minutes"
+                                                   name="duration_minutes"
+                                                   value="{{ old('duration_minutes', $gymClass->duration_minutes) }}"
+                                                   min="15"
+                                                   max="240"
                                                    required>
                                             @error('duration_minutes')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -123,13 +123,13 @@
                                             <label for="max_participants" class="form-label">
                                                 <i class="fas fa-users text-primary"></i> Capacidad máx. *
                                             </label>
-                                            <input type="number" 
-                                                   class="form-control @error('max_participants') is-invalid @enderror" 
-                                                   id="max_participants" 
-                                                   name="max_participants" 
-                                                   value="{{ old('max_participants', $gymClass->max_participants) }}" 
-                                                   min="1" 
-                                                   max="100" 
+                                            <input type="number"
+                                                   class="form-control @error('max_participants') is-invalid @enderror"
+                                                   id="max_participants"
+                                                   name="max_participants"
+                                                   value="{{ old('max_participants', $gymClass->max_participants) }}"
+                                                   min="1"
+                                                   max="100"
                                                    required>
                                             @error('max_participants')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -141,13 +141,13 @@
                                             <label for="price" class="form-label">
                                                 <i class="fas fa-dollar-sign text-primary"></i> Precio *
                                             </label>
-                                            <input type="number" 
-                                                   class="form-control @error('price') is-invalid @enderror" 
-                                                   id="price" 
-                                                   name="price" 
-                                                   value="{{ old('price', $gymClass->price) }}" 
-                                                   step="0.01" 
-                                                   min="0" 
+                                            <input type="number"
+                                                   class="form-control @error('price') is-invalid @enderror"
+                                                   id="price"
+                                                   name="price"
+                                                   value="{{ old('price', $gymClass->price) }}"
+                                                   step="0.01"
+                                                   min="0"
                                                    required>
                                             @error('price')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -159,9 +159,9 @@
                                             <label for="difficulty_level" class="form-label">
                                                 <i class="fas fa-signal text-primary"></i> Dificultad *
                                             </label>
-                                            <select class="form-control @error('difficulty_level') is-invalid @enderror" 
-                                                    id="difficulty_level" 
-                                                    name="difficulty_level" 
+                                            <select class="form-control @error('difficulty_level') is-invalid @enderror"
+                                                    id="difficulty_level"
+                                                    name="difficulty_level"
                                                     required>
                                                 <option value="">Seleccionar...</option>
                                                 <option value="principiante" {{ old('difficulty_level', $gymClass->difficulty_level) == 'principiante' ? 'selected' : '' }}>
@@ -195,10 +195,10 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" 
-                                               class="custom-control-input" 
-                                               id="active" 
-                                               name="active" 
+                                        <input type="checkbox"
+                                               class="custom-control-input"
+                                               id="active"
+                                               name="active"
                                                {{ old('active', $gymClass->active) ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="active">
                                             <i class="fas fa-toggle-on text-success"></i> Clase Activa
@@ -260,8 +260,8 @@
                                                     <i class="fas fa-user-tie"></i> <span id="preview-instructor">{{ $gymClass->instructor_name }}</span>
                                                 </div>
                                                 <div class="text-xs text-gray-600 mt-1">
-                                                    <i class="fas fa-clock"></i> <span id="preview-duration">{{ $gymClass->duration_minutes }}</span> min | 
-                                                    <i class="fas fa-users"></i> <span id="preview-capacity">{{ $gymClass->max_participants }}</span> personas | 
+                                                    <i class="fas fa-clock"></i> <span id="preview-duration">{{ $gymClass->duration_minutes }}</span> min |
+                                                    <i class="fas fa-users"></i> <span id="preview-capacity">{{ $gymClass->max_participants }}</span> personas |
                                                     <strong>$<span id="preview-price">{{ number_format($gymClass->price, 2) }}</span></strong>
                                                 </div>
                                             </div>
@@ -317,7 +317,7 @@ $(document).ready(function() {
 
     // Eventos para actualizar la vista previa
     $('#name, #instructor_name, #duration_minutes, #max_participants, #price').on('input', updatePreview);
-    
+
     // Actualizar al cargar la página
     updatePreview();
 });

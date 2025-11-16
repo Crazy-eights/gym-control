@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// ¡Importante! Usamos el modelo de autenticación de Laravel
-use Illuminate\Foundation\Auth\User as Authenticatable; 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Admin extends Authenticatable // <-- Extiende de Authenticatable
+class Admin extends Authenticatable 
 {
     use HasFactory;
 
@@ -15,10 +14,7 @@ class Admin extends Authenticatable // <-- Extiende de Authenticatable
      */
     protected $table = 'admin';
 
-    /**
-     * La tabla no usa 'created_at' y 'updated_at'.
-     * (Usa 'created_on')
-     */
+
     public $timestamps = false;
 
     /**
@@ -40,13 +36,8 @@ class Admin extends Authenticatable // <-- Extiende de Authenticatable
     protected $hidden = [
         'password',
     ];
-
     /**
-     * --------------------------------------------------
-     * ¡¡ESTA ES LA LÍNEA QUE ARREGLA EL LOGIN!!
-     * Le dice a Laravel que use la columna 'username' 
-     * en lugar de 'email' para autenticar.
-     * --------------------------------------------------
+     * Indica a Laravel que use 'username' para la autenticación.
      */
     public function getAuthIdentifierName()
     {

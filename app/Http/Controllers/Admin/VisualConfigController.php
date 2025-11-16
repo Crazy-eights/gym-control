@@ -14,7 +14,7 @@ class VisualConfigController extends Controller
     {
         // Obtener la configuración actual o crear una nueva instancia
         $config = VisualConfig::first();
-        
+
         if (!$config) {
             // Crear configuración por defecto si no existe
             $config = new VisualConfig();
@@ -33,8 +33,8 @@ class VisualConfigController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->only([
-            'logo', 'secondary_logo', 'primary_color', 'secondary_color', 
-            'accent_color', 'navbar_color', 'sidebar_color', 'font_family', 
+            'logo', 'secondary_logo', 'primary_color', 'secondary_color',
+            'accent_color', 'navbar_color', 'sidebar_color', 'font_family',
             'favicon', 'meta_description', 'custom_css'
         ]), [
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -95,7 +95,7 @@ class VisualConfigController extends Controller
             $this->generateDynamicCSS($config);
 
             return back()->with('success', 'Configuración visual actualizada exitosamente.');
-            
+
         } catch (\Exception $e) {
             return back()->with('error', 'Error al actualizar configuración: ' . $e->getMessage());
         }
@@ -105,7 +105,7 @@ class VisualConfigController extends Controller
     {
         try {
             $config = VisualConfig::first();
-            
+
             if ($config) {
                 // Eliminar archivos si existen
                 if ($config->logo && Storage::disk('public')->exists($config->logo)) {
@@ -129,12 +129,12 @@ class VisualConfigController extends Controller
                 $config->custom_css = null;
                 $config->save();
             }
-            
+
             // Regenerar CSS
             $this->generateDynamicCSS($config);
 
             return back()->with('success', 'Configuración visual restablecida a valores predeterminados.');
-            
+
         } catch (\Exception $e) {
             return back()->with('error', 'Error al restablecer configuración: ' . $e->getMessage());
         }
@@ -145,15 +145,15 @@ class VisualConfigController extends Controller
         if (!$config) {
             $config = VisualConfig::first();
         }
-        
+
         if (!$config) {
             return;
         }
-        
+
         $css = "/* Configuración Visual Personalizada - Generada automáticamente */\n\n";
-        
+
         $css .= ":root {\n";
-        
+
         // Variables CSS dinámicas
         if ($config->primary_color) {
             $css .= "    --bs-primary: {$config->primary_color};\n";
@@ -180,9 +180,9 @@ class VisualConfigController extends Controller
             $css .= "    --bs-font-sans-serif: {$config->font_family};\n";
             $css .= "    --font-family-base: {$config->font_family};\n";
         }
-        
+
         $css .= "}\n\n";
-        
+
         // Estilos globales
         if ($config->font_family) {
             $css .= "body, .sidebar, .navbar, .card, .btn {\n";
@@ -196,7 +196,7 @@ class VisualConfigController extends Controller
             $css .= "    background-color: {$config->primary_color} !important;\n";
             $css .= "    border-color: {$config->primary_color} !important;\n";
             $css .= "}\n\n";
-            
+
             $css .= ".btn-primary:hover, .btn-primary:focus, .btn-primary:active {\n";
             $css .= "    background-color: {$config->primary_color} !important;\n";
             $css .= "    border-color: {$config->primary_color} !important;\n";
@@ -217,11 +217,11 @@ class VisualConfigController extends Controller
             $css .= "    background: {$config->sidebar_color} !important;\n";
             $css .= "    background-image: none !important;\n";
             $css .= "}\n\n";
-            
+
             $css .= ".sidebar .nav-item .nav-link {\n";
             $css .= "    color: rgba(255, 255, 255, 0.8) !important;\n";
             $css .= "}\n\n";
-            
+
             $css .= ".sidebar .nav-item .nav-link:hover, .sidebar .nav-item .nav-link.active {\n";
             $css .= "    color: rgba(255, 255, 255, 1) !important;\n";
             $css .= "}\n\n";
@@ -232,7 +232,7 @@ class VisualConfigController extends Controller
             $css .= "a, .text-primary {\n";
             $css .= "    color: {$config->primary_color} !important;\n";
             $css .= "}\n\n";
-            
+
             $css .= ".border-left-primary {\n";
             $css .= "    border-left: 0.25rem solid {$config->primary_color} !important;\n";
             $css .= "}\n\n";
@@ -259,7 +259,7 @@ class VisualConfigController extends Controller
 
         // Guardar CSS dinámico
         Storage::disk('public')->put('css/dynamic-theme.css', $css);
-        
+
         return $css;
     }
 
@@ -271,7 +271,7 @@ class VisualConfigController extends Controller
             if (!$config) {
                 $config = new VisualConfig();
             }
-            
+
             $config->primary_color = '#007bff';
             $config->secondary_color = '#6c757d';
             $config->accent_color = '#28a745';
@@ -279,9 +279,9 @@ class VisualConfigController extends Controller
             $config->sidebar_color = '#5a5c69';
             $config->font_family = 'Nunito, sans-serif';
             $config->save();
-            
+
             $this->generateDynamicCSS($config);
-            
+
             return response()->json(['success' => true, 'message' => 'Configuraciones predeterminadas creadas exitosamente.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);

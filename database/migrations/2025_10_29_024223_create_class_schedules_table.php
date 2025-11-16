@@ -24,7 +24,7 @@ class CreateClassSchedulesTable extends Migration
             $table->boolean('is_recurring')->default(true); // Si es recurrente semanalmente
             $table->boolean('active')->default(true);
             $table->timestamps();
-            
+
             $table->index(['day_of_week', 'start_time']);
         });
     }

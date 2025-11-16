@@ -11,7 +11,7 @@
         transition: all 0.3s ease;
         overflow: hidden;
     }
-    
+
     .class-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -99,7 +99,7 @@
         .class-info-item {
             padding: 0.5rem;
         }
-        
+
         .class-info-item .value {
             font-size: 0.8rem;
         }
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const mainContent = document.querySelector('.main-content');
         const header = document.querySelector('.header-modern');
         const contentArea = document.querySelector('.content-area');
-        
+
         if (sidebar) {
             sidebar.style.setProperty('position', 'fixed', 'important');
             sidebar.style.setProperty('left', '0', 'important');
@@ -127,14 +127,14 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar.style.setProperty('height', '100vh', 'important');
             sidebar.style.setProperty('z-index', '1000', 'important');
         }
-        
+
         if (mainContent) {
             mainContent.style.setProperty('margin-left', '300px', 'important'); // 20px extra de separación
             mainContent.style.setProperty('width', 'calc(100% - 300px)', 'important');
             mainContent.style.setProperty('min-height', '100vh', 'important');
             mainContent.style.setProperty('position', 'relative', 'important');
         }
-        
+
         if (header) {
             header.style.setProperty('position', 'fixed', 'important');
             header.style.setProperty('top', '0', 'important');
@@ -143,23 +143,23 @@ document.addEventListener('DOMContentLoaded', function() {
             header.style.setProperty('height', '70px', 'important');
             header.style.setProperty('z-index', '900', 'important');
         }
-        
+
         if (contentArea) {
             contentArea.style.setProperty('padding-top', '90px', 'important');
             contentArea.style.setProperty('padding-left', '20px', 'important');
             contentArea.style.setProperty('padding-right', '20px', 'important');
             contentArea.style.setProperty('background', 'red', 'important'); // DEBUG
         }
-        
+
         // Log para debug
         console.log('Layout forzado aplicado');
         console.log('Sidebar width:', sidebar ? sidebar.offsetWidth : 'No encontrado');
         console.log('Main content margin-left:', mainContent ? window.getComputedStyle(mainContent).marginLeft : 'No encontrado');
     }
-    
+
     // Aplicar inmediatamente
     forceCorrectLayout();
-    
+
     // Aplicar cada 100ms durante los primeros 2 segundos por si algo lo sobrescribe
     let attempts = 0;
     const interval = setInterval(() => {
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
         margin: 0 !important; /* Sin márgenes */
         padding: 0 !important; /* Sin padding interno */
     }
-    
+
     .content-area {
         padding-top: 70px !important; /* Solo padding top para el header */
         padding-left: 20px !important;
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
         margin: 0 !important;
         box-sizing: border-box !important;
     }
-    
+
     .sidebar-modern {
         position: fixed !important;
         left: 0 !important;
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
         height: 100vh !important;
         z-index: 1000 !important;
     }
-    
+
     .header-modern {
         position: fixed !important;
         top: 0 !important;
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         background: white !important;
         border-bottom: 1px solid #e9ecef !important;
     }
-    
+
     /* CONTENEDOR FLUID - USAR TODO EL ESPACIO DISPONIBLE */
     .container-fluid {
         width: 100% !important;
@@ -228,42 +228,42 @@ document.addEventListener('DOMContentLoaded', function() {
         box-sizing: border-box !important;
         background: rgba(0, 255, 0, 0.2) !important; /* DEBUG: verde para ver límites */
     }
-    
+
     /* FORZAR LAYOUT CORRECTO DE BOOTSTRAP */
     .row {
         width: 100% !important;
         margin: 0 !important;
         max-width: 100% !important;
     }
-    
+
     .col, .col-md-4, .col-lg-4, .col-xl-4, [class*="col-"] {
         padding-left: 15px !important;
         padding-right: 15px !important;
         box-sizing: border-box !important;
     }
-    
+
     /* DEBUG: BORDES PARA VER EL PROBLEMA */
     .main-content {
         border: 3px solid red !important;
     }
-    
+
     .container-fluid {
         border: 2px solid blue !important;
     }
-    
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .main-content {
             left: 0 !important;
             width: 100vw !important;
         }
-        
+
         .header-modern {
             left: 0 !important;
             width: 100vw !important;
         }
     }
-    
+
     /* MENSAJE DEBUG */
     body::before {
         content: "DEBUG: Contenedor corregido - Width calc(100vw - 280px)" !important;
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label for="date" class="form-label">Fecha</label>
-                        <input type="date" class="form-control" id="date" name="date" 
+                        <input type="date" class="form-control" id="date" name="date"
                                value="{{ request('date') }}">
                     </div>
                     <div class="col-md-3 mb-3">
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <select class="form-select" id="instructor" name="instructor">
                             <option value="">Todos los instructores</option>
                             @foreach($instructors as $instructor)
-                                <option value="{{ $instructor }}" 
+                                <option value="{{ $instructor }}"
                                         {{ request('instructor') == $instructor ? 'selected' : '' }}>
                                     {{ $instructor }}
                                 </option>
@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         @if($class->description)
                             <p class="card-text text-muted mb-3">{{ Str::limit($class->description, 80) }}</p>
                         @endif
-                        
+
                         <!-- Información de la clase -->
                         <div class="row mb-3">
                             <div class="col-4">
@@ -430,17 +430,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     $spotsLeft = $class->max_participants - $currentBookings;
                                                     $userHasBooking = $schedule->bookings ? $schedule->bookings->where('member_id', auth()->id())->where('status', 'confirmed')->count() > 0 : false;
                                                 @endphp
-                                                
+
                                                 <div class="small text-{{ $spotsLeft > 0 ? 'success' : 'danger' }} mb-1">
                                                     <i class="fas fa-users me-1"></i>{{ $spotsLeft }} cupos
                                                 </div>
-                                                
+
                                                 @if($userHasBooking)
                                                     <span class="badge bg-success status-badge">
                                                         <i class="fas fa-check me-1"></i>Reservado
                                                     </span>
                                                 @elseif($spotsLeft > 0 && \Carbon\Carbon::parse($schedule->start_date->format('Y-m-d') . ' ' . $schedule->start_time) > now())
-                                                    <button class="btn btn-sm btn-reserve book-class-btn" 
+                                                    <button class="btn btn-sm btn-reserve book-class-btn"
                                                             data-schedule-id="{{ $schedule->id }}"
                                                             data-class-name="{{ $class->name }}"
                                                             data-date="{{ $schedule->start_date->format('d/m/Y') }}"
@@ -460,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         </div>
                                     </div>
                                 @endforeach
-                                
+
                                 @if($class->upcomingSchedules->count() > 3)
                                     <div class="text-center mt-2">
                                         <a href="{{ route('portal.classes.show', $class) }}" class="btn btn-sm btn-outline-primary">
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         @endif
                     </div>
-                    
+
                     <!-- Footer con enlace a detalles -->
                     @if($class->upcomingSchedules && $class->upcomingSchedules->count() > 0)
                         <div class="card-footer bg-light text-center border-0">
@@ -587,17 +587,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '{{ route("portal.class-bookings.store") }}';
-            
+
             const csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
             csrfToken.value = '{{ csrf_token() }}';
-            
+
             const scheduleInput = document.createElement('input');
             scheduleInput.type = 'hidden';
             scheduleInput.name = 'schedule_id';
             scheduleInput.value = selectedScheduleId;
-            
+
             form.appendChild(csrfToken);
             form.appendChild(scheduleInput);
             document.body.appendChild(form);

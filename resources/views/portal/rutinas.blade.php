@@ -32,7 +32,7 @@
                             <option value="avanzado">Avanzado</option>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-3 mb-2 mb-md-0">
                         <select class="form-select" id="filterType">
                             <option value="">Todos los tipos</option>
@@ -42,7 +42,7 @@
                             <option value="flexibilidad">Flexibilidad</option>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-3 mb-2 mb-md-0">
                         <select class="form-select" id="filterDuration">
                             <option value="">Cualquier duración</option>
@@ -51,7 +51,7 @@
                             <option value="long">Larga (> 60 min)</option>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-3">
                         <button class="btn btn-primary w-100" onclick="applyFilters()">
                             <i class="fas fa-filter me-2"></i>Filtrar
@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-4">
         <div class="card bg-light">
             <div class="card-body text-center">
@@ -79,14 +79,14 @@
 <!-- Routines Grid -->
 <div class="row" id="routinesGrid">
     @foreach($rutinas as $rutina)
-        <div class="col-lg-6 mb-4 routine-card" 
-             data-level="{{ strtolower($rutina->nivel) }}" 
+        <div class="col-lg-6 mb-4 routine-card"
+             data-level="{{ strtolower($rutina->nivel) }}"
              data-type="{{ strtolower($rutina->tipo) }}"
              data-duration="{{ $rutina->duracion }}">
             <div class="card h-100 shadow-sm">
                 <!-- Card Header -->
                 <div class="card-header d-flex justify-content-between align-items-center"
-                     style="background: linear-gradient(135deg, 
+                     style="background: linear-gradient(135deg,
                         @switch($rutina->tipo)
                             @case('Fuerza')
                                 #dc3545 0%, #c82333 100%
@@ -109,7 +109,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="row mb-3">
@@ -120,7 +120,7 @@
                                 <div class="fw-bold">{{ $rutina->duracion }}</div>
                             </div>
                         </div>
-                        
+
                         <div class="col-4 text-center">
                             <div class="border-end">
                                 <i class="fas fa-dumbbell fa-lg text-success mb-1"></i>
@@ -128,22 +128,22 @@
                                 <div class="fw-bold">{{ $rutina->tipo }}</div>
                             </div>
                         </div>
-                        
+
                         <div class="col-4 text-center">
                             <i class="fas fa-signal fa-lg text-info mb-1"></i>
                             <div class="small text-muted">Nivel</div>
                             <div class="fw-bold">{{ $rutina->nivel }}</div>
                         </div>
                     </div>
-                    
+
                     <p class="text-muted mb-3">{{ $rutina->descripcion }}</p>
-                    
+
                     <!-- Exercise Preview -->
                     <div class="mb-3">
                         <h6 class="text-primary">
                             <i class="fas fa-list me-2"></i>Ejercicios ({{ count($rutina->ejercicios) }})
                         </h6>
-                        
+
                         <ul class="list-group list-group-flush">
                             @foreach(array_slice($rutina->ejercicios, 0, 3) as $ejercicio)
                                 <li class="list-group-item px-0 py-1 border-0">
@@ -153,7 +153,7 @@
                                     </small>
                                 </li>
                             @endforeach
-                            
+
                             @if(count($rutina->ejercicios) > 3)
                                 <li class="list-group-item px-0 py-1 border-0">
                                     <small class="text-muted">
@@ -165,7 +165,7 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <!-- Card Footer -->
                 <div class="card-footer bg-transparent">
                     <div class="d-grid gap-2">
@@ -181,7 +181,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <button class="btn btn-outline-success btn-sm" onclick="customizeRoutine('{{ $rutina->nombre }}')">
                             <i class="fas fa-edit me-2"></i>Personalizar
                         </button>
@@ -265,7 +265,7 @@
                     <div class="display-4 text-primary" id="routineTimer">00:00</div>
                     <p class="text-muted">Tiempo transcurrido</p>
                 </div>
-                
+
                 <!-- Current Exercise -->
                 <div class="card bg-light mb-3">
                     <div class="card-body">
@@ -273,7 +273,7 @@
                         <p class="card-text" id="exerciseInstructions">La rutina comenzará en breve</p>
                     </div>
                 </div>
-                
+
                 <!-- Progress -->
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-1">
@@ -324,7 +324,7 @@
                             <option value="fuerza">Ganar fuerza</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="experience" class="form-label">Nivel de Experiencia</label>
                         <select class="form-select" id="experience" required>
@@ -334,7 +334,7 @@
                             <option value="avanzado">Avanzado (2+ años)</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="timeAvailable" class="form-label">Tiempo disponible por sesión</label>
                         <select class="form-select" id="timeAvailable" required>
@@ -345,10 +345,10 @@
                             <option value="90">1.5 horas</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="preferences" class="form-label">Preferencias y restricciones</label>
-                        <textarea class="form-control" id="preferences" rows="3" 
+                        <textarea class="form-control" id="preferences" rows="3"
                                   placeholder="Ejercicios que prefieres, lesiones, limitaciones, etc."></textarea>
                     </div>
                 </form>
@@ -378,22 +378,22 @@ function applyFilters() {
     const level = document.getElementById('filterLevel').value.toLowerCase();
     const type = document.getElementById('filterType').value.toLowerCase();
     const duration = document.getElementById('filterDuration').value;
-    
+
     const cards = document.querySelectorAll('.routine-card');
-    
+
     cards.forEach(card => {
         let show = true;
-        
+
         // Filter by level
         if (level && !card.dataset.level.includes(level)) {
             show = false;
         }
-        
+
         // Filter by type
         if (type && !card.dataset.type.includes(type)) {
             show = false;
         }
-        
+
         // Filter by duration
         if (duration) {
             const cardDuration = parseInt(card.dataset.duration);
@@ -409,10 +409,10 @@ function applyFilters() {
                     break;
             }
         }
-        
+
         card.style.display = show ? 'block' : 'none';
     });
-    
+
     // Show no results message if needed
     const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
     updateNoResultsMessage(visibleCards.length === 0);
@@ -421,11 +421,11 @@ function applyFilters() {
 function updateNoResultsMessage(show) {
     const grid = document.getElementById('routinesGrid');
     const existingMessage = document.getElementById('no-results-message');
-    
+
     if (existingMessage) {
         existingMessage.remove();
     }
-    
+
     if (show) {
         const noResultsHTML = `
             <div id="no-results-message" class="col-12 text-center py-5">
@@ -445,12 +445,12 @@ function clearFilters() {
     document.getElementById('filterLevel').value = '';
     document.getElementById('filterType').value = '';
     document.getElementById('filterDuration').value = '';
-    
+
     const cards = document.querySelectorAll('.routine-card');
     cards.forEach(card => {
         card.style.display = 'block';
     });
-    
+
     updateNoResultsMessage(false);
 }
 
@@ -458,32 +458,32 @@ function addToFavorites(routineName) {
     if (!favorites.includes(routineName)) {
         favorites.push(routineName);
         localStorage.setItem('favoriteRoutines', JSON.stringify(favorites));
-        
+
         // Update UI
         const btn = event.target.closest('button');
         btn.innerHTML = '<i class="fas fa-heart text-danger"></i>';
         btn.classList.remove('btn-outline-light');
         btn.classList.add('btn-light');
-        
+
         showToast('Rutina agregada a favoritos', 'success');
     } else {
         // Remove from favorites
         favorites = favorites.filter(name => name !== routineName);
         localStorage.setItem('favoriteRoutines', JSON.stringify(favorites));
-        
+
         // Update UI
         const btn = event.target.closest('button');
         btn.innerHTML = '<i class="fas fa-heart"></i>';
         btn.classList.remove('btn-light');
         btn.classList.add('btn-outline-light');
-        
+
         showToast('Rutina removida de favoritos', 'info');
     }
 }
 
 function viewMyFavorites() {
     const favoritesContent = document.getElementById('favoritesContent');
-    
+
     if (favorites.length === 0) {
         favoritesContent.innerHTML = `
             <div class="text-center py-4">
@@ -508,7 +508,7 @@ function viewMyFavorites() {
                         <div class="flex-grow-1">
                             <h6 class="mb-1">${routine.nombre}</h6>
                             <small class="text-muted d-block">
-                                <i class="fas fa-clock me-1"></i>${routine.duracion} | 
+                                <i class="fas fa-clock me-1"></i>${routine.duracion} |
                                 <i class="fas fa-signal me-1"></i>${routine.nivel}
                             </small>
                         </div>
@@ -526,7 +526,7 @@ function viewMyFavorites() {
         });
         favoritesContent.innerHTML = favoritesHTML;
     }
-    
+
     const modal = new bootstrap.Modal(document.getElementById('favoritesModal'));
     modal.show();
 }
@@ -544,18 +544,18 @@ function removeFromFavorites(routineName) {
 
 function viewRoutineDetails(routineName) {
     const routine = routinesData.find(r => r.nombre === routineName);
-    
+
     if (routine) {
-        document.getElementById('routineDetailsTitle').innerHTML = 
+        document.getElementById('routineDetailsTitle').innerHTML =
             '<i class="fas fa-info-circle me-2"></i>' + routine.nombre;
-        
+
         document.getElementById('routineDetailsBody').innerHTML = `
             <div class="row">
                 <div class="col-12 mb-3">
                     <h6 class="text-primary">Descripción</h6>
                     <p>${routine.descripcion}</p>
                 </div>
-                
+
                 <div class="col-md-4 mb-3 text-center">
                     <div class="border-end">
                         <i class="fas fa-clock fa-2x text-primary mb-2"></i>
@@ -563,7 +563,7 @@ function viewRoutineDetails(routineName) {
                         <div class="fw-bold">${routine.duracion}</div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 mb-3 text-center">
                     <div class="border-end">
                         <i class="fas fa-dumbbell fa-2x text-success mb-2"></i>
@@ -571,29 +571,29 @@ function viewRoutineDetails(routineName) {
                         <div class="fw-bold">${routine.tipo}</div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 mb-3 text-center">
                     <i class="fas fa-signal fa-2x text-info mb-2"></i>
                     <div class="small text-muted">Nivel</div>
                     <div class="fw-bold">${routine.nivel}</div>
                 </div>
-                
+
                 <div class="col-12">
                     <h6 class="text-primary">Ejercicios Incluidos</h6>
                     <ol class="list-group list-group-numbered">
-                        ${routine.ejercicios.map(ejercicio => 
+                        ${routine.ejercicios.map(ejercicio =>
                             `<li class="list-group-item">${ejercicio}</li>`
                         ).join('')}
                     </ol>
                 </div>
             </div>
         `;
-        
+
         document.getElementById('startFromDetailsBtn').onclick = () => {
             bootstrap.Modal.getInstance(document.getElementById('routineDetailsModal')).hide();
             startRoutine(routineName);
         };
-        
+
         const modal = new bootstrap.Modal(document.getElementById('routineDetailsModal'));
         modal.show();
     }
@@ -602,57 +602,57 @@ function viewRoutineDetails(routineName) {
 function startRoutine(routineName) {
     currentRoutine = routinesData.find(r => r.nombre === routineName);
     if (!currentRoutine) return;
-    
+
     // Reset variables
     currentExerciseIndex = 0;
     routineStartTime = Date.now();
-    
+
     // Update modal
-    document.getElementById('timerRoutineTitle').innerHTML = 
+    document.getElementById('timerRoutineTitle').innerHTML =
         '<i class="fas fa-play-circle me-2"></i>' + currentRoutine.nombre;
-    
+
     // Start timer
     routineTimer = setInterval(updateTimer, 1000);
-    
+
     // Show first exercise
     showCurrentExercise();
-    
+
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('routineTimerModal'));
     modal.show();
-    
+
     showToast('¡Rutina iniciada! ¡Dale con todo!', 'success');
 }
 
 function updateTimer() {
     if (!routineStartTime) return;
-    
+
     const elapsed = Math.floor((Date.now() - routineStartTime) / 1000);
     const minutes = Math.floor(elapsed / 60);
     const seconds = elapsed % 60;
-    
-    document.getElementById('routineTimer').textContent = 
+
+    document.getElementById('routineTimer').textContent =
         `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function showCurrentExercise() {
     if (!currentRoutine || currentExerciseIndex >= currentRoutine.ejercicios.length) return;
-    
+
     const exercise = currentRoutine.ejercicios[currentExerciseIndex];
     document.getElementById('currentExercise').textContent = exercise;
-    document.getElementById('exerciseInstructions').textContent = 
+    document.getElementById('exerciseInstructions').textContent =
         'Sigue las instrucciones del ejercicio y toma tu tiempo.';
-    
+
     // Update progress
     const progress = ((currentExerciseIndex + 1) / currentRoutine.ejercicios.length) * 100;
     document.getElementById('progressBar').style.width = progress + '%';
-    document.getElementById('progressText').textContent = 
+    document.getElementById('progressText').textContent =
         `${currentExerciseIndex + 1}/${currentRoutine.ejercicios.length}`;
 }
 
 function nextExercise() {
     currentExerciseIndex++;
-    
+
     if (currentExerciseIndex >= currentRoutine.ejercicios.length) {
         completeRoutine();
     } else {
@@ -665,7 +665,7 @@ function pauseRoutine() {
         clearInterval(routineTimer);
         routineTimer = null;
         showToast('Rutina pausada', 'warning');
-        
+
         // Update button to resume
         const pauseBtn = event.target;
         pauseBtn.innerHTML = '<i class="fas fa-play me-2"></i>Reanudar';
@@ -676,7 +676,7 @@ function pauseRoutine() {
 function resumeRoutine() {
     routineTimer = setInterval(updateTimer, 1000);
     showToast('Rutina reanudada', 'success');
-    
+
     // Update button back to pause
     const resumeBtn = event.target;
     resumeBtn.innerHTML = '<i class="fas fa-pause me-2"></i>Pausar';
@@ -689,10 +689,10 @@ function stopRoutine() {
             clearInterval(routineTimer);
             routineTimer = null;
         }
-        
+
         bootstrap.Modal.getInstance(document.getElementById('routineTimerModal')).hide();
         showToast('Rutina terminada', 'info');
-        
+
         // Reset variables
         currentRoutine = null;
         currentExerciseIndex = 0;
@@ -705,16 +705,16 @@ function completeRoutine() {
         clearInterval(routineTimer);
         routineTimer = null;
     }
-    
+
     const totalTime = Math.floor((Date.now() - routineStartTime) / 1000);
     const minutes = Math.floor(totalTime / 60);
-    
+
     bootstrap.Modal.getInstance(document.getElementById('routineTimerModal')).hide();
-    
+
     setTimeout(() => {
         alert(`¡Felicidades! 🎉\n\nHas completado la rutina "${currentRoutine.nombre}"\n\nTiempo total: ${minutes} minutos\n\n¡Excelente trabajo!`);
     }, 500);
-    
+
     // Reset variables
     currentRoutine = null;
     currentExerciseIndex = 0;
@@ -733,16 +733,16 @@ function requestCustomRoutine() {
 function submitCustomRequest() {
     const form = document.getElementById('customRoutineForm');
     const formData = new FormData(form);
-    
+
     // Validate form
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
     }
-    
+
     // Simulate submission
     bootstrap.Modal.getInstance(document.getElementById('customRoutineModal')).hide();
-    
+
     setTimeout(() => {
         alert('¡Solicitud enviada exitosamente!\n\nNuestro equipo de entrenadores revisará tus requerimientos y te contactará en 24-48 horas con tu rutina personalizada.\n\n¡Gracias por confiar en nosotros!');
         form.reset();
@@ -760,9 +760,9 @@ function showToast(message, type) {
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    
+
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
         toast.remove();
     }, 3000);
@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Add event listeners for filters
     document.getElementById('filterLevel').addEventListener('change', applyFilters);
     document.getElementById('filterType').addEventListener('change', applyFilters);

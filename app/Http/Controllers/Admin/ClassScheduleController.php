@@ -148,7 +148,7 @@ class ClassScheduleController extends Controller
             }
 
             $schedule->delete();
-            
+
             return redirect()->route('admin.classes.show', $schedule->gym_class_id)
                            ->with('success', 'Horario eliminado exitosamente.');
         } catch (\Exception $e) {

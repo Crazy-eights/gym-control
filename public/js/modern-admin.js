@@ -10,7 +10,7 @@ window.setupModalAccessibility = function(modalElement) {
         // Asegurar que el foco esté en el modal
         this.focus();
     });
-    
+
     modalElement.addEventListener('hidden.bs.modal', function() {
         this.setAttribute('aria-hidden', 'true');
     });
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // === ESTADO DEL SIDEBAR ===
     let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-    
+
     // Aplicar estado inicial
     if (sidebarCollapsed) {
         sidebar.classList.add('collapsed');
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
             sidebarCollapsed = !sidebarCollapsed;
-            
+
             if (sidebarCollapsed) {
                 sidebar.classList.add('collapsed');
                 if (mainContent) {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     mainContent.style.marginLeft = 'var(--sidebar-width)';
                 }
             }
-            
+
             // Guardar estado
             localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
         });
@@ -93,11 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('.header-search-input');
     if (searchInput) {
         let searchTimeout;
-        
+
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
             const query = this.value.trim();
-            
+
             if (query.length >= 2) {
                 searchTimeout = setTimeout(() => {
                     performSearch(query);
@@ -110,13 +110,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function performSearch(query) {
         // Aquí puedes implementar la lógica de búsqueda
         console.log('Buscando:', query);
-        
+
         // Ejemplo: buscar en la navegación
         const sidebarLinks = document.querySelectorAll('.sidebar-text');
         sidebarLinks.forEach(link => {
             const text = link.textContent.toLowerCase();
             const item = link.closest('.sidebar-item');
-            
+
             if (text.includes(query.toLowerCase())) {
                 item.style.display = 'block';
                 item.style.background = 'rgba(76, 175, 80, 0.1)';
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // === TOOLTIPS PARA SIDEBAR COLAPSADO ===
     function initializeTooltips() {
         const sidebarLinks = document.querySelectorAll('.sidebar-link');
-        
+
         sidebarLinks.forEach(link => {
             link.addEventListener('mouseenter', function() {
                 if (sidebar.classList.contains('collapsed')) {
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-            
+
             link.addEventListener('mouseleave', function() {
                 const tooltip = this.querySelector('.sidebar-tooltip');
                 if (tooltip) {
@@ -171,13 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateDateTime() {
         const dateDay = document.querySelector('.header-date-day');
         const dateFull = document.querySelector('.header-date-full');
-        
+
         if (dateDay && dateFull) {
             const now = new Date();
             const day = now.getDate().toString().padStart(2, '0');
             const month = now.toLocaleDateString('es-ES', { month: 'short' });
             const year = now.getFullYear();
-            
+
             dateDay.textContent = day;
             dateFull.textContent = `${month} ${year}`;
         }
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // === RESPONSIVE HANDLING ===
     function handleResize() {
         const isMobile = window.innerWidth <= 768;
-        
+
         if (isMobile && sidebar.classList.contains('mobile-open')) {
             // No hacer nada, mantener el estado móvil
         } else if (!isMobile) {
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sidebarToggle.click();
             }
         }
-        
+
         // Escape: Cerrar dropdowns y overlays
         if (e.key === 'Escape') {
             headerUser?.classList.remove('active');
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
-        
+
         // Ctrl/Cmd + K: Focus search
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-2px)';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
@@ -277,14 +277,14 @@ window.ModernAdmin = {
         // Implementar sistema de toast personalizado
         console.log(`Toast [${type}]: ${message}`);
     },
-    
+
     // Función para confirmar acciones
     confirm: function(message, callback) {
         if (confirm(message)) {
             callback();
         }
     },
-    
+
     // Función para cargar contenido dinámico
     loadContent: function(url, containerId) {
         fetch(url)

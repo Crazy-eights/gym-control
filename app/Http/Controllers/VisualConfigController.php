@@ -12,7 +12,7 @@ class VisualConfigController extends Controller
     public function index()
     {
         $config = VisualConfig::first() ?? new VisualConfig();
-        
+
         return view('admin.visual-config.index', compact('config'));
     }
 
@@ -33,18 +33,18 @@ class VisualConfigController extends Controller
         ]);
 
         $config = VisualConfig::first() ?? new VisualConfig();
-        
+
         // Procesar archivos
         if ($request->hasFile('logo')) {
             $logoPath = $request->file('logo')->store('logos', 'public');
             $config->logo = $logoPath;
         }
-        
+
         if ($request->hasFile('secondary_logo')) {
             $secondaryLogoPath = $request->file('secondary_logo')->store('logos', 'public');
             $config->secondary_logo = $secondaryLogoPath;
         }
-        
+
         if ($request->hasFile('favicon')) {
             $faviconPath = $request->file('favicon')->store('favicons', 'public');
             $config->favicon = $faviconPath;
@@ -74,7 +74,7 @@ class VisualConfigController extends Controller
     public function reset()
     {
         $config = VisualConfig::first();
-        
+
         if ($config) {
             // Eliminar archivos antiguos
             if ($config->logo) {
@@ -86,7 +86,7 @@ class VisualConfigController extends Controller
             if ($config->favicon) {
                 Storage::disk('public')->delete($config->favicon);
             }
-            
+
             $config->delete();
         }
 
@@ -263,7 +263,7 @@ a:hover {
 
         // Crear directorio si no existe
         Storage::disk('public')->makeDirectory('css');
-        
+
         // Guardar CSS
         Storage::disk('public')->put('css/dynamic-theme.css', $css);
     }

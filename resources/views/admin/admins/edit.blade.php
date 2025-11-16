@@ -25,37 +25,37 @@
                 <div class="box-header">
                     <h3 class="box-title">Información del Administrador</h3>
                 </div>
-                
+
                 <div class="box-body">
                     <form method="POST" action="{{ route('admin.admins.update', $admin) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        
+
                         <div class="row">
                             <!-- Información Personal -->
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="firstname" class="form-label">Nombre *</label>
-                                    <input type="text" 
-                                           class="form-control @error('firstname') is-invalid @enderror" 
-                                           id="firstname" 
-                                           name="firstname" 
-                                           value="{{ old('firstname', $admin->firstname) }}" 
+                                    <input type="text"
+                                           class="form-control @error('firstname') is-invalid @enderror"
+                                           id="firstname"
+                                           name="firstname"
+                                           value="{{ old('firstname', $admin->firstname) }}"
                                            required>
                                     @error('firstname')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="lastname" class="form-label">Apellido *</label>
-                                    <input type="text" 
-                                           class="form-control @error('lastname') is-invalid @enderror" 
-                                           id="lastname" 
-                                           name="lastname" 
-                                           value="{{ old('lastname', $admin->lastname) }}" 
+                                    <input type="text"
+                                           class="form-control @error('lastname') is-invalid @enderror"
+                                           id="lastname"
+                                           name="lastname"
+                                           value="{{ old('lastname', $admin->lastname) }}"
                                            required>
                                     @error('lastname')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -69,26 +69,26 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Nombre de Usuario *</label>
-                                    <input type="text" 
-                                           class="form-control @error('username') is-invalid @enderror" 
-                                           id="username" 
-                                           name="username" 
-                                           value="{{ old('username', $admin->username) }}" 
+                                    <input type="text"
+                                           class="form-control @error('username') is-invalid @enderror"
+                                           id="username"
+                                           name="username"
+                                           value="{{ old('username', $admin->username) }}"
                                            required>
                                     @error('username')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email *</label>
-                                    <input type="email" 
-                                           class="form-control @error('email') is-invalid @enderror" 
-                                           id="email" 
-                                           name="email" 
-                                           value="{{ old('email', $admin->email) }}" 
+                                    <input type="email"
+                                           class="form-control @error('email') is-invalid @enderror"
+                                           id="email"
+                                           name="email"
+                                           value="{{ old('email', $admin->email) }}"
                                            required>
                                     @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -102,9 +102,9 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Nueva Contraseña</label>
-                                    <input type="password" 
-                                           class="form-control @error('password') is-invalid @enderror" 
-                                           id="password" 
+                                    <input type="password"
+                                           class="form-control @error('password') is-invalid @enderror"
+                                           id="password"
                                            name="password">
                                     <div class="form-text">Dejar en blanco para mantener la contraseña actual</div>
                                     @error('password')
@@ -112,13 +112,13 @@
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="password_confirmation" class="form-label">Confirmar Nueva Contraseña</label>
-                                    <input type="password" 
-                                           class="form-control" 
-                                           id="password_confirmation" 
+                                    <input type="password"
+                                           class="form-control"
+                                           id="password_confirmation"
                                            name="password_confirmation">
                                 </div>
                             </div>
@@ -127,29 +127,29 @@
                         <!-- Foto de Perfil -->
                         <div class="mb-3">
                             <label for="photo" class="form-label">Foto de Perfil</label>
-                            
+
                             <!-- Foto actual -->
                             @if($admin->photo && Storage::disk('public')->exists($admin->photo))
                                 <div class="current-photo mb-3">
                                     <p class="form-text">Foto actual:</p>
-                                    <img src="{{ Storage::url($admin->photo) }}" 
-                                         alt="{{ $admin->firstname }}" 
-                                         class="img-thumbnail" 
+                                    <img src="{{ Storage::url($admin->photo) }}"
+                                         alt="{{ $admin->firstname }}"
+                                         class="img-thumbnail"
                                          style="max-width: 150px; max-height: 150px;">
                                 </div>
                             @endif
-                            
-                            <input type="file" 
-                                   class="form-control @error('photo') is-invalid @enderror" 
-                                   id="photo" 
-                                   name="photo" 
+
+                            <input type="file"
+                                   class="form-control @error('photo') is-invalid @enderror"
+                                   id="photo"
+                                   name="photo"
                                    accept="image/*"
                                    onchange="previewImage(event)">
                             @error('photo')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <div class="form-text">Formatos soportados: JPEG, PNG, JPG, GIF. Tamaño máximo: 2MB</div>
-                            
+
                             <!-- Preview de la nueva imagen -->
                             <div class="mt-3" id="imagePreview" style="display: none;">
                                 <p class="form-text">Nueva foto:</p>
@@ -178,7 +178,7 @@ function previewImage(event) {
     const file = event.target.files[0];
     const preview = document.getElementById('preview');
     const previewContainer = document.getElementById('imagePreview');
-    
+
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {

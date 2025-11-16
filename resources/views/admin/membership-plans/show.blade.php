@@ -78,7 +78,7 @@
                         <div class="stat-number text-primary">{{ $estadisticas['total_miembros'] }}</div>
                         <div class="stat-label text-muted">Total de Miembros</div>
                     </div>
-                    
+
                     <div class="stat-item text-center mb-3">
                         <div class="stat-number text-success">{{ $estadisticas['miembros_activos'] }}</div>
                         <div class="stat-label text-muted">Miembros Activos</div>
@@ -113,7 +113,7 @@
                         <a href="{{ route('admin.membership-plans.edit', $membershipPlan) }}" class="btn btn-warning btn-modern">
                             <i class="fas fa-edit me-2"></i>Editar Plan
                         </a>
-                        
+
                         <form action="{{ route('admin.membership-plans.duplicate', $membershipPlan) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-info btn-modern w-100" onclick="return confirm('¿Duplicar este plan?')">
@@ -199,11 +199,11 @@
                             </td>
                             <td>
                                 <div class="d-flex gap-1">
-                                    <a href="{{ route('admin.socios.show', $miembro) }}" 
+                                    <a href="{{ route('admin.socios.show', $miembro) }}"
                                        class="btn btn-sm btn-info" title="Ver detalles">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('admin.socios.edit', $miembro) }}" 
+                                    <a href="{{ route('admin.socios.edit', $miembro) }}"
                                        class="btn btn-sm btn-warning" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -220,7 +220,7 @@
             <div class="d-flex justify-content-between align-items-center mt-3">
                 <div>
                     <p class="text-muted mb-0 small">
-                        Mostrando {{ $miembros->firstItem() }} a {{ $miembros->lastItem() }} 
+                        Mostrando {{ $miembros->firstItem() }} a {{ $miembros->lastItem() }}
                         de {{ $miembros->total() }} miembros
                     </p>
                 </div>

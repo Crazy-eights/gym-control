@@ -11,17 +11,17 @@ Route::get('/demo-reset-success/{email}', function ($email) {
         // Buscar usuario
         $member = Member::where('email', $email)->first();
         $admin = Admin::where('email', $email)->first();
-        
+
         if (!$member && !$admin) {
             return response()->json(['error' => 'Usuario no encontrado']);
         }
-        
+
         $user = $member ?: $admin;
         $userType = $member ? 'member' : 'admin';
-        
+
         // Crear token real
         $token = Str::random(60);
-        
+
         if ($userType === 'member') {
             // Guardar en tabla de miembros
             DB::table('member_password_resets')->updateOrInsert(
@@ -40,10 +40,10 @@ Route::get('/demo-reset-success/{email}', function ($email) {
                 'created_at' => now()
             ]);
         }
-        
+
         // Crear URL de reset
         $resetUrl = url('/password/reset/' . $token . '?email=' . urlencode($email));
-        
+
         return response()->json([
             'success' => true,
             'message' => '✅ DEMOSTRACIÓN: Token de recuperación creado exitosamente',
@@ -63,7 +63,7 @@ Route::get('/demo-reset-success/{email}', function ($email) {
             'database_status' => 'Token guardado en base de datos correctamente',
             'next_step' => 'El usuario haría clic en el enlace del email para restablecer su contraseña'
         ]);
-        
+
     } catch (\Exception $e) {
         return response()->json([
             'error' => $e->getMessage(),

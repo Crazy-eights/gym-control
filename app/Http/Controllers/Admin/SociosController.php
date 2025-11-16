@@ -264,7 +264,7 @@ class SociosController extends Controller
                     $startDate = \Carbon\Carbon::parse($validated['subscription_start_date']);
                     // Solo recalcular si la fecha de fin no se proporcionó o es diferente al cálculo
                     $calculatedEndDate = $startDate->copy()->addDays($plan->duration_days);
-                    if (!isset($validated['subscription_end_date']) || 
+                    if (!isset($validated['subscription_end_date']) ||
                         \Carbon\Carbon::parse($validated['subscription_end_date'])->ne($calculatedEndDate)) {
                         $validated['subscription_end_date'] = $calculatedEndDate->format('Y-m-d');
                     }
@@ -305,7 +305,6 @@ class SociosController extends Controller
             $socio->delete();
 
 
-
             return redirect()->route('admin.socios.index')
                 ->with('success', 'Socio eliminado exitosamente.');
 
@@ -336,7 +335,6 @@ class SociosController extends Controller
                 'subscription_start_date' => $startDate,
                 'subscription_end_date' => $endDate,
             ]);
-
 
 
             return redirect()->back()

@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') - Gym Control</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <style>
         :root {
             --primary-color: #667eea;
@@ -14,33 +14,33 @@
             --sidebar-bg: #2c3e50;
             --sidebar-text: #ecf0f1;
         }
-        
+
         body {
             background-color: #f8f9fa;
         }
-        
+
         .sidebar {
             background: linear-gradient(180deg, var(--sidebar-bg) 0%, #34495e 100%);
             min-height: 100vh;
             color: var(--sidebar-text);
         }
-        
+
         .sidebar .nav-link {
             color: var(--sidebar-text);
             border-radius: 0.375rem;
             margin: 0.125rem 0;
         }
-        
+
         .sidebar .nav-link:hover {
             background-color: rgba(255,255,255,0.1);
             color: white;
         }
-        
+
         .sidebar .nav-link.active {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
         }
-        
+
         .navbar-brand {
             font-weight: 700;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -48,7 +48,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .content-header {
             background: white;
             padding: 1rem;
@@ -56,19 +56,19 @@
             border-radius: 0.375rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .box {
             background: white;
             border-radius: 0.375rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 1rem;
         }
-        
+
         .box-header {
             padding: 1rem;
             border-bottom: 1px solid #dee2e6;
         }
-        
+
         .box-body {
             padding: 1rem;
         }
@@ -86,16 +86,16 @@
                         </h4>
                         <small class="text-muted">Panel Admin</small>
                     </div>
-                    
+
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
                                href="{{ route('admin.dashboard') }}">
                                 <i class="fas fa-tachometer-alt"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}"
                                href="{{ route('admin.admins.index') }}">
                                 <i class="fas fa-user-shield"></i> Administradores
                             </a>
@@ -121,21 +121,21 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"
                                href="{{ route('admin.settings.index') }}">
                                 <i class="fas fa-cogs"></i> Configuración
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.mail.config.*') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.mail.config.*') ? 'active' : '' }}"
                                href="{{ route('admin.mail.config.index') }}">
                                 <i class="fas fa-envelope"></i> Config. Email
                             </a>
                         </li>
                     </ul>
-                    
+
                     <hr class="my-3">
-                    
+
                     <div class="text-center">
                         <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
@@ -146,7 +146,7 @@
                     </div>
                 </div>
             </nav>
-            
+
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <!-- Top navbar -->
@@ -156,11 +156,11 @@
                             <span class="navbar-brand mb-0 h1">
                                 <i class="fas fa-dumbbell"></i> Gym Control
                             </span>
-                            
+
                             <div class="navbar-nav ms-auto">
                                 <div class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                        <i class="fas fa-user-circle"></i> 
+                                        <i class="fas fa-user-circle"></i>
                                         {{ Auth::guard('admin')->user()->firstname ?? 'Admin' }}
                                     </a>
                                     <ul class="dropdown-menu">
@@ -180,13 +180,13 @@
                         </div>
                     </nav>
                 </div>
-                
+
                 @yield('content')
             </main>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     @stack('scripts')
 </body>
 </html>

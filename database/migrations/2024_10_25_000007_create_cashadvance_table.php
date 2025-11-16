@@ -18,8 +18,8 @@ class CreateCashadvanceTable extends Migration
             $table->id(); // int(11) NOT NULL AUTO_INCREMENT
             $table->date('date_advance');
             // Esta columna NO es una llave foránea, es un varchar
-            $table->string('employee_id', 15); 
-            $table->double('amount');      
+            $table->string('employee_id', 15);
+            $table->double('amount');
         });
         }
     }

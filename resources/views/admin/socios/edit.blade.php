@@ -33,18 +33,18 @@
                     <form action="{{ route('admin.socios.update', $socio) }}" method="POST" enctype="multipart/form-data" id="socioEditForm">
                         @csrf
                         @method('PUT')
-                        
+
                         <!-- Foto actual -->
                         <div class="row mb-4">
                             <div class="col-12 text-center">
                                 <h6 class="text-primary">Foto Actual</h6>
                                 @if($socio->photo)
-                                    <img src="{{ asset('storage/' . $socio->photo) }}" 
-                                         alt="Foto actual de {{ $socio->full_name }}" 
+                                    <img src="{{ asset('storage/' . $socio->photo) }}"
+                                         alt="Foto actual de {{ $socio->full_name }}"
                                          class="rounded-circle img-thumbnail mb-2"
                                          style="width: 120px; height: 120px; object-fit: cover;">
                                 @else
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-2" 
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-2"
                                          style="width: 120px; height: 120px;">
                                         <i class="fas fa-user fa-3x text-white"></i>
                                     </div>
@@ -64,8 +64,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="member_id" class="form-label">ID del Socio <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('member_id') is-invalid @enderror" 
-                                       id="member_id" name="member_id" value="{{ old('member_id', $socio->member_id) }}" 
+                                <input type="text" class="form-control @error('member_id') is-invalid @enderror"
+                                       id="member_id" name="member_id" value="{{ old('member_id', $socio->member_id) }}"
                                        placeholder="Ej: SOC001" required>
                                 @error('member_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -73,7 +73,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="photo" class="form-label">Cambiar Foto</label>
-                                <input type="file" class="form-control @error('photo') is-invalid @enderror" 
+                                <input type="file" class="form-control @error('photo') is-invalid @enderror"
                                        id="photo" name="photo" accept="image/*">
                                 @error('photo')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -85,8 +85,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="firstname" class="form-label">Nombre <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('firstname') is-invalid @enderror" 
-                                       id="firstname" name="firstname" value="{{ old('firstname', $socio->firstname) }}" 
+                                <input type="text" class="form-control @error('firstname') is-invalid @enderror"
+                                       id="firstname" name="firstname" value="{{ old('firstname', $socio->firstname) }}"
                                        placeholder="Nombre del socio" required>
                                 @error('firstname')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -94,8 +94,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="lastname" class="form-label">Apellidos <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('lastname') is-invalid @enderror" 
-                                       id="lastname" name="lastname" value="{{ old('lastname', $socio->lastname) }}" 
+                                <input type="text" class="form-control @error('lastname') is-invalid @enderror"
+                                       id="lastname" name="lastname" value="{{ old('lastname', $socio->lastname) }}"
                                        placeholder="Apellidos del socio" required>
                                 @error('lastname')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -106,8 +106,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="contact_info" class="form-label">Información de Contacto <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('contact_info') is-invalid @enderror" 
-                                       id="contact_info" name="contact_info" value="{{ old('contact_info', $socio->contact_info) }}" 
+                                <input type="text" class="form-control @error('contact_info') is-invalid @enderror"
+                                       id="contact_info" name="contact_info" value="{{ old('contact_info', $socio->contact_info) }}"
                                        placeholder="Teléfono o email" required>
                                 @error('contact_info')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -130,7 +130,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="birthdate" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control @error('birthdate') is-invalid @enderror" 
+                                <input type="date" class="form-control @error('birthdate') is-invalid @enderror"
                                        id="birthdate" name="birthdate" value="{{ old('birthdate', $socio->birthdate ? $socio->birthdate->format('Y-m-d') : '') }}">
                                 @error('birthdate')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -138,8 +138,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="address" class="form-label">Dirección</label>
-                                <input type="text" class="form-control @error('address') is-invalid @enderror" 
-                                       id="address" name="address" value="{{ old('address', $socio->address) }}" 
+                                <input type="text" class="form-control @error('address') is-invalid @enderror"
+                                       id="address" name="address" value="{{ old('address', $socio->address) }}"
                                        placeholder="Dirección completa">
                                 @error('address')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -177,8 +177,8 @@
                         <div class="row mb-3" id="membership-dates" style="{{ $socio->plan_id ? 'display: block;' : 'display: none;' }}">
                             <div class="col-md-6">
                                 <label for="subscription_start_date" class="form-label">Fecha de Inicio</label>
-                                <input type="date" class="form-control @error('subscription_start_date') is-invalid @enderror" 
-                                       id="subscription_start_date" name="subscription_start_date" 
+                                <input type="date" class="form-control @error('subscription_start_date') is-invalid @enderror"
+                                       id="subscription_start_date" name="subscription_start_date"
                                        value="{{ old('subscription_start_date', $socio->subscription_start_date ? $socio->subscription_start_date->format('Y-m-d') : '') }}">
                                 @error('subscription_start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -186,8 +186,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="subscription_end_date" class="form-label">Fecha de Vencimiento</label>
-                                <input type="date" class="form-control @error('subscription_end_date') is-invalid @enderror" 
-                                       id="subscription_end_date" name="subscription_end_date" 
+                                <input type="date" class="form-control @error('subscription_end_date') is-invalid @enderror"
+                                       id="subscription_end_date" name="subscription_end_date"
                                        value="{{ old('subscription_end_date', $socio->subscription_end_date ? $socio->subscription_end_date->format('Y-m-d') : '') }}" readonly>
                                 @error('subscription_end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>

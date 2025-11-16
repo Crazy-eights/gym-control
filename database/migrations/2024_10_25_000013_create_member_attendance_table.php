@@ -16,7 +16,7 @@ class CreateMemberAttendanceTable extends Migration
         if (!Schema::hasTable('member_attendance')) {
 
             Schema::create('member_attendance', function (Blueprint $table) {
-                $table->id(); 
+                $table->id();
 
                 $table->foreignId('member_id')->constrained('members')->onDelete('cascade');
 

@@ -11,23 +11,23 @@
     <title>@yield('title', 'Panel de Administración') - Gym Control</title>
 
     <!-- Modern Fonts -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css">
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" type="text/css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
     <!-- Modern Theme CSS -->
     <link href="{{ asset('css/modern-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar-modern.css') }}" rel="stylesheet">
     <link href="{{ asset('css/header-modern.css') }}" rel="stylesheet">
-    
+
     @stack('styles')
 </head>
 
 <body class="modern-layout">
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
+
     <!-- Modern Sidebar -->
     <nav class="sidebar-modern" id="sidebar">
         <!-- Logo Section -->
@@ -57,7 +57,7 @@
             <!-- Gestión Section -->
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Gestión</div>
-                
+
                 <!-- Socios -->
                 <div class="sidebar-item">
                     <a href="{{ route('admin.socios.index') }}" class="sidebar-link {{ request()->routeIs('admin.socios.*') ? 'active' : '' }}">
@@ -116,7 +116,7 @@
             <!-- Administración Section -->
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Administración</div>
-                
+
                 <!-- Administradores -->
                 <div class="sidebar-item">
                     <a href="{{ route('admin.admins.index') }}" class="sidebar-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
@@ -132,7 +132,7 @@
             <!-- Configuración Section -->
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Sistema</div>
-                
+
                 <!-- Configuración General -->
                 <div class="sidebar-item">
                     <a href="{{ route('admin.settings.index') }}" class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
@@ -176,7 +176,7 @@
                 </div>
                 <div class="sidebar-user-details">
                     <div class="sidebar-user-name">
-                        {{ auth('admin')->check() ? (auth('admin')->user()->firstname ?? 'Admin') : 'Admin' }} 
+                        {{ auth('admin')->check() ? (auth('admin')->user()->firstname ?? 'Admin') : 'Admin' }}
                         {{ auth('admin')->check() ? (auth('admin')->user()->lastname ?? '') : '' }}
                     </div>
                     <div class="sidebar-user-role">Administrador</div>
@@ -255,7 +255,7 @@
                         <i class="fas fa-cog header-dropdown-icon"></i>
                         Configuración
                     </a>
-                    <a href="{{ route('logout') }}" class="header-dropdown-item" 
+                    <a href="{{ route('logout') }}" class="header-dropdown-item"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="fas fa-sign-out-alt header-dropdown-icon"></i>
                         Cerrar Sesión
@@ -302,9 +302,9 @@
     </form>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="{{ asset('js/modern-admin.js') }}"></script>
-    
+
     @stack('scripts')
 
     <style>
@@ -315,17 +315,17 @@
             transition: margin-left var(--transition-speed) ease;
             min-height: calc(100vh - var(--header-height));
         }
-        
+
         .sidebar-modern.collapsed ~ * .main-content {
             margin-left: var(--sidebar-collapsed-width);
         }
-        
+
         .content-wrapper {
             padding: var(--spacing-xl);
             background: var(--bg-secondary);
             min-height: 100%;
         }
-        
+
         @media (max-width: 768px) {
             .main-content {
                 margin-left: 0;

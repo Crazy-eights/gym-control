@@ -14,35 +14,35 @@
   --primary-color: #4CAF50;           /* Verde menta vibrante */
   --primary-hover: #45a049;           /* Verde más oscuro para hover */
   --primary-light: #e8f5e8;           /* Verde muy claro para fondos */
-  
+
   --secondary-color: #00BCD4;         /* Azul turquesa alternativo */
   --secondary-hover: #00acc1;         /* Turquesa hover */
   --secondary-light: #e0f2f1;         /* Turquesa claro */
-  
+
   /* === FONDOS Y PANELES === */
   --bg-primary: #ffffff;              /* Blanco puro */
   --bg-secondary: #F8F9FA;            /* Gris muy claro */
   --bg-tertiary: #E9ECEF;             /* Gris claro para divisores */
   --bg-dark: #2c3e50;                 /* Azul noche para sidebar */
   --bg-dark-light: #34495e;           /* Azul noche más claro */
-  
+
   /* === TEXTO === */
   --text-primary: #343A40;            /* Negro suave principal */
   --text-secondary: #6C757D;          /* Gris para detalles */
   --text-light: #ADB5BD;              /* Gris claro */
   --text-white: #ffffff;              /* Blanco para sidebar */
   --text-muted: #868e96;              /* Texto muy sutil */
-  
+
   /* === ALERTAS Y ESTADOS === */
   --success: #28a745;                 /* Verde éxito */
   --warning: #ffc107;                 /* Amarillo advertencia */
   --danger: #dc3545;                  /* Rojo controlado */
   --info: #17a2b8;                    /* Azul información */
-  
+
   /* === TIPOGRAFÍA === */
   --font-headline: 'Poppins', sans-serif;     /* Para títulos y números */
   --font-body: 'Inter', sans-serif;           /* Para texto de cuerpo */
-  
+
   --font-size-xs: 0.75rem;            /* 12px */
   --font-size-sm: 0.875rem;           /* 14px */
   --font-size-base: 1rem;             /* 16px */
@@ -51,7 +51,7 @@
   --font-size-2xl: 1.5rem;            /* 24px */
   --font-size-3xl: 1.875rem;          /* 30px */
   --font-size-4xl: 2.25rem;           /* 36px */
-  
+
   /* === ESPACIADO === */
   --spacing-xs: 0.25rem;              /* 4px */
   --spacing-sm: 0.5rem;               /* 8px */
@@ -59,18 +59,18 @@
   --spacing-lg: 1.5rem;               /* 24px */
   --spacing-xl: 2rem;                 /* 32px */
   --spacing-2xl: 3rem;                /* 48px */
-  
+
   /* === BORDES Y SOMBRAS === */
   --border-radius-sm: 4px;            /* Bordes sutiles */
   --border-radius-md: 8px;            /* Bordes estándar */
   --border-radius-lg: 12px;           /* Bordes grandes */
   --border-radius-xl: 16px;           /* Bordes muy grandes */
-  
+
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1);
-  
+
   /* === LAYOUT === */
   --sidebar-width: 280px;             /* Ancho sidebar expandido */
   --sidebar-collapsed-width: 70px;    /* Ancho sidebar colapsado */
@@ -230,33 +230,33 @@ h6 { font-size: var(--font-size-base); }
   transition: all var(--transition-speed) ease;
 }
 
-.badge-primary { 
-  background-color: var(--primary-light); 
-  color: var(--primary-color); 
+.badge-primary {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
   border: 1px solid rgba(76, 175, 80, 0.2);
 }
 
-.badge-success { 
-  background-color: rgba(40, 167, 69, 0.1); 
-  color: var(--success); 
+.badge-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--success);
   border: 1px solid rgba(40, 167, 69, 0.2);
 }
 
-.badge-warning { 
-  background-color: rgba(255, 193, 7, 0.1); 
-  color: #d39e00; 
+.badge-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #d39e00;
   border: 1px solid rgba(255, 193, 7, 0.2);
 }
 
-.badge-danger { 
-  background-color: rgba(220, 53, 69, 0.1); 
-  color: var(--danger); 
+.badge-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--danger);
   border: 1px solid rgba(220, 53, 69, 0.2);
 }
 
-.badge-secondary { 
-  background-color: rgba(108, 117, 125, 0.1); 
-  color: var(--text-secondary); 
+.badge-secondary {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: var(--text-secondary);
   border: 1px solid rgba(108, 117, 125, 0.2);
 }
 
@@ -365,11 +365,11 @@ h6 { font-size: var(--font-size-base); }
     --sidebar-width: 100%;
     --sidebar-collapsed-width: 100%;
   }
-  
+
   .stat-card {
     padding: var(--spacing-lg);
   }
-  
+
   .stat-number {
     font-size: var(--font-size-2xl);
   }

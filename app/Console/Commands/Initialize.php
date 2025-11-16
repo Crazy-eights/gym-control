@@ -18,10 +18,11 @@ class Initialize extends Command
      *
      * @var string
      */
-    protected $signature = 'gym:initialize 
+    protected $signature = 'gym:initialize
                            {--fresh : Ejecutar migraciones frescas (elimina datos existentes)}
                            {--admin-email= : Email del administrador (por defecto: admin@gymcontrol.com)}
-                           {--admin-password= : Contraseña del administrador (por defecto: admin123)}';
+                           {--admin-password= : Contraseña del administrador (se generará aleatoriamente si no se especifica)}
+                           {--force-weak-password : Permitir contraseñas débiles (no recomendado para producción)}';
 
     /**
      * The console command description.
@@ -43,7 +44,27 @@ class Initialize extends Command
         // Verificar si se debe hacer fresh migration
         $fresh = $this->option('fresh');
         $adminEmail = $this->option('admin-email') ?? 'admin@gymcontrol.com';
-        $adminPassword = $this->option('admin-password') ?? 'admin123';
+        $adminPassword = $this->option('admin-password');
+        
+        // Si no se proporciona contraseña, generar una segura
+        if (!$adminPassword) {
+            $adminPassword = $this->generateSecurePassword();
+            $this->info('⚡ Contraseña generada automáticamente para el administrador');
+        } else {
+            // Validar la seguridad de la contraseña proporcionada
+            if (!$this->option('force-weak-password') && !$this->isPasswordSecure($adminPassword)) {
+                $this->error('❌ La contraseña proporcionada no es segura.');
+                $this->info('La contraseña debe tener:');
+                $this->info('- Al menos 8 caracteres');
+                $this->info('- Al menos una mayúscula');
+                $this->info('- Al menos una minúscula');
+                $this->info('- Al menos un número');
+                $this->info('- Al menos un carácter especial');
+                $this->newLine();
+                $this->info('Usa --force-weak-password para omitir esta validación (no recomendado)');
+                return 1;
+            }
+        }
 
         if ($fresh) {
             if ($this->confirm('⚠️  ¿Estás seguro de que quieres eliminar todos los datos existentes?')) {
@@ -61,22 +82,22 @@ class Initialize extends Command
 
         // Crear configuraciones básicas del sistema
         $this->createBasicSettings();
-        
+
         // Crear configuraciones visuales predeterminadas
         $this->createVisualSettings();
-        
+
         // Crear datos de ejemplo de asistencias si no existen
         $this->createSampleAttendances();
-        
+
         // Crear clases de ejemplo si no existen
         $this->createSampleClasses();
-        
+
         // Crear planes de membresía por defecto
         $this->createDefaultMembershipPlans();
-        
+
         // Crear configuración de email básica
         $this->createBasicMailSettings();
-        
+
         // Crear usuario administrador
         $this->createAdminUser($adminEmail, $adminPassword);
 
@@ -86,6 +107,17 @@ class Initialize extends Command
         $this->info('📋 Credenciales de acceso:');
         $this->info("   Email: {$adminEmail}");
         $this->info("   Contraseña: {$adminPassword}");
+        
+        // Advertencias de seguridad
+        if (!$this->option('admin-password')) {
+            $this->newLine();
+            $this->warn('⚠️  IMPORTANTE: Contraseña generada automáticamente.');
+            $this->warn('   Guarda esta contraseña en un lugar seguro.');
+            $this->warn('   Se recomienda cambiarla después del primer acceso.');
+        }
+        
+        $this->newLine();
+        $this->info('🔐 Por seguridad, considera cambiar las credenciales después del primer acceso.');
         $this->newLine();
         $this->info('🌐 Accede al sistema en: ' . config('app.url') . '/admin/login');
 
@@ -139,7 +171,7 @@ class Initialize extends Command
 
         foreach ($settings as $setting) {
             Setting::updateOrCreate(
-                ['key' => $setting['key']], 
+                ['key' => $setting['key']],
                 $setting
             );
         }
@@ -187,7 +219,7 @@ class Initialize extends Command
 
         foreach ($plans as $plan) {
             MembershipPlan::updateOrCreate(
-                ['plan_name' => $plan['plan_name']], 
+                ['plan_name' => $plan['plan_name']],
                 $plan
             );
         }
@@ -264,7 +296,7 @@ class Initialize extends Command
         $this->info('📊 Verificando datos de asistencia...');
 
         $attendanceCount = \App\Models\MemberAttendance::count();
-        
+
         if ($attendanceCount === 0) {
             $this->info('   📝 Creando datos de ejemplo de asistencias...');
             try {
@@ -286,7 +318,7 @@ class Initialize extends Command
         $this->info('🏋️ Verificando clases del gimnasio...');
 
         $classCount = \App\Models\GymClass::count();
-        
+
         if ($classCount === 0) {
             $this->info('   📝 Creando clases de ejemplo...');
             try {
@@ -298,5 +330,61 @@ class Initialize extends Command
         } else {
             $this->info("   ✅ Ya existen {$classCount} clases registradas");
         }
+    }
+
+    /**
+     * Generar una contraseña segura aleatoria
+     */
+    private function generateSecurePassword($length = 12)
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+        $password = '';
+        
+        // Asegurar que tiene al menos uno de cada tipo requerido
+        $password .= chr(rand(65, 90)); // Mayúscula
+        $password .= chr(rand(97, 122)); // Minúscula
+        $password .= chr(rand(48, 57)); // Número
+        $password .= '!@#$%^&*'[rand(0, 7)]; // Carácter especial
+        
+        // Completar el resto de la longitud
+        for ($i = 4; $i < $length; $i++) {
+            $password .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        
+        // Mezclar los caracteres para mayor seguridad
+        return str_shuffle($password);
+    }
+
+    /**
+     * Validar si una contraseña es segura
+     */
+    private function isPasswordSecure($password)
+    {
+        // Al menos 8 caracteres
+        if (strlen($password) < 8) {
+            return false;
+        }
+        
+        // Al menos una mayúscula
+        if (!preg_match('/[A-Z]/', $password)) {
+            return false;
+        }
+        
+        // Al menos una minúscula
+        if (!preg_match('/[a-z]/', $password)) {
+            return false;
+        }
+        
+        // Al menos un número
+        if (!preg_match('/[0-9]/', $password)) {
+            return false;
+        }
+        
+        // Al menos un carácter especial
+        if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+            return false;
+        }
+        
+        return true;
     }
 }

@@ -17,7 +17,7 @@ class UpdateMailSettingsAuthMethod extends Migration
         Schema::table('mail_settings', function (Blueprint $table) {
             // Agregar campo para método de autenticación
             $table->enum('auth_method', ['smtp', 'oauth_microsoft'])->default('smtp')->after('mail_encryption');
-            
+
             // Eliminar campo oauth_microsoft_enabled ya que ahora usamos auth_method
             $table->dropColumn('oauth_microsoft_enabled');
         });
@@ -39,7 +39,7 @@ class UpdateMailSettingsAuthMethod extends Migration
         Schema::table('mail_settings', function (Blueprint $table) {
             // Restaurar campo oauth_microsoft_enabled
             $table->boolean('oauth_microsoft_enabled')->default(false)->after('mail_provider');
-            
+
             // Eliminar campo auth_method
             $table->dropColumn('auth_method');
         });

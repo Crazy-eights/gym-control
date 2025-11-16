@@ -89,7 +89,6 @@ class MembershipPlansController extends Controller
             $plan = MembershipPlan::create($validated);
 
 
-
             return redirect()->route('admin.membership-plans.index')
                 ->with('success', 'Plan de membresía creado exitosamente.');
 
@@ -171,7 +170,7 @@ class MembershipPlansController extends Controller
         try {
             // Verificar si hay miembros asociados
             $cantidadMiembros = $membershipPlan->members()->count();
-            
+
             if ($cantidadMiembros > 0) {
                 return redirect()->back()
                     ->withErrors(['error' => "No se puede eliminar el plan porque tiene {$cantidadMiembros} miembro(s) asociado(s)."]);

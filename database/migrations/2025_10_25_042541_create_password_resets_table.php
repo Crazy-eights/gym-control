@@ -16,11 +16,11 @@ class CreatePasswordResetsTable extends Migration
         if (!Schema::hasTable('password_resets')) {
         Schema::create('password_resets', function (Blueprint $table) {
            $table->id(); // Tu 'id' int(11)
-            
+
             $table->foreignId('user_id')->constrained('admin')->onDelete('cascade');
             $table->string('token_hash', 128);
             $table->dateTime('expires_at');
-            
+
             // Tu 'created_at' que por defecto usa la fecha actual
             $table->timestamp('created_at')->useCurrent();
         });
@@ -36,5 +36,5 @@ class CreatePasswordResetsTable extends Migration
     {
         Schema::dropIfExists('password_resets');
     }
-    
+
 }

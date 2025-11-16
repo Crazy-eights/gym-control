@@ -19,7 +19,7 @@ class GymClassController extends Controller
         // Calcular plazas disponibles
         $totalCapacity = $classes->sum('max_participants');
         $reservedSpots = 0;
-        
+
         try {
             // Contar reservas activas para clases activas
             $reservedSpots = \App\Models\ClassBooking::join('class_schedules', 'class_bookings.class_schedule_id', '=', 'class_schedules.id')
@@ -31,7 +31,7 @@ class GymClassController extends Controller
         } catch (\Exception $e) {
             $reservedSpots = 0;
         }
-        
+
         $availableSpots = max(0, $totalCapacity - $reservedSpots);
 
         return view('admin.classes.index', compact('classes', 'totalCapacity', 'availableSpots'));
@@ -95,7 +95,7 @@ class GymClassController extends Controller
             }
 
             DB::commit();
-            
+
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -108,14 +108,14 @@ class GymClassController extends Controller
                            ->with('success', 'Clase creada exitosamente.');
         } catch (\Exception $e) {
             DB::rollback();
-            
+
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al crear la clase: ' . $e->getMessage()
                 ], 500);
             }
-            
+
             return back()->withInput()
                         ->with('error', 'Error al crear la clase: ' . $e->getMessage());
         }
@@ -124,7 +124,7 @@ class GymClassController extends Controller
     public function show(GymClass $class)
     {
         $class->load(['schedules', 'bookings.member']);
-        
+
         $stats = [
             'total_bookings' => $class->bookings()->count(),
             'upcoming_sessions' => $class->schedules()->where('active', true)->count(),
@@ -145,6 +145,23 @@ class GymClassController extends Controller
 
     public function update(Request $request, GymClass $class)
     {
+        $this->validateUpdateRequest($request);
+
+        DB::beginTransaction();
+        try {
+            $this->updateClassData($request, $class);
+            $this->updateSchedules($request, $class);
+            DB::commit();
+
+            return $this->handleSuccessResponse($request);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->handleErrorResponse($request, $e);
+        }
+    }
+
+    private function validateUpdateRequest(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -154,7 +171,6 @@ class GymClassController extends Controller
             'price' => 'required|numeric|min:0',
             'difficulty_level' => 'required|in:principiante,intermedio,avanzado',
             'active' => 'nullable',
-            // Validación para horarios
             'schedules' => 'nullable|array',
             'schedules.*.day_of_week' => 'required|integer|min:0|max:6',
             'schedules.*.start_time' => 'required|date_format:H:i',
@@ -164,69 +180,99 @@ class GymClassController extends Controller
             'schedules.*.is_recurring' => 'nullable',
             'schedules.*.active' => 'nullable'
         ]);
+    }
 
-        DB::beginTransaction();
-        try {
-            $class->update([
-                'name' => $request->name,
-                'description' => $request->description,
-                'instructor_name' => $request->instructor_name,
-                'duration_minutes' => $request->duration_minutes,
-                'max_participants' => $request->max_participants,
-                'price' => $request->price,
-                'difficulty_level' => $request->difficulty_level,
-                'active' => $request->has('active')
-            ]);
+    private function updateClassData(Request $request, GymClass $class)
+    {
+        $class->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'instructor_name' => $request->instructor_name,
+            'duration_minutes' => $request->duration_minutes,
+            'max_participants' => $request->max_participants,
+            'price' => $request->price,
+            'difficulty_level' => $request->difficulty_level,
+            'active' => $request->has('active')
+        ]);
+    }
 
-            // Actualizar horarios si se proporcionaron
-            if ($request->has('schedules') && is_array($request->schedules)) {
-                // Eliminar horarios actuales que no tienen reservas futuras
-                $class->schedules()->whereDoesntHave('bookings', function ($query) {
-                    $query->where('booking_date', '>=', now()->toDateString())
-                          ->where('status', 'confirmed');
-                })->delete();
-
-                // Crear nuevos horarios
-                foreach ($request->schedules as $scheduleData) {
-                    if (!empty($scheduleData['day_of_week']) && !empty($scheduleData['start_time']) && !empty($scheduleData['end_time'])) {
-                        $class->schedules()->create([
-                            'day_of_week' => $scheduleData['day_of_week'],
-                            'start_time' => $scheduleData['start_time'],
-                            'end_time' => $scheduleData['end_time'],
-                            'start_date' => $scheduleData['start_date'] ?? now()->toDateString(),
-                            'end_date' => $scheduleData['end_date'] ?? null,
-                            'is_recurring' => isset($scheduleData['is_recurring']) ? true : false,
-                            'active' => isset($scheduleData['active']) ? true : false
-                        ]);
-                    }
-                }
-            }
-
-            DB::commit();
-            
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Clase actualizada exitosamente.',
-                    'redirect' => route('admin.classes.index')
-                ]);
-            }
-
-            return redirect()->route('admin.classes.index')
-                           ->with('success', 'Clase actualizada exitosamente.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al actualizar la clase: ' . $e->getMessage()
-                ], 500);
-            }
-            
-            return back()->withInput()
-                        ->with('error', 'Error al actualizar la clase: ' . $e->getMessage());
+    private function updateSchedules(Request $request, GymClass $class)
+    {
+        if (!$this->hasValidSchedules($request)) {
+            return;
         }
+
+        $this->deleteOldSchedules($class);
+        $this->createNewSchedules($request, $class);
+    }
+
+    private function hasValidSchedules(Request $request): bool
+    {
+        return $request->has('schedules') && is_array($request->schedules);
+    }
+
+    private function deleteOldSchedules(GymClass $class)
+    {
+        $class->schedules()->whereDoesntHave('bookings', function ($query) {
+            $query->where('booking_date', '>=', now()->toDateString())
+                  ->where('status', 'confirmed');
+        })->delete();
+    }
+
+    private function createNewSchedules(Request $request, GymClass $class)
+    {
+        foreach ($request->schedules as $scheduleData) {
+            if ($this->isValidScheduleData($scheduleData)) {
+                $class->schedules()->create($this->prepareScheduleData($scheduleData));
+            }
+        }
+    }
+
+    private function isValidScheduleData(array $scheduleData): bool
+    {
+        return !empty($scheduleData['day_of_week'])
+            && !empty($scheduleData['start_time'])
+            && !empty($scheduleData['end_time']);
+    }
+
+    private function prepareScheduleData(array $scheduleData): array
+    {
+        return [
+            'day_of_week' => $scheduleData['day_of_week'],
+            'start_time' => $scheduleData['start_time'],
+            'end_time' => $scheduleData['end_time'],
+            'start_date' => $scheduleData['start_date'] ?? now()->toDateString(),
+            'end_date' => $scheduleData['end_date'] ?? null,
+            'is_recurring' => isset($scheduleData['is_recurring']),
+            'active' => isset($scheduleData['active'])
+        ];
+    }
+
+    private function handleSuccessResponse(Request $request)
+    {
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Clase actualizada exitosamente.',
+                'redirect' => route('admin.classes.index')
+            ]);
+        }
+
+        return redirect()->route('admin.classes.index')
+                       ->with('success', 'Clase actualizada exitosamente.');
+    }
+
+    private function handleErrorResponse(Request $request, \Exception $e)
+    {
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar la clase: ' . $e->getMessage()
+            ], 500);
+        }
+
+        return back()->withInput()
+                    ->with('error', 'Error al actualizar la clase: ' . $e->getMessage());
     }
 
     public function destroy(GymClass $class)

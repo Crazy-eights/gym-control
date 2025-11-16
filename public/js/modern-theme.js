@@ -4,16 +4,16 @@
    =================================== */
 
 document.addEventListener('DOMContentLoaded', function() {
-    
+
     // === SIDEBAR TOGGLE === //
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
-    
+
     if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', function() {
             sidebar.classList.toggle('collapsed');
-            
+
             // Guardar estado en localStorage
             if (sidebar.classList.contains('collapsed')) {
                 localStorage.setItem('sidebarCollapsed', 'true');
@@ -22,13 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // === RESTAURAR ESTADO DEL SIDEBAR === //
     const sidebarState = localStorage.getItem('sidebarCollapsed');
     if (sidebarState === 'true' && sidebar) {
         sidebar.classList.add('collapsed');
     }
-    
+
     // === MOBILE SIDEBAR OVERLAY === //
     if (sidebarOverlay) {
         sidebarOverlay.addEventListener('click', function() {
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.classList.remove('show');
         });
     }
-    
+
     // === MOBILE SIDEBAR TOGGLE === //
     if (window.innerWidth <= 768) {
         if (sidebarToggle && sidebar && sidebarOverlay) {
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-    
+
     // === TOOLTIPS === //
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     if (typeof bootstrap !== 'undefined') {
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     }
-    
+
     // === DROPDOWN AUTO-CLOSE === //
     document.addEventListener('click', function(e) {
         const dropdowns = document.querySelectorAll('.dropdown-menu.show');
@@ -65,14 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // === SMOOTH SCROLL PARA ANCLAS === //
     const anchorLinks = document.querySelectorAll('a[href^="#"]');
     anchorLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-            
+
             if (targetElement) {
                 e.preventDefault();
                 targetElement.scrollIntoView({
@@ -82,19 +82,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // === CARDS HOVER EFFECT === //
     const cards = document.querySelectorAll('.card');
     cards.forEach(function(card) {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-2px)';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
-    
+
     // === FORM VALIDATION FEEDBACK === //
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(function(form) {
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             form.classList.add('was-validated');
         });
     });
-    
+
     // === AUTO-HIDE ALERTS === //
     const alerts = document.querySelectorAll('.alert-dismissible');
     alerts.forEach(function(alert) {
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 5000); // 5 segundos
     });
-    
+
     // === LOADING STATES === //
     const loadingButtons = document.querySelectorAll('[data-loading]');
     loadingButtons.forEach(function(button) {
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Cargando...';
             this.disabled = true;
-            
+
             // Restaurar después de 3 segundos (ajustar según necesidad)
             setTimeout(() => {
                 this.innerHTML = originalText;
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 3000);
         });
     });
-    
+
     // === RESPONSIVE SIDEBAR === //
     function handleResize() {
         if (window.innerWidth <= 768) {
@@ -146,18 +146,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
+
     window.addEventListener('resize', handleResize);
-    
+
     // === DARK MODE TOGGLE (para futuro) === //
     const darkModeToggle = document.getElementById('darkModeToggle');
     if (darkModeToggle) {
         darkModeToggle.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
-            
+
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-            
+
             // Cambiar icono
             const icon = this.querySelector('i');
             if (icon) {
@@ -165,14 +165,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.classList.toggle('fa-sun');
             }
         });
-        
+
         // Restaurar estado del dark mode
         const darkMode = localStorage.getItem('darkMode');
         if (darkMode === 'enabled') {
             document.body.classList.add('dark-mode');
         }
     }
-    
+
     // === INITIALIZE COMPONENTS === //
     initializeComponents();
 });
@@ -185,7 +185,7 @@ function initializeComponents() {
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
-        
+
         // Inicializar popovers
         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
         var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {

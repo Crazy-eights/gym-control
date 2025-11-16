@@ -6,14 +6,14 @@ use App\Models\MailSetting;
 Route::get('/debug-microsoft-token', function () {
     try {
         $mailConfig = MailSetting::getConfig();
-        
+
         if (!$mailConfig) {
             return response()->json(['error' => 'No hay configuración de email']);
         }
-        
+
         $accessToken = $mailConfig->getDecryptedMicrosoftAccessToken();
         $refreshToken = $mailConfig->getDecryptedMicrosoftRefreshToken();
-        
+
         return response()->json([
             'auth_method' => $mailConfig->auth_method,
             'user_email' => $mailConfig->microsoft_user_email,
@@ -26,7 +26,7 @@ Route::get('/debug-microsoft-token', function () {
             'expires_at' => $mailConfig->microsoft_token_expires_at,
             'is_expired' => $mailConfig->microsoft_token_expires_at ? now()->gt($mailConfig->microsoft_token_expires_at) : 'No expiry set'
         ]);
-        
+
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
     }

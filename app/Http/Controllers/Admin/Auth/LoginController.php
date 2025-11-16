@@ -25,7 +25,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('admin.auth.login'); 
+        return view('admin.auth.login');
     }
 
     /**
@@ -46,27 +46,27 @@ class LoginController extends Controller
         if (filter_var($inputUser, FILTER_VALIDATE_EMAIL)) {
             // Limpiar cualquier sesión de admin anterior
             Auth::guard('admin')->logout();
-            
+
             $member = \App\Models\Member::where('email', $inputUser)->first();
-            
+
             if ($member && \Hash::check($inputPassword, $member->password)) {
                 // Login del socio
                 Auth::guard('web')->login($member);
                 $request->session()->regenerate();
                 return redirect('/portal/dashboard');
             }
-            
+
             return back()->withErrors(['username' => 'Credenciales de socio incorrectas.']);
         } else {
             // Limpiar cualquier sesión de socio anterior
             Auth::guard('web')->logout();
-            
+
             // Es username (para admins)
             if (Auth::guard('admin')->attempt(['username' => $inputUser, 'password' => $inputPassword])) {
                 $request->session()->regenerate();
                 return redirect()->intended(route('admin.dashboard'));
             }
-            
+
             return back()->withErrors(['username' => 'Credenciales de admin incorrectas.']);
         }
     }
@@ -80,7 +80,7 @@ class LoginController extends Controller
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
         }
-        
+
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
@@ -114,11 +114,11 @@ class LoginController extends Controller
         try {
             // 1. Primero buscar si es un socio
             $member = \App\Models\Member::where('email', $email)->first();
-            
+
             if ($member) {
                 // Es un socio - crear token en la tabla standard
                 $token = Str::random(60);
-                
+
                 // Limpiar tokens antiguos y crear nuevo
                 DB::table('member_password_resets')->where('email', $email)->delete();
                 DB::table('member_password_resets')->insert([
@@ -132,13 +132,13 @@ class LoginController extends Controller
 
                 // Enviar email usando la configuración existente
                 $this->sendMemberResetEmail($email, $member, $resetUrl, $token);
-                
+
                 return back()->with('status', 'Te hemos enviado un enlace de recuperación por email.');
             }
 
             // 2. Si no es socio, buscar si es un admin
             $admin = Admin::where('email', $email)->first();
-            
+
             if ($admin) {
                 // Es un admin - usar la lógica existente de admin
                 AdminPasswordReset::cleanExpiredTokens();
@@ -155,7 +155,7 @@ class LoginController extends Controller
 
                 // Enviar email usando la configuración existente
                 $this->sendAdminResetEmail($email, $admin, $resetUrl, $token);
-                    
+
                 return back()->with('Te hemos enviado un enlace de recuperación por email.');
             }
 
@@ -198,7 +198,7 @@ class LoginController extends Controller
         try {
             // 1. Primero verificar si es un socio
             $member = \App\Models\Member::where('email', $email)->first();
-            
+
             if ($member) {
                 // Verificar token de socio
                 $tokenRecord = DB::table('member_password_resets')
@@ -226,7 +226,7 @@ class LoginController extends Controller
 
             // 2. Si no es socio, verificar si es admin
             $admin = Admin::where('email', $email)->first();
-            
+
             if ($admin) {
                 // Verificar token de admin
                 $tokenRecord = AdminPasswordReset::where('email', $email)
@@ -275,7 +275,6 @@ class LoginController extends Controller
         }
 
 
-
         // Detectar automáticamente el método configurado y usar ese
         if ($mailConfig->auth_method === 'oauth_microsoft' && $mailConfig->isMicrosoftOAuthConfigured()) {
             // Usar Microsoft Graph si está configurado
@@ -302,7 +301,6 @@ class LoginController extends Controller
         }
 
 
-
         // Detectar automáticamente el método configurado y usar ese
         if ($mailConfig->auth_method === 'oauth_microsoft' && $mailConfig->isMicrosoftOAuthConfigured()) {
             // Usar Microsoft Graph si está configurado
@@ -324,7 +322,7 @@ class LoginController extends Controller
         try {
             // Obtener configuración de email de la base de datos
             $mailConfig = MailSetting::getConfig();
-            
+
             if ($mailConfig && $mailConfig->smtp_host) {
                 // Configurar SMTP dinámicamente
                 Config::set('mail.mailers.smtp.host', $mailConfig->smtp_host);
@@ -353,7 +351,6 @@ class LoginController extends Controller
             });
 
 
-
         } catch (\Exception $e) {
             Log::error('Error enviando email via SMTP para socio', ['error' => $e->getMessage()]);
             throw $e;
@@ -368,7 +365,7 @@ class LoginController extends Controller
         try {
             // Obtener configuración de email de la base de datos
             $mailConfig = MailSetting::getConfig();
-            
+
             if ($mailConfig && $mailConfig->smtp_host) {
                 // Configurar SMTP dinámicamente
                 Config::set('mail.mailers.smtp.host', $mailConfig->smtp_host);
@@ -397,7 +394,6 @@ class LoginController extends Controller
             });
 
 
-
         } catch (\Exception $e) {
             Log::error('Error enviando email via SMTP para admin', ['error' => $e->getMessage()]);
             throw $e;
@@ -411,7 +407,7 @@ class LoginController extends Controller
     {
         try {
 
-            
+
             $subject = 'Restablecer Contraseña - Portal de Socios';
             $content = "
                 <h2>Restablecer Contraseña - Portal de Socios</h2>
@@ -431,7 +427,6 @@ class LoginController extends Controller
             });
 
 
-
         } catch (\Exception $e) {
             Log::error('Error enviando email via configuración básica para socio', ['error' => $e->getMessage()]);
             throw $e;
@@ -446,7 +441,7 @@ class LoginController extends Controller
         try {
             // Obtener token válido (renovándolo si es necesario)
             $accessToken = $mailConfig->getValidMicrosoftAccessToken();
-            
+
             if (empty($accessToken)) {
                 throw new \Exception('No se pudo obtener un token de acceso válido');
             }
@@ -492,7 +487,6 @@ class LoginController extends Controller
             }
 
 
-
         } catch (\Exception $e) {
             Log::error('Microsoft Graph: Error enviando reset email para socio', ['error' => $e->getMessage()]);
             throw $e;
@@ -509,7 +503,7 @@ class LoginController extends Controller
 
             // Obtener token válido (renovándolo si es necesario)
             $accessToken = $mailConfig->getValidMicrosoftAccessToken();
-            
+
             if (empty($accessToken)) {
                 throw new \Exception('No se pudo obtener un token de acceso válido');
             }
@@ -582,7 +576,6 @@ class LoginController extends Controller
             Config::set('mail.from.address', env('MAIL_FROM_ADDRESS', env('MAIL_USERNAME')));
             Config::set('mail.from.name', env('MAIL_FROM_NAME', 'Gym Control'));
 
-            
 
             $emailContent = "
                 <h2>Restablecer Contraseña - Gym Control</h2>
@@ -597,7 +590,6 @@ class LoginController extends Controller
                 $message->to($email, $admin->name ?? $admin->username)
                         ->subject('Restablecer Contraseña - Gym Control Admin');
             });
-
 
 
         } catch (\Exception $e) {

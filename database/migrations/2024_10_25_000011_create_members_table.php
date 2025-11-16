@@ -23,10 +23,10 @@ class CreateMembersTable extends Migration
             $table->date('birthdate');
             $table->string('contact_info', 100);
             $table->string('gender', 10);
-            
+
             // Foreign key that can be NULL and is set to NULL if the plan is deleted
             $table->foreignId('plan_id')->nullable()->constrained('membership_plans')->onDelete('set null');
-            
+
             $table->date('subscription_start_date')->nullable();
             $table->date('subscription_end_date')->nullable();
             $table->string('photo', 200)->nullable();

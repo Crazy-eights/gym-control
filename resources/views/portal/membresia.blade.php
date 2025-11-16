@@ -17,12 +17,12 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h4 class="text-primary mb-3">{{ $plan->plan_name }}</h4>
-                            
+
                             <div class="mb-3">
                                 <label class="small text-muted">Descripción:</label>
                                 <p class="mb-2">{{ $plan->description }}</p>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-6 mb-3">
                                     <label class="small text-muted">Precio:</label>
@@ -31,14 +31,14 @@
                                         <small class="text-muted">/ {{ $plan->duration_type }}</small>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-6 mb-3">
                                     <label class="small text-muted">Duración:</label>
                                     <div class="h6">{{ $plan->duration_value }} {{ $plan->duration_type }}</div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="text-center">
                                 <div class="position-relative d-inline-block mb-3">
@@ -46,17 +46,17 @@
                                         $diasRestantes = $socio->subscription_end_date ? now()->diffInDays($socio->subscription_end_date, false) : 0;
                                         $porcentaje = $diasRestantes > 0 ? min(100, ($diasRestantes / 30) * 100) : 0;
                                     @endphp
-                                    
+
                                     <svg width="120" height="120" viewBox="0 0 42 42" class="donut">
-                                        <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" 
+                                        <circle cx="21" cy="21" r="15.91549430918954" fill="transparent"
                                                 stroke="#e9ecef" stroke-width="3"></circle>
-                                        <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" 
-                                                stroke="{{ $diasRestantes > 7 ? '#28a745' : ($diasRestantes > 0 ? '#ffc107' : '#dc3545') }}" 
+                                        <circle cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                                                stroke="{{ $diasRestantes > 7 ? '#28a745' : ($diasRestantes > 0 ? '#ffc107' : '#dc3545') }}"
                                                 stroke-width="3"
                                                 stroke-dasharray="{{ $porcentaje }} {{ 100 - $porcentaje }}"
                                                 stroke-dashoffset="25"></circle>
                                     </svg>
-                                    
+
                                     <div class="position-absolute top-50 start-50 translate-middle text-center">
                                         <div class="h4 mb-0 {{ $diasRestantes > 7 ? 'text-success' : ($diasRestantes > 0 ? 'text-warning' : 'text-danger') }}">
                                             {{ $diasRestantes > 0 ? $diasRestantes : '0' }}
@@ -64,7 +64,7 @@
                                         <small class="text-muted">días</small>
                                     </div>
                                 </div>
-                                
+
                                 <div>
                                     <label class="small text-muted">Estado:</label>
                                     <div>
@@ -88,9 +88,9 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <hr>
-                    
+
                     <!-- Membership Dates -->
                     <div class="row">
                         <div class="col-md-4 text-center">
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4 text-center">
                             <div class="border-end">
                                 <i class="fas fa-stop-circle fa-2x text-danger mb-2"></i>
@@ -112,7 +112,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4 text-center">
                             <i class="fas fa-credit-card fa-2x text-primary mb-2"></i>
                             <div class="small text-muted">Próximo Pago</div>
@@ -125,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Renewal Button -->
                     @if($socio->status === 'vencido' || $diasRestantes <= 7)
                         <div class="alert alert-{{ $socio->status === 'vencido' ? 'danger' : 'warning' }} mt-4">
@@ -141,16 +141,16 @@
                                     </h6>
                                     <p class="mb-0">
                                         @if($socio->status === 'vencido')
-                                            Tu membresía venció el {{ $socio->subscription_end_date->format('d/m/Y') }}. 
+                                            Tu membresía venció el {{ $socio->subscription_end_date->format('d/m/Y') }}.
                                             Renuévala para seguir disfrutando de todos los beneficios.
                                         @else
-                                            Tu membresía vence en {{ $diasRestantes }} días. 
+                                            Tu membresía vence en {{ $diasRestantes }} días.
                                             Te recomendamos renovarla con anticipación.
                                         @endif
                                     </p>
                                 </div>
                                 <div class="flex-shrink-0 ms-3">
-                                    <button class="btn {{ $socio->status === 'vencido' ? 'btn-light' : 'btn-dark' }}" 
+                                    <button class="btn {{ $socio->status === 'vencido' ? 'btn-light' : 'btn-dark' }}"
                                             onclick="renewMembership()">
                                         <i class="fas fa-sync-alt me-2"></i>Renovar Ahora
                                     </button>
@@ -203,7 +203,7 @@
                             </div>
                         </div>
                     @endforeach
-                    
+
                     <div class="text-center mt-3">
                         <button class="btn btn-sm btn-outline-primary" onclick="showAllPayments()">
                             Ver Historial Completo
@@ -237,9 +237,9 @@
                         <i class="fas fa-university me-2"></i>Transferencia
                     </button>
                 </div>
-                
+
                 <hr>
-                
+
                 <div class="text-center">
                     <small class="text-muted">
                         <i class="fas fa-shield-alt me-1"></i>
@@ -261,7 +261,7 @@
                     <p class="small text-muted mb-3">
                         Para renovaciones o dudas sobre tu membresía
                     </p>
-                    
+
                     <div class="d-grid gap-2">
                         <button class="btn btn-outline-primary btn-sm" onclick="callGym()">
                             <i class="fas fa-phone me-2"></i>(555) 123-4567
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const length = circle.getTotalLength();
         circle.style.strokeDasharray = length + ' ' + length;
         circle.style.strokeDashoffset = length;
-        
+
         setTimeout(() => {
             circle.style.transition = 'stroke-dashoffset 2s ease-in-out';
             const percent = circle.getAttribute('stroke-dasharray').split(' ')[0];

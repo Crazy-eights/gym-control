@@ -161,7 +161,7 @@ class MailSetting extends Model
     public static function getMailConfig()
     {
         $config = self::getConfig();
-        
+
         return [
             'mailers' => [
                 'smtp' => [
@@ -217,7 +217,7 @@ class MailSetting extends Model
     public function applyProviderPreset($provider)
     {
         $presets = self::getProviderPresets();
-        
+
         if (isset($presets[$provider])) {
             $this->update(array_merge($presets[$provider], [
                 'mail_provider' => $provider
@@ -343,7 +343,7 @@ class MailSetting extends Model
             'email_test_status' => $status,
             'last_email_error' => $error,
         ]);
-        
+
         Cache::forget('mail_settings');
     }
 
@@ -413,7 +413,6 @@ class MailSetting extends Model
             }
 
 
-
             $response = \Illuminate\Support\Facades\Http::timeout(30)->asForm()->post('https://login.microsoftonline.com/common/oauth2/v2.0/token', [
                 'client_id' => $clientId,
                 'client_secret' => $clientSecret,
@@ -424,7 +423,7 @@ class MailSetting extends Model
 
             if ($response->successful()) {
                 $tokenData = $response->json();
-                
+
                 // Actualizar tokens
                 $updateData = [
                     'microsoft_access_token' => $tokenData['access_token'], // El mutator se encarga de encriptar
@@ -439,9 +438,8 @@ class MailSetting extends Model
                 $this->update($updateData);
 
 
-                
                 return $tokenData['access_token'];
-                
+
             } else {
                 $error = $response->json();
                 \Illuminate\Support\Facades\Log::error('Error renovando token de Microsoft', [
@@ -449,13 +447,13 @@ class MailSetting extends Model
                     'error' => $error,
                     'error_description' => $error['error_description'] ?? 'Sin descripción'
                 ]);
-                
+
                 // Si el error es de refresh token inválido, marcar como requiere reconexión
                 if (isset($error['error']) && in_array($error['error'], ['invalid_grant', 'invalid_request'])) {
                     $this->update(['microsoft_refresh_token' => null]);
                     throw new \Exception('Refresh token expirado - se requiere reconexión OAuth');
                 }
-                
+
                 throw new \Exception('Error renovando token: ' . ($error['error_description'] ?? $response->status()));
             }
 
@@ -507,19 +505,16 @@ class MailSetting extends Model
             'mail_from_name' => $this->mail_from_name,
             'mail_reply_to' => $this->mail_reply_to,
             'mail_provider' => $this->mail_provider,
-            'microsoft_client_id' => $this->microsoft_client_id,
-            'microsoft_client_secret' => $this->getDecryptedMicrosoftClientSecret(),
-            'microsoft_tenant_id' => $this->microsoft_tenant_id,
-            'microsoft_redirect_uri' => $this->microsoft_redirect_uri,
             
-            // Campos OAuth necesarios para la vista
+            // Credenciales OAuth vienen del ENV, no de la BD
+            // Solo datos de estado OAuth (tokens y usuario) desde la BD
             'microsoft_access_token' => $this->getDecryptedMicrosoftAccessToken(),
             'microsoft_refresh_token' => $this->getDecryptedMicrosoftRefreshToken(),
             'microsoft_user_email' => $this->microsoft_user_email,
             'microsoft_user_name' => $this->microsoft_user_name,
             'microsoft_token_expires_at' => $this->microsoft_token_expires_at ? $this->microsoft_token_expires_at->format('d/m/Y H:i:s') : null,
             'microsoft_connected_at' => $this->microsoft_connected_at ? $this->microsoft_connected_at->format('d/m/Y H:i:s') : null,
-            
+
             'email_notifications_enabled' => $this->email_notifications_enabled,
             'email_queue_enabled' => $this->email_queue_enabled,
             'email_log_enabled' => $this->email_log_enabled,

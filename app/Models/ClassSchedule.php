@@ -52,7 +52,7 @@ class ClassSchedule extends Model
     public function isAvailableForDate($date)
     {
         if (!$this->active) return false;
-        
+
         $confirmedBookings = $this->bookingsForDate($date)->count();
         return $confirmedBookings < $this->gymClass->max_participants;
     }
@@ -70,14 +70,14 @@ class ClassSchedule extends Model
         $dayName = Carbon::parse($date)->locale('es')->dayName;
         $dayMap = [
             'lunes' => 'Monday',
-            'martes' => 'Tuesday', 
+            'martes' => 'Tuesday',
             'miércoles' => 'Wednesday',
             'jueves' => 'Thursday',
             'viernes' => 'Friday',
             'sábado' => 'Saturday',
             'domingo' => 'Sunday'
         ];
-        
+
         $englishDay = array_search($dayName, $dayMap);
         if ($englishDay !== false && $englishDay !== $this->day_of_week) {
             return false;
@@ -87,7 +87,7 @@ class ClassSchedule extends Model
         if ($this->start_date && Carbon::parse($date)->lt($this->start_date)) {
             return false;
         }
-        
+
         if ($this->end_date && Carbon::parse($date)->gt($this->end_date)) {
             return false;
         }

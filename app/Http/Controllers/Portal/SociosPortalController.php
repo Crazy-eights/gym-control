@@ -18,15 +18,15 @@ class SociosPortalController extends Controller
     public function dashboard()
     {
         $socio = auth()->user();
-        
+
         // Estadísticas del socio
         $diasRestantes = null;
         $estadoMembresia = $socio->status;
-        
+
         if ($socio->subscription_end_date) {
             $diasRestantes = now()->diffInDays($socio->subscription_end_date, false);
         }
-        
+
         // Asistencias reales recientes del socio
         $asistenciasRecientes = \App\Models\MemberAttendance::where('member_id', $socio->id)
             ->whereNotNull('checkin_time')
@@ -45,10 +45,10 @@ class SociosPortalController extends Controller
                 return null;
             })
             ->filter(); // Remover elementos null
-        
+
         // Próximas clases - por ahora empty hasta crear el módulo de clases
         $proximasClases = collect([]);
-        
+
         return view('portal.dashboard', compact(
             'socio',
             'diasRestantes',
@@ -57,7 +57,7 @@ class SociosPortalController extends Controller
             'proximasClases'
         ));
     }
-    
+
     /**
      * Mostrar perfil del socio
      */
@@ -66,14 +66,14 @@ class SociosPortalController extends Controller
         $socio = auth()->user();
         return view('portal.perfil', compact('socio'));
     }
-    
+
     /**
      * Actualizar perfil del socio
      */
     public function actualizarPerfil(Request $request)
     {
         $socio = auth()->user();
-        
+
         $request->validate([
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
@@ -92,26 +92,26 @@ class SociosPortalController extends Controller
             'photo.image' => 'El archivo debe ser una imagen.',
             'photo.max' => 'La imagen no puede superar los 2MB.'
         ]);
-        
+
         $data = $request->except(['photo']);
-        
+
         // Manejar la foto
         if ($request->hasFile('photo')) {
             // Eliminar foto anterior si existe
             if ($socio->photo) {
                 Storage::delete('public/' . $socio->photo);
             }
-            
+
             $photoPath = $request->file('photo')->store('socios', 'public');
             $data['photo'] = $photoPath;
         }
-        
+
         $socio->update($data);
-        
+
         return redirect()->route('portal.perfil')
             ->with('success', 'Perfil actualizado exitosamente.');
     }
-    
+
     /**
      * Cambiar contraseña
      */
@@ -126,22 +126,22 @@ class SociosPortalController extends Controller
             'password.confirmed' => 'La confirmación de contraseña no coincide.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.'
         ]);
-        
+
         $socio = auth()->user();
-        
+
         // Verificar contraseña actual
         if (!Hash::check($request->current_password, $socio->password)) {
             return back()->withErrors(['current_password' => 'La contraseña actual es incorrecta.']);
         }
-        
+
         $socio->update([
             'password' => Hash::make($request->password)
         ]);
-        
+
         return redirect()->route('portal.perfil')
             ->with('success', 'Contraseña actualizada exitosamente.');
     }
-    
+
     /**
      * Información de membresía
      */
@@ -149,7 +149,7 @@ class SociosPortalController extends Controller
     {
         $socio = auth()->user();
         $plan = $socio->membershipPlan;
-        
+
         // Historial de pagos simulado
         $historialPagos = collect([
             (object)[
@@ -171,10 +171,10 @@ class SociosPortalController extends Controller
                 'estado' => 'pagado'
             ]
         ]);
-        
+
         return view('portal.membresia', compact('socio', 'plan', 'historialPagos'));
     }
-    
+
     /**
      * Ver clases disponibles
      */
@@ -223,10 +223,10 @@ class SociosPortalController extends Controller
                 'inscritos' => 7
             ]
         ]);
-        
+
         return view('portal.clases', compact('clases'));
     }
-    
+
     /**
      * Ver rutinas disponibles
      */
@@ -291,10 +291,10 @@ class SociosPortalController extends Controller
                 ]
             ]
         ]);
-        
+
         return view('portal.rutinas', compact('rutinas'));
     }
-    
+
     /**
      * Configuración del perfil
      */

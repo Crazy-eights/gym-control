@@ -5,7 +5,7 @@
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
   	<title>Gym Control | Login</title>
   	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  	
+
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
   	<link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
   	<link rel="stylesheet" href="{{ asset('dist/css/AdminLTE.min.css') }}">
@@ -18,7 +18,7 @@
   	<div class="login-logo">
   		<b>Gym Control</b>
   	</div>
-  
+
   	<div class="login-box-body">
     	<p class="login-box-msg">Ingresa tus credenciales de Administrador</p>
 
@@ -30,12 +30,12 @@
                 <span class="help-block">{{ $message }}</span>
             @enderror
       		</div>
-          
+
       		<div class="form-group has-feedback">
         		<input type="password" class="form-control" name="password" placeholder="Contraseña" required>
         		<span class="glyphicon glyphicon-lock form-control-feedback"></span>
       		</div>
-      		
+
       		<div class="row">
     			<div class="col-xs-12">
           			<button type="submit" class="btn btn-primary btn-block btn-flat">
@@ -46,7 +46,7 @@
     	</form>
   	</div>
 </div>
-	
+
 <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 </body>

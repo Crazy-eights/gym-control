@@ -16,7 +16,7 @@ class ClassBookingController extends Controller
     {
         $member = Auth::user();
         $status = $request->get('status', 'upcoming');
-        
+
         $query = ClassBooking::where('member_id', $member->id)
             ->with(['classSchedule.gymClass']);
 
@@ -64,10 +64,10 @@ class ClassBookingController extends Controller
         $totalCount = ClassBooking::where('member_id', $member->id)->count();
 
         return view('portal.bookings.index', compact(
-            'bookings', 
-            'upcomingCount', 
-            'completedCount', 
-            'cancelledCount', 
+            'bookings',
+            'upcomingCount',
+            'completedCount',
+            'cancelledCount',
             'totalCount'
         ));
     }
@@ -159,7 +159,7 @@ class ClassBookingController extends Controller
     public function getAvailability($classId, Request $request)
     {
         $date = $request->get('date', Carbon::today()->toDateString());
-        
+
         $schedules = ClassSchedule::where('gym_class_id', $classId)
             ->where('start_date', '<=', $date)
             ->where(function($query) use ($date) {
@@ -175,7 +175,7 @@ class ClassBookingController extends Controller
         $availability = $schedules->map(function($schedule) {
             $confirmedBookings = $schedule->bookings->count();
             $capacity = $schedule->gymClass->max_participants;
-            
+
             return [
                 'schedule_id' => $schedule->id,
                 'start_time' => $schedule->start_time,
@@ -201,7 +201,7 @@ class ClassBookingController extends Controller
 
     public function classDetails($gymClass)
     {
-        // Método temporal 
+        // Método temporal
         return back()->with('info', 'Funcionalidad en desarrollo');
     }
 

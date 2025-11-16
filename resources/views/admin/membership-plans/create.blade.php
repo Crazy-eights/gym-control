@@ -30,15 +30,15 @@
                 <div class="modern-card-body">
                     <form action="{{ route('admin.membership-plans.store') }}" method="POST">
                         @csrf
-                        
+
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label for="plan_name" class="form-label fw-semibold text-success">Nombre del Plan <span class="text-danger">*</span></label>
-                                <input type="text" 
-                                       class="form-control form-control-sm @error('plan_name') is-invalid @enderror" 
-                                       id="plan_name" 
-                                       name="plan_name" 
-                                       value="{{ old('plan_name') }}" 
+                                <input type="text"
+                                       class="form-control form-control-sm @error('plan_name') is-invalid @enderror"
+                                       id="plan_name"
+                                       name="plan_name"
+                                       value="{{ old('plan_name') }}"
                                        placeholder="Ej: Membresía Premium Mensual"
                                        required>
                                 @error('plan_name')
@@ -52,11 +52,11 @@
                                 <label for="price" class="form-label fw-semibold text-success">Precio <span class="text-danger">*</span></label>
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" 
-                                           class="form-control form-control-sm @error('price') is-invalid @enderror" 
-                                           id="price" 
-                                           name="price" 
-                                           value="{{ old('price') }}" 
+                                    <input type="number"
+                                           class="form-control form-control-sm @error('price') is-invalid @enderror"
+                                           id="price"
+                                           name="price"
+                                           value="{{ old('price') }}"
                                            placeholder="0.00"
                                            step="0.01"
                                            min="0"
@@ -70,11 +70,11 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="duration_days" class="form-label fw-semibold text-success">Duración (días) <span class="text-danger">*</span></label>
-                                <input type="number" 
-                                       class="form-control form-control-sm @error('duration_days') is-invalid @enderror" 
-                                       id="duration_days" 
-                                       name="duration_days" 
-                                       value="{{ old('duration_days') }}" 
+                                <input type="number"
+                                       class="form-control form-control-sm @error('duration_days') is-invalid @enderror"
+                                       id="duration_days"
+                                       name="duration_days"
+                                       value="{{ old('duration_days') }}"
                                        placeholder="30"
                                        min="1"
                                        max="3650"
@@ -91,10 +91,10 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label for="description" class="form-label fw-semibold text-success">Descripción <span class="text-danger">*</span></label>
-                                <textarea class="form-control form-control-sm @error('description') is-invalid @enderror" 
-                                          id="description" 
-                                          name="description" 
-                                          rows="4" 
+                                <textarea class="form-control form-control-sm @error('description') is-invalid @enderror"
+                                          id="description"
+                                          name="description"
+                                          rows="4"
                                           placeholder="Describe los beneficios y características de este plan..."
                                           required>{{ old('description') }}</textarea>
                                 @error('description')
@@ -156,7 +156,7 @@
                     <div class="mb-3">
                         <h6 class="text-warning"><i class="fas fa-exclamation-triangle"></i> Importante</h6>
                         <p class="small text-muted">
-                            Una vez creado el plan, podrás editarlo, pero ten en cuenta que los cambios 
+                            Una vez creado el plan, podrás editarlo, pero ten en cuenta que los cambios
                             pueden afectar a los miembros actuales con este plan asignado.
                         </p>
                     </div>
@@ -191,19 +191,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const priceInput = document.getElementById('price');
     const durationInput = document.getElementById('duration_days');
     const descriptionInput = document.getElementById('description');
-    
+
     const previewName = document.getElementById('preview-name');
     const previewPrice = document.getElementById('preview-price');
     const previewDuration = document.getElementById('preview-duration');
     const previewDescription = document.getElementById('preview-description');
-    
+
     const durationHelper = document.getElementById('duration-helper');
     const charCount = document.getElementById('char-count');
 
     // Función para calcular la duración equivalente
     function calculateDurationEquivalent(days) {
         if (!days || days <= 0) return '-';
-        
+
         if (days === 1) return '1 día';
         if (days <= 7) return `${days} días`;
         if (days <= 31) {
@@ -222,12 +222,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePreview() {
         previewName.textContent = planNameInput.value || 'Nombre del Plan';
         previewPrice.textContent = '$' + (priceInput.value ? parseFloat(priceInput.value).toFixed(2) : '0.00');
-        
+
         const days = parseInt(durationInput.value);
         const equivalent = calculateDurationEquivalent(days);
         previewDuration.textContent = equivalent !== '-' ? equivalent : 'Duración no especificada';
         durationHelper.innerHTML = 'Equivale a: <span class="fw-bold">' + equivalent + '</span>';
-        
+
         previewDescription.textContent = descriptionInput.value || 'La descripción aparecerá aquí...';
     }
 

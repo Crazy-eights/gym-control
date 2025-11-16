@@ -13,7 +13,7 @@ class CreateAdminTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('create_admin_table')) {   
+        if (!Schema::hasTable('create_admin_table')) {
         Schema::create('admin', function (Blueprint $table) {
             $table->id(); // int(11) NOT NULL AUTO_INCREMENT
             $table->string('username', 30);

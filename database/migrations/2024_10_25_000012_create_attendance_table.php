@@ -17,10 +17,10 @@ class CreateAttendanceTable extends Migration
         Schema::create('attendance', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees');
-            $table->date('date');         
-            $table->time('time_in');      
-            $table->integer('status');    
-            $table->time('time_out');     
+            $table->date('date');
+            $table->time('time_in');
+            $table->integer('status');
+            $table->time('time_out');
             $table->double('num_hr');
             $table->timestamps();
         });

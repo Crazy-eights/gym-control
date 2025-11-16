@@ -28,7 +28,7 @@
                 <div class="card-body">
                     <form action="{{ route('admin.socios.store') }}" method="POST" enctype="multipart/form-data" id="socioForm">
                         @csrf
-                        
+
                         <!-- Datos Básicos -->
                         <div class="row mb-4">
                             <div class="col-12">
@@ -41,8 +41,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="member_id" class="form-label">ID del Socio <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('member_id') is-invalid @enderror" 
-                                       id="member_id" name="member_id" value="{{ old('member_id') }}" 
+                                <input type="text" class="form-control @error('member_id') is-invalid @enderror"
+                                       id="member_id" name="member_id" value="{{ old('member_id') }}"
                                        placeholder="Ej: SOC001" required>
                                 @error('member_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -51,7 +51,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="photo" class="form-label">Foto del Socio</label>
-                                <input type="file" class="form-control @error('photo') is-invalid @enderror" 
+                                <input type="file" class="form-control @error('photo') is-invalid @enderror"
                                        id="photo" name="photo" accept="image/*">
                                 @error('photo')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -63,8 +63,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="firstname" class="form-label">Nombre <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('firstname') is-invalid @enderror" 
-                                       id="firstname" name="firstname" value="{{ old('firstname') }}" 
+                                <input type="text" class="form-control @error('firstname') is-invalid @enderror"
+                                       id="firstname" name="firstname" value="{{ old('firstname') }}"
                                        placeholder="Nombre del socio" required>
                                 @error('firstname')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -72,8 +72,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="lastname" class="form-label">Apellidos <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('lastname') is-invalid @enderror" 
-                                       id="lastname" name="lastname" value="{{ old('lastname') }}" 
+                                <input type="text" class="form-control @error('lastname') is-invalid @enderror"
+                                       id="lastname" name="lastname" value="{{ old('lastname') }}"
                                        placeholder="Apellidos del socio" required>
                                 @error('lastname')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -84,8 +84,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="contact_info" class="form-label">Información de Contacto <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('contact_info') is-invalid @enderror" 
-                                       id="contact_info" name="contact_info" value="{{ old('contact_info') }}" 
+                                <input type="text" class="form-control @error('contact_info') is-invalid @enderror"
+                                       id="contact_info" name="contact_info" value="{{ old('contact_info') }}"
                                        placeholder="Teléfono o email" required>
                                 @error('contact_info')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -108,7 +108,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="birthdate" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control @error('birthdate') is-invalid @enderror" 
+                                <input type="date" class="form-control @error('birthdate') is-invalid @enderror"
                                        id="birthdate" name="birthdate" value="{{ old('birthdate') }}">
                                 @error('birthdate')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -116,8 +116,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="address" class="form-label">Dirección</label>
-                                <input type="text" class="form-control @error('address') is-invalid @enderror" 
-                                       id="address" name="address" value="{{ old('address') }}" 
+                                <input type="text" class="form-control @error('address') is-invalid @enderror"
+                                       id="address" name="address" value="{{ old('address') }}"
                                        placeholder="Dirección completa">
                                 @error('address')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -155,7 +155,7 @@
                         <div class="row mb-3" id="membership-dates" style="display: none;">
                             <div class="col-md-6">
                                 <label for="subscription_start_date" class="form-label">Fecha de Inicio</label>
-                                <input type="date" class="form-control @error('subscription_start_date') is-invalid @enderror" 
+                                <input type="date" class="form-control @error('subscription_start_date') is-invalid @enderror"
                                        id="subscription_start_date" name="subscription_start_date" value="{{ old('subscription_start_date', now()->format('Y-m-d')) }}">
                                 @error('subscription_start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -163,7 +163,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="subscription_end_date" class="form-label">Fecha de Vencimiento</label>
-                                <input type="date" class="form-control @error('subscription_end_date') is-invalid @enderror" 
+                                <input type="date" class="form-control @error('subscription_end_date') is-invalid @enderror"
                                        id="subscription_end_date" name="subscription_end_date" value="{{ old('subscription_end_date') }}" readonly>
                                 @error('subscription_end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>

@@ -51,9 +51,9 @@
         <section class="sidebar">
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">NAVEGACIÓN PRINCIPAL</li>
-                
+
                 <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                
+
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-users"></i>
@@ -72,7 +72,7 @@
     </aside>
 
     <div class="content-wrapper">
-        
+
         @yield('content')
 
     </div>

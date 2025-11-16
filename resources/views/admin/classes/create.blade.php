@@ -31,7 +31,7 @@
 
             <form action="{{ route('admin.classes.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                
+
                 <div class="row">
                     <!-- Información Básica -->
                     <div class="col-lg-8">
@@ -48,11 +48,11 @@
                                             <label for="name" class="form-label">
                                                 <i class="fas fa-dumbbell text-primary"></i> Nombre de la Clase *
                                             </label>
-                                            <input type="text" 
-                                                   class="form-control @error('name') is-invalid @enderror" 
-                                                   id="name" 
-                                                   name="name" 
-                                                   value="{{ old('name') }}" 
+                                            <input type="text"
+                                                   class="form-control @error('name') is-invalid @enderror"
+                                                   id="name"
+                                                   name="name"
+                                                   value="{{ old('name') }}"
                                                    placeholder="Ej: Yoga Matutino, CrossFit Avanzado"
                                                    required>
                                             @error('name')
@@ -65,11 +65,11 @@
                                             <label for="instructor_name" class="form-label">
                                                 <i class="fas fa-user-tie text-primary"></i> Instructor *
                                             </label>
-                                            <input type="text" 
-                                                   class="form-control @error('instructor_name') is-invalid @enderror" 
-                                                   id="instructor_name" 
-                                                   name="instructor_name" 
-                                                   value="{{ old('instructor_name') }}" 
+                                            <input type="text"
+                                                   class="form-control @error('instructor_name') is-invalid @enderror"
+                                                   id="instructor_name"
+                                                   name="instructor_name"
+                                                   value="{{ old('instructor_name') }}"
                                                    placeholder="Nombre del instructor"
                                                    required>
                                             @error('instructor_name')
@@ -83,10 +83,10 @@
                                     <label for="description" class="form-label">
                                         <i class="fas fa-align-left text-primary"></i> Descripción
                                     </label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" 
-                                              id="description" 
-                                              name="description" 
-                                              rows="3" 
+                                    <textarea class="form-control @error('description') is-invalid @enderror"
+                                              id="description"
+                                              name="description"
+                                              rows="3"
                                               placeholder="Describe en qué consiste la clase, beneficios, requisitos, etc.">{{ old('description') }}</textarea>
                                     @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -99,13 +99,13 @@
                                             <label for="duration_minutes" class="form-label">
                                                 <i class="fas fa-clock text-primary"></i> Duración (min) *
                                             </label>
-                                            <input type="number" 
-                                                   class="form-control @error('duration_minutes') is-invalid @enderror" 
-                                                   id="duration_minutes" 
-                                                   name="duration_minutes" 
-                                                   value="{{ old('duration_minutes', 60) }}" 
-                                                   min="15" 
-                                                   max="240" 
+                                            <input type="number"
+                                                   class="form-control @error('duration_minutes') is-invalid @enderror"
+                                                   id="duration_minutes"
+                                                   name="duration_minutes"
+                                                   value="{{ old('duration_minutes', 60) }}"
+                                                   min="15"
+                                                   max="240"
                                                    required>
                                             @error('duration_minutes')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -117,13 +117,13 @@
                                             <label for="max_participants" class="form-label">
                                                 <i class="fas fa-users text-primary"></i> Capacidad máx. *
                                             </label>
-                                            <input type="number" 
-                                                   class="form-control @error('max_participants') is-invalid @enderror" 
-                                                   id="max_participants" 
-                                                   name="max_participants" 
-                                                   value="{{ old('max_participants', 20) }}" 
-                                                   min="1" 
-                                                   max="100" 
+                                            <input type="number"
+                                                   class="form-control @error('max_participants') is-invalid @enderror"
+                                                   id="max_participants"
+                                                   name="max_participants"
+                                                   value="{{ old('max_participants', 20) }}"
+                                                   min="1"
+                                                   max="100"
                                                    required>
                                             @error('max_participants')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -135,13 +135,13 @@
                                             <label for="price" class="form-label">
                                                 <i class="fas fa-dollar-sign text-primary"></i> Precio *
                                             </label>
-                                            <input type="number" 
-                                                   class="form-control @error('price') is-invalid @enderror" 
-                                                   id="price" 
-                                                   name="price" 
-                                                   value="{{ old('price', 0) }}" 
-                                                   step="0.01" 
-                                                   min="0" 
+                                            <input type="number"
+                                                   class="form-control @error('price') is-invalid @enderror"
+                                                   id="price"
+                                                   name="price"
+                                                   value="{{ old('price', 0) }}"
+                                                   step="0.01"
+                                                   min="0"
                                                    required>
                                             @error('price')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -153,9 +153,9 @@
                                             <label for="difficulty_level" class="form-label">
                                                 <i class="fas fa-signal text-primary"></i> Dificultad *
                                             </label>
-                                            <select class="form-control @error('difficulty_level') is-invalid @enderror" 
-                                                    id="difficulty_level" 
-                                                    name="difficulty_level" 
+                                            <select class="form-control @error('difficulty_level') is-invalid @enderror"
+                                                    id="difficulty_level"
+                                                    name="difficulty_level"
                                                     required>
                                                 <option value="">Seleccionar...</option>
                                                 <option value="principiante" {{ old('difficulty_level') == 'principiante' ? 'selected' : '' }}>
@@ -177,7 +177,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Horarios de la Clase -->
                     <div class="col-lg-4">
                         <div class="card shadow mb-4">
@@ -193,7 +193,7 @@
                                         <p class="text-muted">No hay horarios configurados</p>
                                     </div>
                                 </div>
-                                
+
                                 <button type="button" id="add-schedule" class="btn btn-outline-primary btn-sm w-100">
                                     <i class="fas fa-plus"></i> Agregar Horario
                                 </button>
@@ -214,10 +214,10 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" 
-                                               class="custom-control-input" 
-                                               id="active" 
-                                               name="active" 
+                                        <input type="checkbox"
+                                               class="custom-control-input"
+                                               id="active"
+                                               name="active"
                                                {{ old('active', true) ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="active">
                                             <i class="fas fa-toggle-on text-success"></i> Clase Activa
@@ -256,8 +256,8 @@
                                                     <i class="fas fa-user-tie"></i> <span id="preview-instructor">Instructor</span>
                                                 </div>
                                                 <div class="text-xs text-gray-600 mt-1">
-                                                    <i class="fas fa-clock"></i> <span id="preview-duration">60</span> min | 
-                                                    <i class="fas fa-users"></i> <span id="preview-capacity">20</span> personas | 
+                                                    <i class="fas fa-clock"></i> <span id="preview-duration">60</span> min |
+                                                    <i class="fas fa-users"></i> <span id="preview-capacity">20</span> personas |
                                                     <strong>$<span id="preview-price">0.00</span></strong>
                                                 </div>
                                             </div>
@@ -298,10 +298,10 @@ console.log('Script de creación cargado'); // Debug
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM cargado en create'); // Debug
-    
+
     let scheduleIndex = 0;
     console.log('Schedule index inicial:', scheduleIndex); // Debug
-    
+
     // Actualizar vista previa en tiempo real
     function updatePreview() {
         const nameEl = document.getElementById('preview-name');
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const durationEl = document.getElementById('preview-duration');
         const capacityEl = document.getElementById('preview-capacity');
         const priceEl = document.getElementById('preview-price');
-        
+
         if (nameEl) nameEl.textContent = document.getElementById('name').value || 'Nombre de la Clase';
         if (instructorEl) instructorEl.textContent = document.getElementById('instructor_name').value || 'Instructor';
         if (durationEl) durationEl.textContent = document.getElementById('duration_minutes').value || '60';
@@ -325,28 +325,28 @@ document.addEventListener('DOMContentLoaded', function() {
             input.addEventListener('input', updatePreview);
         }
     });
-    
+
     // Actualizar al cargar la página
     updatePreview();
 
     // Agregar nuevo horario - CON DEBUG
     const addScheduleBtn = document.getElementById('add-schedule');
     console.log('Botón agregar horario (create):', addScheduleBtn); // Debug
-    
+
     if (addScheduleBtn) {
         console.log('Botón encontrado, agregando evento (create)'); // Debug
         addScheduleBtn.addEventListener('click', function(e) {
             console.log('Click en agregar horario detectado (create)'); // Debug
             e.preventDefault();
-            
+
             // Ocultar mensaje de "no hay horarios" si existe
             const emptyMessage = document.querySelector('#schedules-container .text-center');
             if (emptyMessage) {
                 emptyMessage.style.display = 'none';
             }
-            
+
             const currentDate = new Date().toISOString().split('T')[0];
-            
+
             const scheduleHtml = `
                 <div class="schedule-item border rounded p-3 mb-3" style="background-color: #f8f9fa;">
                     <div class="row">
@@ -365,42 +365,42 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label"><strong>Hora Inicio</strong></label>
-                            <input type="time" 
-                                   name="schedules[${scheduleIndex}][start_time]" 
+                            <input type="time"
+                                   name="schedules[${scheduleIndex}][start_time]"
                                    class="form-control form-control-sm"
                                    required>
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label"><strong>Hora Fin</strong></label>
-                            <input type="time" 
-                                   name="schedules[${scheduleIndex}][end_time]" 
+                            <input type="time"
+                                   name="schedules[${scheduleIndex}][end_time]"
                                    class="form-control form-control-sm"
                                    required>
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Fecha Inicio</label>
-                            <input type="date" 
-                                   name="schedules[${scheduleIndex}][start_date]" 
+                            <input type="date"
+                                   name="schedules[${scheduleIndex}][start_date]"
                                    class="form-control form-control-sm"
                                    value="${currentDate}">
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Fecha Fin (opcional)</label>
-                            <input type="date" 
-                                   name="schedules[${scheduleIndex}][end_date]" 
+                            <input type="date"
+                                   name="schedules[${scheduleIndex}][end_date]"
                                    class="form-control form-control-sm">
                         </div>
                         <div class="col-12">
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" 
-                                       name="schedules[${scheduleIndex}][is_recurring]" 
+                                <input type="checkbox"
+                                       name="schedules[${scheduleIndex}][is_recurring]"
                                        class="form-check-input"
                                        id="recurring_${scheduleIndex}">
                                 <label class="form-check-label" for="recurring_${scheduleIndex}">Recurrente</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input type="checkbox" 
-                                       name="schedules[${scheduleIndex}][active]" 
+                                <input type="checkbox"
+                                       name="schedules[${scheduleIndex}][active]"
                                        class="form-check-input"
                                        id="active_${scheduleIndex}"
                                        checked>
@@ -413,10 +413,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             `;
-            
+
             const container = document.getElementById('schedules-container');
             console.log('Container (create):', container); // Debug
-            
+
             if (container) {
                 container.insertAdjacentHTML('beforeend', scheduleHtml);
                 scheduleIndex++;
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (scheduleItem) {
                     scheduleItem.remove();
                     console.log('Horario eliminado (create)'); // Debug
-                    
+
                     // Mostrar mensaje si no hay horarios
                     if (document.querySelectorAll('.schedule-item').length === 0) {
                         const container = document.getElementById('schedules-container');
@@ -461,37 +461,37 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             console.log('Enviando formulario (create), validando horarios'); // Debug
-            
+
             let valid = true;
             let errorMessage = '';
-            
+
             const scheduleItems = document.querySelectorAll('.schedule-item');
             console.log('Horarios a validar (create):', scheduleItems.length); // Debug
-            
+
             scheduleItems.forEach((item, index) => {
                 const daySelect = item.querySelector('select[name*="[day_of_week]"]');
                 const startTime = item.querySelector('input[name*="[start_time]"]');
                 const endTime = item.querySelector('input[name*="[end_time]"]');
-                
+
                 if (daySelect && daySelect.value === '') {
                     errorMessage = `Horario ${index + 1}: Debe seleccionar un día de la semana.`;
                     valid = false;
                     return;
                 }
-                
+
                 if (startTime && endTime && (startTime.value === '' || endTime.value === '')) {
                     errorMessage = `Horario ${index + 1}: Debe completar la hora de inicio y fin.`;
                     valid = false;
                     return;
                 }
-                
+
                 if (startTime && endTime && startTime.value >= endTime.value) {
                     errorMessage = `Horario ${index + 1}: La hora de fin debe ser posterior a la hora de inicio.`;
                     valid = false;
                     return;
                 }
             });
-            
+
             if (!valid) {
                 console.log('Validación falló (create):', errorMessage); // Debug
                 alert(errorMessage);
@@ -503,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('No se encontró el formulario (create)'); // Debug
     }
-    
+
     console.log('Script de creación completamente inicializado'); // Debug
 });
 </script>

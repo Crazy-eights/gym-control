@@ -38,12 +38,12 @@
                     <!-- Foto del Socio -->
                     <div class="mb-3">
                         @if($socio->photo)
-                            <img src="{{ asset('storage/' . $socio->photo) }}" 
-                                 alt="Foto de {{ $socio->full_name }}" 
+                            <img src="{{ asset('storage/' . $socio->photo) }}"
+                                 alt="Foto de {{ $socio->full_name }}"
                                  class="rounded-circle img-fluid"
                                  style="width: 150px; height: 150px; object-fit: cover; border: 4px solid var(--success-color);">
                         @else
-                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto border" 
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto border"
                                  style="width: 150px; height: 150px; border: 4px solid var(--success-color) !important;">
                                 <i class="fas fa-user fa-4x text-muted"></i>
                             </div>
@@ -272,7 +272,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="subscription_start_date_renovar" class="form-label">Fecha de Inicio</label>
-                        <input type="date" class="form-control" id="subscription_start_date_renovar" 
+                        <input type="date" class="form-control" id="subscription_start_date_renovar"
                                name="subscription_start_date" value="{{ now()->format('Y-m-d') }}" required>
                     </div>
                     <div class="alert alert-info d-flex align-items-center">
@@ -319,7 +319,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="subscription_start_date_asignar" class="form-label">Fecha de Inicio</label>
-                        <input type="date" class="form-control" id="subscription_start_date_asignar" 
+                        <input type="date" class="form-control" id="subscription_start_date_asignar"
                                name="subscription_start_date" value="{{ now()->format('Y-m-d') }}" required>
                     </div>
                 </div>
