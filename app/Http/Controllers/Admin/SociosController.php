@@ -8,6 +8,7 @@ use App\Models\MembershipPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class SociosController extends Controller
 {
@@ -74,6 +75,11 @@ class SociosController extends Controller
             ])->count(),
         ];
 
+        // Si es una petición AJAX, devolver solo la tabla
+        if ($request->ajax() || $request->get('ajax')) {
+            return view('admin.socios.partials.table', compact('socios', 'planes'))->render();
+        }
+
         return view('admin.socios.index', compact('socios', 'planes', 'stats'));
     }
 
@@ -98,6 +104,8 @@ class SociosController extends Controller
             'address' => 'nullable|string|max:255',
             'birthdate' => 'nullable|date|before:today',
             'contact_info' => 'required|string|max:100',
+            'email' => 'nullable|email|unique:members,email',
+            'password' => 'required|string|min:6|confirmed',
             'gender' => 'required|in:M,F,Otro',
             'plan_id' => 'nullable|exists:membership_plans,id',
             'subscription_start_date' => 'nullable|date',
@@ -116,6 +124,11 @@ class SociosController extends Controller
             'birthdate.before' => 'La fecha de nacimiento debe ser anterior a hoy.',
             'contact_info.required' => 'La información de contacto es obligatoria.',
             'contact_info.max' => 'La información de contacto no puede tener más de 100 caracteres.',
+            'email.email' => 'El email debe ser una dirección válida.',
+            'email.unique' => 'Este email ya está registrado.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+            'password.confirmed' => 'La confirmación de contraseña no coincide.',
             'gender.required' => 'El género es obligatorio.',
             'gender.in' => 'El género debe ser Masculino, Femenino u Otro.',
             'plan_id.exists' => 'El plan de membresía seleccionado no existe.',
@@ -134,8 +147,12 @@ class SociosController extends Controller
                 $validated['photo'] = $photoPath;
             }
 
+            // Hash de la contraseña
+            $validated['password'] = Hash::make($validated['password']);
+
             // Calcular fecha de fin automáticamente si se selecciona un plan
-            if ($validated['plan_id'] && $validated['subscription_start_date']) {
+            if (isset($validated['plan_id']) && $validated['plan_id'] && 
+                isset($validated['subscription_start_date']) && $validated['subscription_start_date']) {
                 $plan = MembershipPlan::find($validated['plan_id']);
                 if ($plan) {
                     $startDate = \Carbon\Carbon::parse($validated['subscription_start_date']);
@@ -145,11 +162,41 @@ class SociosController extends Controller
 
             $socio = Member::create($validated);
 
+            // Si es una petición AJAX, devolver JSON
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Socio creado exitosamente',
+                    'socio' => $socio
+                ]);
+            }
+
             return redirect()->route('admin.socios.index')
                 ->with('success', 'Socio registrado exitosamente.');
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Si es AJAX y hay errores de validación
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error de validación',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            
+            // Para requests normales, manejar como antes
+            throw $e;
+            
         } catch (\Exception $e) {
             Log::error('Error al crear socio: ' . $e->getMessage());
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al crear el socio: ' . $e->getMessage()
+                ], 500);
+            }
+            
             return redirect()->back()
                 ->withErrors(['error' => 'Error al registrar el socio.'])
                 ->withInput();
@@ -180,6 +227,7 @@ class SociosController extends Controller
                         'member_id' => $socio->member_id,
                         'firstname' => $socio->firstname,
                         'lastname' => $socio->lastname,
+                        'email' => $socio->email,
                         'contact_info' => $socio->contact_info,
                         'gender' => $socio->gender,
                         'birthdate' => $socio->birthdate,
@@ -187,7 +235,7 @@ class SociosController extends Controller
                         'plan_id' => $socio->plan_id,
                         'subscription_start_date' => $socio->subscription_start_date,
                         'subscription_end_date' => $socio->subscription_end_date,
-                        'status' => 'active', // Por defecto activo ya que no hay campo status en la BD
+                        'status' => $socio->status, // Usa el atributo calculado del modelo
                         'photo' => $socio->photo,
                     ]
                 ]);
@@ -217,6 +265,7 @@ class SociosController extends Controller
             'address' => 'nullable|string|max:255',
             'birthdate' => 'nullable|date|before:today',
             'contact_info' => 'required|string|max:100',
+            'email' => 'nullable|email|unique:members,email,' . $socio->id,
             'gender' => 'required|in:M,F,Otro',
             'plan_id' => 'nullable|exists:membership_plans,id',
             'subscription_start_date' => 'nullable|date',
@@ -235,6 +284,8 @@ class SociosController extends Controller
             'birthdate.before' => 'La fecha de nacimiento debe ser anterior a hoy.',
             'contact_info.required' => 'La información de contacto es obligatoria.',
             'contact_info.max' => 'La información de contacto no puede tener más de 100 caracteres.',
+            'email.email' => 'El email debe ser una dirección válida.',
+            'email.unique' => 'Este email ya está registrado.',
             'gender.required' => 'El género es obligatorio.',
             'gender.in' => 'El género debe ser Masculino, Femenino u Otro.',
             'plan_id.exists' => 'El plan de membresía seleccionado no existe.',
@@ -258,18 +309,19 @@ class SociosController extends Controller
             }
 
             // Calcular fecha de fin automáticamente si se selecciona un plan
-            if ($validated['plan_id'] && $validated['subscription_start_date']) {
+            if (isset($validated['plan_id']) && $validated['plan_id'] && 
+                isset($validated['subscription_start_date']) && $validated['subscription_start_date']) {
                 $plan = MembershipPlan::find($validated['plan_id']);
                 if ($plan) {
                     $startDate = \Carbon\Carbon::parse($validated['subscription_start_date']);
                     // Solo recalcular si la fecha de fin no se proporcionó o es diferente al cálculo
                     $calculatedEndDate = $startDate->copy()->addDays($plan->duration_days);
-                    if (!isset($validated['subscription_end_date']) ||
+                    if (!isset($validated['subscription_end_date']) || !$validated['subscription_end_date'] ||
                         \Carbon\Carbon::parse($validated['subscription_end_date'])->ne($calculatedEndDate)) {
                         $validated['subscription_end_date'] = $calculatedEndDate->format('Y-m-d');
                     }
                 }
-            } elseif (!$validated['plan_id']) {
+            } elseif (!isset($validated['plan_id']) || !$validated['plan_id']) {
                 // Si no hay plan, limpiar las fechas
                 $validated['subscription_start_date'] = null;
                 $validated['subscription_end_date'] = null;
@@ -277,11 +329,41 @@ class SociosController extends Controller
 
             $socio->update($validated);
 
+            // Si es una petición AJAX, devolver JSON
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Socio actualizado exitosamente',
+                    'socio' => $socio->load('membershipPlan')
+                ]);
+            }
+
             return redirect()->route('admin.socios.index')
                 ->with('success', 'Datos del socio actualizados exitosamente.');
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Si es AJAX y hay errores de validación
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error de validación',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            
+            // Para requests normales, manejar como antes
+            throw $e;
+
         } catch (\Exception $e) {
             Log::error('Error al actualizar socio: ' . $e->getMessage());
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al actualizar el socio: ' . $e->getMessage()
+                ], 500);
+            }
+            
             return redirect()->back()
                 ->withErrors(['error' => 'Error al actualizar los datos.'])
                 ->withInput();

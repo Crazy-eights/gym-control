@@ -126,10 +126,9 @@
                                 <i class="fas fa-cogs"></i> Configuración
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.mail.config.*') ? 'active' : '' }}"
-                               href="{{ route('admin.mail.config.index') }}">
-                                <i class="fas fa-envelope"></i> Config. Email
+                        <li class="nav-item" style="opacity: 0.5;">
+                            <a class="nav-link" href="#" onclick="alert('Configuración de email temporalmente deshabilitada')">
+                                <i class="fas fa-envelope"></i> Config. Email (Deshabilitado)
                             </a>
                         </li>
                     </ul>

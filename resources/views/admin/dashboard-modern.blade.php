@@ -188,7 +188,7 @@
             <small class="text-muted">Configurar membresías</small>
         </a>
 
-        <a href="{{ route('admin.mail.config.index') }}" class="quick-action-btn">
+        <a href="#" onclick="alert('Configuración de email temporalmente deshabilitada')" class="quick-action-btn">
             <div class="quick-action-icon">
                 <i class="fas fa-envelope"></i>
             </div>

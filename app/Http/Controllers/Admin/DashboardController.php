@@ -47,7 +47,7 @@ class DashboardController extends Controller
         return Cache::remember('admin.dashboard.data', 300, function () {
             return [
                 'totalMembers' => Member::count(),
-                'activeMembers' => Member::where('status', 'active')->count(),
+                'activeMembers' => Member::where('subscription_end_date', '>=', now())->count(),
                 'todayAttendances' => $this->getTodayAttendances(),
                 'monthlyRevenue' => $this->getMonthlyRevenue(),
                 'membershipPlans' => MembershipPlan::with('members')->get(),
@@ -66,7 +66,7 @@ class DashboardController extends Controller
         try {
             return [
                 'totalMembers' => Member::count() ?? 0,
-                'activeMembers' => Member::where('status', 'active')->count() ?? 0,
+                'activeMembers' => Member::where('subscription_end_date', '>=', now())->count() ?? 0,
                 'todayAttendances' => 0,
                 'monthlyRevenue' => 0,
                 'membershipPlans' => collect([]),

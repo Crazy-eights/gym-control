@@ -33,7 +33,9 @@ class AuthenticateAdmin
 
         if (method_exists($response, 'header')) {
             $response->header('X-Admin-Access', 'true');
-            $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+            $response->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+            $response->header('Pragma', 'no-cache');
+            $response->header('Expires', 'Thu, 01 Jan 1970 00:00:00 GMT');
         }
 
         return $response;

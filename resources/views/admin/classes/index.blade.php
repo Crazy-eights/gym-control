@@ -105,6 +105,59 @@
         </div>
     @endif
 
+    <!-- Filtros de búsqueda -->
+    <div class="card-modern mb-4">
+        <div class="card-header-modern">
+            <h5 class="card-title-modern text-success">
+                <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="searchFormClasses">
+                @csrf
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="search" class="form-label">Buscar Clase</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-search text-muted" id="searchIconClasses"></i>
+                                <i class="fas fa-spinner fa-spin text-muted d-none" id="searchSpinnerClasses"></i>
+                            </span>
+                            <input type="text" class="form-control" id="searchClasses" name="search" value="{{ request('search') }}" placeholder="Nombre, instructor..." autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="active" class="form-label">Estado</label>
+                        <select class="form-select" id="active" name="active">
+                            <option value="">Todas</option>
+                            <option value="1" {{ request('active') == '1' ? 'selected' : '' }}>Activas</option>
+                            <option value="0" {{ request('active') == '0' ? 'selected' : '' }}>Inactivas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="price_min" class="form-label">Precio Mín.</label>
+                        <input type="number" class="form-control" id="price_min" name="price_min" value="{{ request('price_min') }}" placeholder="0.00" step="0.01">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="price_max" class="form-label">Precio Máx.</label>
+                        <input type="number" class="form-control" id="price_max" name="price_max" value="{{ request('price_max') }}" placeholder="999.99" step="0.01">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success btn-modern flex-fill">
+                                <i class="fas fa-search me-2"></i>Buscar
+                            </button>
+                            <a href="{{ route('admin.classes.index') }}" class="btn btn-outline-success btn-modern flex-fill">
+                                <i class="fas fa-times me-2"></i>Limpiar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Lista de clases -->
     <div class="card-modern">
         <div class="card-header-modern">
@@ -113,149 +166,15 @@
             </h5>
         </div>
         <div class="card-body">
-            @if($classes->count() > 0)
-                <div class="table-responsive">
-                    <table class="table table-modern">
-                        <thead>
-                            <tr>
-                                <th>Clase</th>
-                                <th>Instructor</th>
-                                <th>Duración</th>
-                                <th>Capacidad</th>
-                                <th>Precio</th>
-                                <th>Dificultad</th>
-                                <th>Horarios</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                    @foreach($classes as $class)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex flex-column">
-                                                    <strong>{{ $class->name }}</strong>
-                                                    @if($class->description)
-                                                        <small class="text-muted">{{ Str::limit($class->description, 50) }}</small>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <i class="fas fa-user-tie text-primary"></i>
-                                                {{ $class->instructor_name }}
-                                            </td>
-                                            <td>
-                                                <i class="fas fa-clock text-info"></i>
-                                                {{ $class->duration_minutes }} min
-                                            </td>
-                                            <td>
-                                                <i class="fas fa-users text-secondary"></i>
-                                                {{ $class->max_participants }} personas
-                                            </td>
-                                            <td>
-                                                <strong class="text-success">
-                                                    ${{ number_format($class->price, 2) }}
-                                                </strong>
-                                            </td>
-                                            <td>
-                                                @switch($class->difficulty_level)
-                                                    @case('principiante')
-                                                        <span class="badge badge-modern badge-success">
-                                                            <i class="fas fa-star"></i> Principiante
-                                                        </span>
-                                                        @break
-                                                    @case('intermedio')
-                                                        <span class="badge badge-modern badge-warning">
-                                                            <i class="fas fa-star"></i><i class="fas fa-star"></i> Intermedio
-                                                        </span>
-                                                        @break
-                                                    @case('avanzado')
-                                                        <span class="badge badge-modern badge-danger">
-                                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> Avanzado
-                                                        </span>
-                                                        @break
-                                                @endswitch
-                                            </td>
-                                            <td>
-                                                @if($class->schedules->count() > 0)
-                                                    <div class="d-flex flex-wrap">
-                                                        @foreach($class->schedules->take(3) as $schedule)
-                                                            <small class="badge badge-modern badge-secondary me-1 mb-1">
-                                                                {{ ucfirst($schedule->day_of_week) }}
-                                                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}
-                                                            </small>
-                                                        @endforeach
-                                                        @if($class->schedules->count() > 3)
-                                                            <small class="text-muted">+{{ $class->schedules->count() - 3 }} más</small>
-                                                        @endif
-                                                    </div>
-                                                @else
-                                                    <span class="text-muted">Sin horarios</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($class->active)
-                                                    <span class="badge badge-modern badge-success">
-                                                        <i class="fas fa-check"></i> Activa
-                                                    </span>
-                                                @else
-                                                    <span class="badge badge-modern badge-secondary">
-                                                        <i class="fas fa-pause"></i> Inactiva
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <a href="{{ route('admin.classes.show', $class) }}"
-                                                       class="btn btn-sm btn-outline-success"
-                                                       title="Ver detalles">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-outline-warning"
-                                                            title="Editar"
-                                                            onclick="editClass('{{ $class->id }}', '{{ $class->name }}', '{{ $class->instructor_name }}', '{{ $class->duration_minutes }}', '{{ $class->max_participants }}', '{{ $class->price }}', '{{ $class->difficulty_level }}', '{{ $class->active }}', '{{ addslashes($class->description ?? '') }}')">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            title="Eliminar"
-                                                            onclick="confirmDelete({{ $class->id }}, '{{ $class->name }}')">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Paginación -->
-                        <div class="d-flex justify-content-center mt-4">
-                            {{ $classes->links() }}
-                        </div>
-                    @else
-                        <div class="empty-state text-center py-5">
-                            <div class="empty-icon mb-3">
-                                <i class="fas fa-dumbbell fa-3x text-muted"></i>
-                            </div>
-                            <h5 class="mb-2">No hay clases registradas</h5>
-                            <p class="text-muted mb-3">Comienza creando tu primera clase del gimnasio.</p>
-                            <button type="button" class="btn btn-success btn-modern" data-bs-toggle="modal" data-bs-target="#createClassModal">
-                                <i class="fas fa-plus me-2"></i>Crear Primera Clase
-                            </button>
-                        </div>
-                    @endif
-                </div>
+            <!-- Contenedor de resultados dinámicos -->
+            <div id="classesResults">
+                @include('admin.classes.partials.table', ['classes' => $classes])
             </div>
         </div>
     </div>
 </div>
 
-    </div>
-
-    <!-- Modal Crear Clase -->
+<!-- Modal Crear Clase -->
     <div class="modal fade" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content shadow-lg border-0">
@@ -533,16 +452,163 @@
 <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 <script>
-// Inicializar DataTable
-$(document).ready(function() {
-    $('#dataTable').DataTable({
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-        },
-        "order": [[ 0, "asc" ]],
-        "pageLength": 10,
-        "responsive": true
+// Auto-submit form on filter change y búsqueda AJAX
+document.addEventListener('DOMContentLoaded', function() {
+    let searchTimeout;
+    
+    // Elementos del DOM para classes
+    const searchFormClasses = document.getElementById('searchFormClasses');
+    const searchInputClasses = document.getElementById('searchClasses');
+    const searchIconClasses = document.getElementById('searchIconClasses');
+    const searchSpinnerClasses = document.getElementById('searchSpinnerClasses');
+    const classesResults = document.getElementById('classesResults');
+    
+    // Filtros
+    const activeFilter = document.getElementById('active');
+    const priceMinFilter = document.getElementById('price_min');
+    const priceMaxFilter = document.getElementById('price_max');
+    
+    // Verificar que los elementos existen
+    console.log('Elementos encontrados:', {
+        searchFormClasses: !!searchFormClasses,
+        searchInputClasses: !!searchInputClasses,
+        searchIconClasses: !!searchIconClasses,
+        searchSpinnerClasses: !!searchSpinnerClasses,
+        classesResults: !!classesResults,
+        activeFilter: !!activeFilter,
+        priceMinFilter: !!priceMinFilter,
+        priceMaxFilter: !!priceMaxFilter
     });
+    
+    // Función para realizar búsqueda AJAX
+    function performSearchClasses() {
+        console.log('Iniciando búsqueda AJAX...');
+        
+        const params = new URLSearchParams();
+        
+        // Agregar parámetros de búsqueda
+        const search = searchInputClasses.value.trim();
+        const active = activeFilter.value;
+        const price_min = priceMinFilter.value;
+        const price_max = priceMaxFilter.value;
+        
+        if (search) params.append('search', search);
+        if (active) params.append('active', active);
+        if (price_min) params.append('price_min', price_min);
+        if (price_max) params.append('price_max', price_max);
+        params.append('ajax', '1'); // Indicar que es una petición AJAX
+        
+        console.log('Parámetros de búsqueda:', params.toString());
+        
+        // Mostrar spinner en el icono
+        searchIconClasses.classList.add('d-none');
+        searchSpinnerClasses.classList.remove('d-none');
+        
+        // Mostrar skeleton loading en la tabla
+        classesResults.innerHTML = `
+            <div class="table-responsive">
+                <table class="table table-modern">
+                    <thead>
+                        <tr>
+                            <th>Clase</th>
+                            <th>Instructor</th>
+                            <th>Duración</th>
+                            <th>Capacidad</th>
+                            <th>Precio</th>
+                            <th>Dificultad</th>
+                            <th>Horarios</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="9" class="text-center py-4">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-spinner fa-spin text-success me-3"></i>
+                                    <span class="text-muted">Buscando clases...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        // Realizar petición AJAX
+        fetch(`{{ route('admin.classes.index') }}?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            console.log('Respuesta recibida:', response);
+            return response.text();
+        })
+        .then(html => {
+            console.log('HTML recibido:', html.substring(0, 200) + '...');
+            classesResults.innerHTML = html;
+            
+            // Ocultar spinner
+            searchIconClasses.classList.remove('d-none');
+            searchSpinnerClasses.classList.add('d-none');
+        })
+        .catch(error => {
+            console.error('Error en la búsqueda:', error);
+            
+            // Ocultar spinner
+            searchIconClasses.classList.remove('d-none');
+            searchSpinnerClasses.classList.add('d-none');
+            
+            // Mostrar mensaje de error
+            classesResults.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error al realizar la búsqueda. Por favor, intenta nuevamente.
+                </div>
+            `;
+        });
+    }
+    
+    // Prevenir envío tradicional del formulario
+    searchFormClasses.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Submit prevenido, ejecutando búsqueda AJAX');
+        performSearchClasses();
+    });
+    
+    // Búsqueda en tiempo real con debounce
+    searchInputClasses.addEventListener('input', function() {
+        console.log('Input detectado:', this.value);
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(performSearchClasses, 300); // Esperar 300ms
+    });
+    
+    // Auto-submit para filtros
+    [activeFilter, priceMinFilter, priceMaxFilter].forEach(filter => {
+        filter.addEventListener('change', function() {
+            console.log('Filtro cambiado:', filter.id, '=', filter.value);
+            performSearchClasses();
+        });
+    });
+});
+
+// Inicializar DataTable solo si no hay búsqueda AJAX
+$(document).ready(function() {
+    // Solo inicializar DataTable si no es una búsqueda AJAX
+    if (!document.querySelector('#classesResults table[id^="dataTable"]')) {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
+            "order": [[ 0, "asc" ]],
+            "pageLength": 10,
+            "responsive": true
+        });
+    }
 });
 
 // Función para confirmar eliminación

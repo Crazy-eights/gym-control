@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test AJAX</title>
+</head>
+<body>
+    <h1>Test de AJAX para Classes</h1>
+    <input type="text" id="testSearch" placeholder="Prueba de búsqueda">
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('testSearch').addEventListener('input', function() {
+            const search = this.value;
+            console.log('Buscando:', search);
+            
+            fetch(`http://localhost/gym-control/public/admin/classes?search=${search}&ajax=1`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                console.log('Resultado:', html);
+                document.getElementById('result').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

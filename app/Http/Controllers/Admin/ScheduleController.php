@@ -15,9 +15,14 @@ class ScheduleController extends Controller
     public function index()
     {
         try {
-            $schedules = Schedule::with('employees')
+            $schedules = Schedule::with('employees.position')
                 ->orderBy('time_in')
                 ->paginate(20);
+
+            // Agregar el conteo de empleados para cada horario
+            foreach ($schedules as $schedule) {
+                $schedule->employees_count = $schedule->employees->count();
+            }
 
             return view('admin.schedules.index', compact('schedules'));
 
@@ -248,12 +253,40 @@ class ScheduleController extends Controller
     public function show(Schedule $schedule)
     {
         try {
-            $schedule->load('employees');
+            $schedule->load('employees.position');
 
-            return view('admin.schedules.show', compact('schedule'));
+            // Si es una petición AJAX, devolver JSON
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'id' => $schedule->id,
+                    'time_in' => $schedule->time_in,
+                    'time_out' => $schedule->time_out,
+                    'employees' => $schedule->employees->map(function($employee) {
+                        return [
+                            'id' => $employee->id,
+                            'firstname' => $employee->firstname,
+                            'lastname' => $employee->lastname,
+                            'employee_id' => $employee->employee_id,
+                            'position' => $employee->position ? $employee->position->description : null
+                        ];
+                    })
+                ]);
+            }
+
+            // Si no es AJAX, redirigir al index (no tenemos vista show)
+            return redirect()->route('admin.schedules.index')
+                ->with('info', 'Horario: ' . $schedule->time_in . ' - ' . $schedule->time_out);
 
         } catch (\Exception $e) {
             Log::error('Error loading schedule: ' . $e->getMessage());
+
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al cargar el horario: ' . $e->getMessage()
+                ], 500);
+            }
 
             return redirect()->back()
                 ->with('error', 'Error al cargar el horario: ' . $e->getMessage());
@@ -265,7 +298,34 @@ class ScheduleController extends Controller
      */
     public function edit(Schedule $schedule)
     {
-        return view('admin.schedules.edit', compact('schedule'));
+        try {
+            // Si es una petición AJAX, devolver JSON
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'id' => $schedule->id,
+                    'time_in' => $schedule->time_in,
+                    'time_out' => $schedule->time_out
+                ]);
+            }
+
+            // Si no es AJAX, redirigir al index con los datos
+            return redirect()->route('admin.schedules.index')
+                ->with('edit_schedule', $schedule);
+
+        } catch (\Exception $e) {
+            Log::error('Error loading schedule for edit: ' . $e->getMessage());
+
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al cargar el horario para editar: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Error al cargar el horario para editar: ' . $e->getMessage());
+        }
     }
 
     /**

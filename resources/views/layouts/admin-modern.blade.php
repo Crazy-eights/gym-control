@@ -101,14 +101,46 @@
                     </a>
                 </div>
 
-                <!-- Horarios -->
+                <!-- Posiciones -->
+                <div class="sidebar-item">
+                    <a href="{{ route('admin.positions.index') }}" class="sidebar-link {{ request()->routeIs('admin.positions.*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <span class="sidebar-text">Posiciones</span>
+                        @php
+                            try {
+                                $positionCount = \App\Models\Position::count();
+                            } catch (Exception $e) {
+                                $positionCount = 0;
+                            }
+                        @endphp
+                        @if($positionCount > 0)
+                            <span class="sidebar-badge">{{ $positionCount }}</span>
+                        @endif
+                        <div class="sidebar-tooltip">Gestión de Posiciones</div>
+                    </a>
+                </div>
+
+                <!-- Horarios de Personal -->
                 <div class="sidebar-item">
                     <a href="{{ route('admin.schedules.index') }}" class="sidebar-link {{ request()->routeIs('admin.schedules.*') ? 'active' : '' }}">
                         <div class="sidebar-icon">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
-                        <span class="sidebar-text">Horarios</span>
-                        <div class="sidebar-tooltip">Horarios de Clases</div>
+                        <span class="sidebar-text">Horarios Personal</span>
+                        <div class="sidebar-tooltip">Horarios de Trabajo del Personal</div>
+                    </a>
+                </div>
+
+                <!-- Instructores -->
+                <div class="sidebar-item">
+                    <a href="{{ route('admin.instructors.index') }}" class="sidebar-link {{ request()->routeIs('admin.instructors.*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <span class="sidebar-text">Instructores</span>
+                        <div class="sidebar-tooltip">Gestión de Instructores</div>
                     </a>
                 </div>
             </div>
@@ -156,13 +188,13 @@
                 </div>
 
                 <!-- Configuración de Email -->
-                <div class="sidebar-item">
-                    <a href="{{ route('admin.mail.config.index') }}" class="sidebar-link {{ request()->routeIs('admin.mail.config.*') ? 'active' : '' }}">
+                <div class="sidebar-item" style="opacity: 0.5;">
+                    <a href="#" onclick="alert('Configuración de email temporalmente deshabilitada')" class="sidebar-link">
                         <div class="sidebar-icon">
                             <i class="fas fa-envelope"></i>
                         </div>
                         <span class="sidebar-text">Email</span>
-                        <div class="sidebar-tooltip">Configuración de Email</div>
+                        <div class="sidebar-tooltip">Configuración de Email (Deshabilitado)</div>
                     </a>
                 </div>
             </div>

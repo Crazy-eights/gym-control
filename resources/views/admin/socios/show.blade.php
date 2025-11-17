@@ -5,19 +5,16 @@
 @section('header-color', 'bg-success')
 
 @section('content')
-<div class="animate-fade-in-up">
+<div class="animate-fade-in-up px-3 pt-3">
     <!-- Header con acciones -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 px-2">
         <div>
             <h2 class="text-success mb-1">
                 <i class="fas fa-user me-2"></i>Detalles del Socio
             </h2>
             <p class="text-muted mb-0">Información completa del miembro</p>
         </div>
-        <div class="btn-group">
-            <a href="{{ route('admin.socios.edit', $socio) }}" class="btn btn-warning btn-modern">
-                <i class="fas fa-edit me-1"></i>Editar
-            </a>
+        <div>
             <a href="{{ route('admin.socios.index') }}" class="btn btn-secondary btn-modern">
                 <i class="fas fa-arrow-left me-1"></i>Volver
             </a>
@@ -28,13 +25,13 @@
         <!-- Información Personal -->
         <div class="col-lg-4">
             <div class="card-modern mb-4">
-                <div class="card-modern-header">
+                <div class="card-modern-header p-3">
                     <h3 class="card-modern-title">
                         <i class="fas fa-id-card text-success me-2"></i>
                         Información Personal
                     </h3>
                 </div>
-                <div class="card-modern-body text-center">
+                <div class="card-modern-body text-center p-4">
                     <!-- Foto del Socio -->
                     <div class="mb-3">
                         @if($socio->photo)
@@ -83,7 +80,7 @@
                     </div>
 
                     <!-- Datos básicos -->
-                    <div class="text-start">
+                    <div class="text-start px-3 py-2">
                         <div class="row mb-2">
                             <div class="col-4"><strong>Género:</strong></div>
                             <div class="col-8">
@@ -134,7 +131,7 @@
         <!-- Información de Membresía -->
         <div class="col-lg-8">
             <div class="card-modern mb-4">
-                <div class="card-modern-header d-flex justify-content-between align-items-center">
+                <div class="card-modern-header d-flex justify-content-between align-items-center p-3">
                     <h3 class="card-modern-title mb-0">
                         <i class="fas fa-id-badge text-success me-2"></i>
                         Información de Membresía
@@ -149,7 +146,7 @@
                         </button>
                     @endif
                 </div>
-                <div class="card-modern-body">
+                <div class="card-modern-body p-4">
                     @if($socio->membershipPlan)
                         <div class="row">
                             <div class="col-md-6">
@@ -230,13 +227,13 @@
 
             <!-- Historial (placeholder para futuras funcionalidades) -->
             <div class="card-modern">
-                <div class="card-modern-header">
+                <div class="card-modern-header p-3">
                     <h3 class="card-modern-title">
                         <i class="fas fa-history text-success me-2"></i>
                         Historial de Actividad
                     </h3>
                 </div>
-                <div class="card-modern-body">
+                <div class="card-modern-body p-4">
                     <div class="text-center py-3">
                         <i class="fas fa-history fa-2x text-muted mb-2"></i>
                         <p class="text-muted">Próximamente: Historial de pagos, asistencias y actividades.</p>

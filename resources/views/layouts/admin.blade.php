@@ -308,6 +308,14 @@
                 </a>
             </li>
 
+            <!-- Nav Item - Posiciones -->
+            <li class="nav-item {{ request()->routeIs('admin.positions.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.positions.index') }}">
+                    <i class="fas fa-fw fa-user-tie"></i>
+                    <span>Posiciones</span>
+                </a>
+            </li>
+
             <!-- Nav Item - Asistencias -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="alert('Próximamente: Control de Asistencias')">
@@ -341,10 +349,10 @@
             </li>
 
             <!-- Nav Item - Configuración de Email -->
-            <li class="nav-item {{ request()->routeIs('admin.mail.config.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.mail.config.index') }}">
+            <li class="nav-item" style="opacity: 0.5;">
+                <a class="nav-link" href="#" onclick="alert('Configuración de email temporalmente deshabilitada')">
                     <i class="fas fa-fw fa-envelope"></i>
-                    <span>Configuración Email</span>
+                    <span>Configuración Email (Deshabilitado)</span>
                 </a>
             </li>
 

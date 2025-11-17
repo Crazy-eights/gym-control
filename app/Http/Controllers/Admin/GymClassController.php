@@ -10,11 +10,37 @@ use Illuminate\Support\Facades\DB;
 
 class GymClassController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $classes = GymClass::with(['schedules' => function($query) {
+        $query = GymClass::with(['schedules' => function($query) {
             $query->where('active', true);
-        }])->orderBy('name')->paginate(10);
+        }]);
+
+        // Búsqueda por nombre o instructor
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('instructor_name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filtro por estado activo/inactivo
+        if ($request->filled('active')) {
+            $query->where('active', $request->active);
+        }
+
+        // Filtro por precio
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->price_min);
+        }
+
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->price_max);
+        }
+
+        $classes = $query->orderBy('name')->paginate(10);
 
         // Calcular plazas disponibles
         $totalCapacity = $classes->sum('max_participants');
@@ -33,6 +59,11 @@ class GymClassController extends Controller
         }
 
         $availableSpots = max(0, $totalCapacity - $reservedSpots);
+
+        // Si es una petición AJAX, devolver solo la tabla
+        if ($request->ajax() || $request->get('ajax')) {
+            return view('admin.classes.partials.table', compact('classes'))->render();
+        }
 
         return view('admin.classes.index', compact('classes', 'totalCapacity', 'availableSpots'));
     }

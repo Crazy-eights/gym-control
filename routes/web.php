@@ -7,10 +7,11 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\MailConfigController;
+// use App\Http\Controllers\Admin\MailConfigController; // Temporalmente deshabilitado
 use App\Http\Controllers\Admin\SociosController;
 use App\Http\Controllers\Admin\MembershipPlansController;
 use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\InstructorsController;
 use App\Http\Controllers\Portal\SociosPortalController;
 
 /*
@@ -149,7 +150,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
         Route::post('settings/reset', [SettingsController::class, 'reset'])->name('settings.reset');
 
-        // Configuración de Email/Correo (CON RATE LIMITING)
+        // Configuración de Email/Correo (TEMPORALMENTE DESHABILITADO)
+        /*
         Route::get('mail-config', [MailConfigController::class, 'index'])->name('mail.config.index');
         Route::put('mail-config', [MailConfigController::class, 'update'])->name('mail.config.update');
 
@@ -158,6 +160,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->middleware('throttle:10,1'); // 10 tests por minuto
 
         Route::post('mail-config/preset/{provider}', [MailConfigController::class, 'applyPreset'])->name('mail.config.preset');
+        */
 
         // Configuración Visual
         Route::get('visual-config', [\App\Http\Controllers\Admin\VisualConfigController::class, 'index'])->name('visual.config.index');
@@ -166,11 +169,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('visual-config/seed', [\App\Http\Controllers\Admin\VisualConfigController::class, 'seedDefaults'])->name('visual.config.seed');
         Route::post('visual-config/preview', [\App\Http\Controllers\Admin\VisualConfigController::class, 'preview'])->name('visual.config.preview');
 
-        // OAuth Microsoft Routes
+        // OAuth Microsoft Routes (TEMPORALMENTE DESHABILITADO)
+        /*
         Route::get('mail-config/oauth/microsoft', [MailConfigController::class, 'redirectToMicrosoft'])->name('mail.oauth.microsoft');
         Route::post('mail-config/oauth/microsoft/connect', [MailConfigController::class, 'connectToMicrosoft'])->name('mail.oauth.microsoft.connect');
         Route::get('mail-config/oauth/microsoft/callback', [MailConfigController::class, 'handleMicrosoftCallback'])->name('mail.oauth.microsoft.callback');
         Route::post('mail-config/oauth/microsoft/disconnect', [MailConfigController::class, 'disconnectMicrosoft'])->name('mail.oauth.microsoft.disconnect');
+        */
 
         // === MÓDULO DE SOCIOS ===
         Route::resource('socios', SociosController::class);
@@ -188,6 +193,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // === MÓDULO DE HORARIOS ===
         Route::resource('schedules', ScheduleController::class);
+
+        // === MÓDULO DE POSICIONES ===
+        Route::resource('positions', \App\Http\Controllers\Admin\PositionsController::class);
+        // Ruta de test temporal
+        Route::get('positions-test', function() {
+            $positions = \App\Models\Position::all();
+            return view('admin.positions.test', compact('positions'));
+        })->name('positions.test');
+
+        // === MÓDULO DE INSTRUCTORES ===
+        Route::resource('instructors', \App\Http\Controllers\Admin\InstructorsController::class);
 
         // Route::resource('employees', EmployeeController::class);  // Comentado hasta crear el controlador
     });

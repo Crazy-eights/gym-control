@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <style>
         body {
-            background: linear-gradient(135deg, #4A90E2 0%, #5FB3E4 100%);
+            background: linear-gradient(135deg, #ffffffff 0%, #ffffffff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -28,7 +28,7 @@
         }
 
         .login-left {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3ac9ecff 0%, #4b82a2ff 100%);
             flex: 1;
             display: flex;
             align-items: center;
