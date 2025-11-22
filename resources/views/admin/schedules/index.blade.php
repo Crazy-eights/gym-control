@@ -326,6 +326,9 @@
 <script>
     console.log('Script iniciando...');
 
+    // Declarar funciones globales inmediatamente para onclick
+    var verHorario, editarHorario, eliminarHorario;
+
     // Funciones principales
     window.verHorario = function(id) {
         console.log('verHorario llamado con ID:', id);
@@ -483,6 +486,11 @@
             });
         }
     };
+
+    // Asignar funciones globales inmediatamente
+    verHorario = window.verHorario;
+    editarHorario = window.editarHorario;
+    eliminarHorario = window.eliminarHorario;
 
     // Función para crear horario
     function crearHorario() {
@@ -707,74 +715,6 @@
         }
     }
 
-    function verHorario(id) {
-        console.log('verHorario llamado con ID:', id);
-        alert('Probando función verHorario - ID: ' + id);
-        
-        fetch(`/admin/schedules/${id}`, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => {
-            console.log('Respuesta verHorario:', response);
-            if (!response.ok) {
-                throw new Error('Error en la petición');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                const content = `
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6 class="fw-bold">Información General</h6>
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td><strong>ID:</strong></td>
-                                    <td>#${data.id}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Hora de Entrada:</strong></td>
-                                    <td>${data.time_in}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Hora de Salida:</strong></td>
-                                    <td>${data.time_out}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Duración:</strong></td>
-                                    <td>${calculateDuration(data.time_in, data.time_out)}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="fw-bold">Empleados Asignados</h6>
-                            ${data.employees && data.employees.length > 0 ?
-                                '<ul class="list-unstyled">' +
-                                data.employees.map(emp => `<li><i class="fas fa-user me-2"></i>${emp.firstname} ${emp.lastname}</li>`).join('') +
-                                '</ul>' :
-                                '<p class="text-muted">No hay empleados asignados</p>'
-                            }
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('viewScheduleModalBody').innerHTML = content;
-                new bootstrap.Modal(document.getElementById('viewScheduleModal')).show();
-            } else {
-                showAlert('error', data.message || 'Error al cargar el horario');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('error', 'Error al cargar los detalles del horario');
-        });
-    }
     // Función auxiliar para calcular duración
     function calculateDuration(timeIn, timeOut) {
         const start = new Date('1970-01-01T' + timeIn + 'Z');
