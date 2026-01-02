@@ -346,14 +346,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-    form.addEventListener('submit', function() {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Procesando...';
-                submitBtn.disabled = true;
-            }
-        });
-    });
-});
-</script>
-@endpush

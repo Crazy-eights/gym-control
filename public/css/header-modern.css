@@ -16,7 +16,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--spacing-xl);
-  z-index: 1100; /* Mayor que el sidebar para estar por encima */
+  z-index: 1040; /* Menor que los modales de Bootstrap (1050-1055) pero mayor que el sidebar (1000) */
   transition: left var(--transition-speed) ease;
   box-shadow: var(--shadow-sm);
   gap: var(--spacing-lg);

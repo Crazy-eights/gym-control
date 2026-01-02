@@ -72,7 +72,7 @@ class InstructorsController extends Controller
             'birthdate' => 'nullable|date',
             'contact_info' => 'required|string',
             'gender' => 'required|string|in:M,F',
-            'position_id' => 'required|exists:positions,id',
+            'position_id' => 'required|exists:position,id',
             'schedule_id' => 'required|exists:schedules,id',
             'photo' => 'nullable|string|max:200'
         ]);
@@ -112,7 +112,7 @@ class InstructorsController extends Controller
             'birthdate' => 'nullable|date',
             'contact_info' => 'required|string',
             'gender' => 'required|string|in:M,F',
-            'position_id' => 'required|exists:positions,id',
+            'position_id' => 'required|exists:position,id',
             'schedule_id' => 'required|exists:schedules,id',
             'photo' => 'nullable|string|max:200'
         ]);

@@ -345,6 +345,12 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         
         const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        // Deshabilitar botón y mostrar loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
         
         fetch('{{ route('admin.instructors.store') }}', {
             method: 'POST',
@@ -354,7 +360,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 // Cerrar modal
@@ -362,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 modal.hide();
                 
                 // Limpiar formulario
-                this.reset();
+                document.getElementById('createInstructorForm').reset();
                 
                 // Mostrar mensaje
                 showAlert('success', data.message);
@@ -370,12 +381,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Recargar tabla
                 searchInstructors();
             } else {
-                showAlert('error', 'Error al crear el instructor');
+                showAlert('error', data.message || 'Error al crear el instructor');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            showAlert('error', 'Error al procesar la solicitud');
+            console.error('Error completo:', error);
+            let errorMessage = 'Error al procesar la solicitud';
+            
+            if (error.errors) {
+                // Errores de validación
+                const firstError = Object.values(error.errors)[0];
+                errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+            
+            showAlert('error', errorMessage);
+        })
+        .finally(() => {
+            // Restaurar botón
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
         });
     });
 
