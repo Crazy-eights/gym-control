@@ -16,7 +16,7 @@ class CreateClassSchedulesTable extends Migration
         Schema::create('class_schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('gym_class_id')->constrained()->onDelete('cascade');
-            $table->enum('day_of_week', ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']);
+            $table->string('day_of_week', 20); // 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'
             $table->time('start_time'); // Hora de inicio
             $table->time('end_time'); // Hora de fin
             $table->date('start_date')->nullable(); // Fecha de inicio (para clases temporales)

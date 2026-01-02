@@ -14,7 +14,10 @@ class AddTimestampsToMembershipPlansTable extends Migration
     public function up()
     {
         Schema::table('membership_plans', function (Blueprint $table) {
-            $table->timestamps();
+            // Verificar si las columnas no existen antes de agregarlas
+            if (!Schema::hasColumn('membership_plans', 'created_at')) {
+                $table->timestamps();
+            }
         });
     }
 

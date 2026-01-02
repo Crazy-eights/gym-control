@@ -49,7 +49,7 @@ return new class extends Migration
             // Testing y logs
             $table->string('test_email_address', 100)->nullable();
             $table->timestamp('last_email_test')->nullable();
-            $table->enum('email_test_status', ['success', 'failed', 'pending'])->nullable();
+            $table->string('email_test_status', 20)->nullable(); // 'success', 'failed', 'pending'
             $table->text('last_email_error')->nullable();
 
             // Configuraciones avanzadas

@@ -21,7 +21,7 @@ class CreateGymClassesTable extends Migration
             $table->integer('duration_minutes'); // Duración en minutos
             $table->integer('max_participants')->default(20); // Máximo de participantes
             $table->decimal('price', 8, 2)->default(0); // Precio de la clase (0 = incluido en membresía)
-            $table->enum('difficulty_level', ['principiante', 'intermedio', 'avanzado'])->default('principiante');
+            $table->string('difficulty_level', 20)->default('principiante'); // 'principiante', 'intermedio', 'avanzado'
             $table->json('equipment_needed')->nullable(); // Equipamiento necesario
             $table->string('room')->nullable(); // Sala donde se imparte
             $table->boolean('active')->default(true);

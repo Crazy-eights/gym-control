@@ -18,7 +18,7 @@ class CreateClassBookingsTable extends Migration
             $table->foreignId('member_id')->constrained()->onDelete('cascade');
             $table->foreignId('class_schedule_id')->constrained()->onDelete('cascade');
             $table->date('booking_date'); // Fecha específica de la clase
-            $table->enum('status', ['confirmed', 'cancelled', 'attended', 'no_show'])->default('confirmed');
+            $table->string('status', 20)->default('confirmed'); // 'confirmed', 'cancelled', 'attended', 'no_show'
             $table->timestamp('booked_at')->useCurrent(); // Cuando se hizo la reserva
             $table->timestamp('cancelled_at')->nullable(); // Si fue cancelada
             $table->text('notes')->nullable(); // Notas adicionales
