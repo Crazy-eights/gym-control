@@ -147,16 +147,16 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Satisfacción</div>
+                    <div class="stat-number">{{ $expiredMemberships ?? 0 }}</div>
+                    <div class="stat-label">Membresías Vencidas</div>
                 </div>
                 <div class="stat-icon">
-                    <i class="fas fa-heart" style="color: var(--danger); font-size: 2rem;"></i>
+                    <i class="fas fa-exclamation-triangle" style="color: var(--warning); font-size: 2rem;"></i>
                 </div>
             </div>
             <div class="mt-3">
-                <small class="text-success">
-                    <i class="fas fa-arrow-up"></i> Excelente
+                <small class="text-warning">
+                    <i class="fas fa-clock"></i> Requieren renovación
                 </small>
             </div>
         </div>

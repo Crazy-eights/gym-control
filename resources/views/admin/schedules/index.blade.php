@@ -90,14 +90,12 @@
     </div>
 
     <!-- Lista de horarios -->
-    <div class="card-modern">
-        <div class="card-header-modern p-3">
-            <h5 class="card-title-modern text-success">
-                <i class="fas fa-list me-2"></i>Lista de Horarios
-            </h5>
-        </div>
-        <div class="card-body p-4">
-            @if($schedules->count() > 0)
+    <div class="content-section">
+        <h5 class="section-title">
+            <i class="fas fa-list me-2"></i>Lista de Horarios
+        </h5>
+        
+        @if($schedules->count() > 0)
                 <div class="table-responsive">
                     <table class="table table-modern">
                         <thead>
@@ -216,7 +214,6 @@
                     </button>
                 </div>
             @endif
-        </div>
     </div>
 </div>
 

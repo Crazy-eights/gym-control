@@ -23,38 +23,44 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const headerUser = document.getElementById('headerUser');
-    const mainContent = document.getElementById('mainContent');
+    const body = document.body;
+    const html = document.documentElement;
 
     // === ESTADO DEL SIDEBAR ===
-    let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    // Recuperar estado guardado o usar false por defecto (expandido)
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    const sidebarCollapsed = savedState === 'true';
 
-    // Aplicar estado inicial
-    if (sidebarCollapsed) {
-        sidebar.classList.add('collapsed');
-        if (mainContent) {
-            mainContent.style.marginLeft = 'var(--sidebar-collapsed-width)';
+    console.log('DOMContentLoaded - Estado guardado:', savedState, '-> Colapsado:', sidebarCollapsed);
+
+    // Remover la clase temporal del HTML
+    html.classList.remove('sidebar-collapsed-initial');
+
+    // Aplicar estado definitivo al sidebar y body
+    if (sidebar) {
+        if (sidebarCollapsed) {
+            sidebar.classList.add('collapsed');
+            body.classList.add('sidebar-collapsed');
+        } else {
+            sidebar.classList.remove('collapsed');
+            body.classList.remove('sidebar-collapsed');
         }
     }
 
     // === TOGGLE SIDEBAR DESKTOP ===
-    if (sidebarToggle) {
+    if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', function() {
-            sidebarCollapsed = !sidebarCollapsed;
-
-            if (sidebarCollapsed) {
-                sidebar.classList.add('collapsed');
-                if (mainContent) {
-                    mainContent.style.marginLeft = 'var(--sidebar-collapsed-width)';
-                }
-            } else {
-                sidebar.classList.remove('collapsed');
-                if (mainContent) {
-                    mainContent.style.marginLeft = 'var(--sidebar-width)';
-                }
-            }
-
-            // Guardar estado
-            localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
+            const isCurrentlyCollapsed = sidebar.classList.contains('collapsed');
+            
+            // Toggle la clase en sidebar y body
+            sidebar.classList.toggle('collapsed');
+            body.classList.toggle('sidebar-collapsed');
+            
+            // Guardar el nuevo estado
+            const newState = !isCurrentlyCollapsed;
+            localStorage.setItem('sidebarCollapsed', newState);
+            
+            console.log('Sidebar toggle -> Nuevo estado:', newState ? 'Colapsado' : 'Expandido');
         });
     }
 

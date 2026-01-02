@@ -89,14 +89,12 @@
     </div>
 
     <!-- Filtros de búsqueda -->
-    <div class="card-modern mb-4">
-        <div class="card-header-modern">
-            <h5 class="card-title-modern text-success">
-                <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
-            </h5>
-        </div>
-        <div class="card-body">
-            <form method="GET" action="{{ route('admin.membership-plans.index') }}">
+    <div class="content-section mb-4">
+        <h5 class="section-title">
+            <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+        </h5>
+        
+        <form id="searchForm" method="GET" action="{{ route('admin.membership-plans.index') }}">
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="search" class="form-label">Buscar Plan</label>
@@ -128,18 +126,15 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 
     <!-- Lista de planes -->
-    <div class="card-modern">
-        <div class="card-header-modern">
-            <h5 class="card-title-modern text-success">
-                <i class="fas fa-list me-2"></i>Lista de Planes de Membresía
-            </h5>
-        </div>
-        <div class="card-body">
-            @if($planes->count() > 0)
+    <div class="content-section">
+        <h5 class="section-title">
+            <i class="fas fa-list me-2"></i>Planes de Membresía
+        </h5>
+        
+        @if($planes->count() > 0)
                 <div class="table-responsive">
                     <table class="table table-modern">
                         <thead>
@@ -251,7 +246,6 @@
                     @endif
                 </div>
             @endif
-        </div>
     </div>
 </div>
 

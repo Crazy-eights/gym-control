@@ -21,6 +21,58 @@
     <link href="{{ asset('css/sidebar-modern.css') }}" rel="stylesheet">
     <link href="{{ asset('css/header-modern.css') }}" rel="stylesheet">
 
+    <!-- Aplicar estado del sidebar ANTES de que el body sea visible -->
+    <script>
+        // Este script se ejecuta INMEDIATAMENTE antes de que el DOM esté listo
+        (function() {
+            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (sidebarCollapsed) {
+                // Agregar clase al HTML para aplicarlo inmediatamente
+                document.documentElement.classList.add('sidebar-collapsed-initial');
+            }
+        })();
+    </script>
+
+    <style>
+        /* Estilos críticos para aplicar ANTES de que cargue JavaScript */
+        html.sidebar-collapsed-initial .sidebar-modern {
+            width: 70px;
+        }
+        html.sidebar-collapsed-initial .main-content {
+            margin-left: 70px;
+        }
+        html.sidebar-collapsed-initial .header-modern {
+            left: 70px;
+        }
+        /* Solo ocultar el TEXTO, NO el logo/icono */
+        html.sidebar-collapsed-initial .sidebar-logo-text {
+            opacity: 0;
+            width: 0;
+            pointer-events: none;
+        }
+        html.sidebar-collapsed-initial .sidebar-text,
+        html.sidebar-collapsed-initial .sidebar-badge,
+        html.sidebar-collapsed-initial .sidebar-section-title {
+            opacity: 0;
+            width: 0;
+            pointer-events: none;
+        }
+        html.sidebar-collapsed-initial .sidebar-link {
+            justify-content: center;
+            padding: 1rem;
+        }
+        html.sidebar-collapsed-initial .sidebar-logo {
+            padding: 2rem 0.5rem;
+            justify-content: center;
+        }
+        /* Asegurar que el logo/icono siempre sea visible */
+        html.sidebar-collapsed-initial .sidebar-logo > div:first-child,
+        html.sidebar-collapsed-initial .sidebar-icon {
+            opacity: 1 !important;
+            display: flex !important;
+        }
+    </style>
+
     @stack('styles')
 </head>
 
@@ -30,14 +82,6 @@
 
     <!-- Modern Sidebar -->
     <nav class="sidebar-modern" id="sidebar">
-        <!-- Logo Section -->
-        <div class="sidebar-logo">
-            <div style="width: 40px; height: 40px; background: var(--primary-color); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">
-                GC
-            </div>
-            <span class="sidebar-logo-text">Gym Control</span>
-        </div>
-
         <!-- Navigation -->
         <div class="sidebar-nav">
             <!-- Dashboard Section -->
@@ -65,16 +109,6 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <span class="sidebar-text">Socios</span>
-                        @php
-                            try {
-                                $memberCount = \App\Models\Member::count();
-                            } catch (Exception $e) {
-                                $memberCount = 0;
-                            }
-                        @endphp
-                        @if($memberCount > 0)
-                            <span class="sidebar-badge">{{ $memberCount }}</span>
-                        @endif
                         <div class="sidebar-tooltip">Gestión de Socios</div>
                     </a>
                 </div>
@@ -108,16 +142,6 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <span class="sidebar-text">Posiciones</span>
-                        @php
-                            try {
-                                $positionCount = \App\Models\Position::count();
-                            } catch (Exception $e) {
-                                $positionCount = 0;
-                            }
-                        @endphp
-                        @if($positionCount > 0)
-                            <span class="sidebar-badge">{{ $positionCount }}</span>
-                        @endif
                         <div class="sidebar-tooltip">Gestión de Posiciones</div>
                     </a>
                 </div>
@@ -224,40 +248,25 @@
 
     <!-- Modern Header -->
     <header class="header-modern" id="header">
-        <div class="header-left">
-            <button class="header-mobile-toggle" id="mobileSidebarToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <h1 class="header-title">@yield('page-title', 'Dashboard')</h1>
-            @if(isset($breadcrumbs))
-            <nav class="header-breadcrumb">
-                @foreach($breadcrumbs as $index => $breadcrumb)
-                    @if($index > 0)
-                        <span class="header-breadcrumb-separator">/</span>
-                    @endif
-                    @if($loop->last)
-                        <span class="header-breadcrumb-current">{{ $breadcrumb['title'] }}</span>
-                    @else
-                        <a href="{{ $breadcrumb['url'] }}" class="header-breadcrumb-link">{{ $breadcrumb['title'] }}</a>
-                    @endif
-                @endforeach
-            </nav>
-            @endif
+        <!-- Logo Section -->
+        <div class="header-logo">
+            <div class="header-logo-icon">GC</div>
+            <span class="header-logo-text">Gym Control</span>
         </div>
 
+        <!-- Mobile Toggle -->
+        <button class="header-mobile-toggle" id="mobileSidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Search Widget -->
+        <div class="header-search">
+            <i class="fas fa-search header-search-icon"></i>
+            <input type="text" class="header-search-input" placeholder="Buscar socios, clases...">
+        </div>
+
+        <!-- Right Section -->
         <div class="header-right">
-            <!-- Search Widget -->
-            <div class="header-search">
-                <i class="fas fa-search header-search-icon"></i>
-                <input type="text" class="header-search-input" placeholder="Buscar socios, clases...">
-            </div>
-
-            <!-- Date Widget -->
-            <div class="header-date">
-                <div class="header-date-day">{{ date('d') }}</div>
-                <div class="header-date-full">{{ date('M Y') }}</div>
-            </div>
-
             <!-- Notifications Widget -->
             <div class="header-notifications">
                 <button class="header-notification-btn">
@@ -348,7 +357,14 @@
             min-height: calc(100vh - var(--header-height));
         }
 
-        .sidebar-modern.collapsed ~ * .main-content {
+        /* El header ya no se ajusta - siempre es full-width */
+        .header-modern {
+            left: 0 !important;
+            width: 100% !important;
+        }
+
+        /* Cuando el sidebar está colapsado */
+        body.sidebar-collapsed .main-content {
             margin-left: var(--sidebar-collapsed-width);
         }
 

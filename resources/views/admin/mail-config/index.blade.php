@@ -61,9 +61,8 @@
     </div>
 
     <!-- Main Configuration Card -->
-    <div class="card-modern">
-        <div class="p-4">
-            <form method="POST" action="{{ route('admin.mail.config.update') }}">
+    <div class="content-section">
+        <form method="POST" action="{{ route('admin.mail.config.update') }}">
                 @csrf
                 @method('PUT')
 
@@ -339,7 +338,6 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 </div>
 

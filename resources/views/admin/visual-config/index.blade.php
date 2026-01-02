@@ -37,15 +37,13 @@
     <div class="row">
         <!-- Logo Principal -->
         <div class="col-lg-6 mb-4">
-            <div class="card-modern">
-                <div class="card-modern-header">
-                    <h3 class="card-modern-title">
-                        <i class="fas fa-image text-success me-2"></i>
-                        Logo Principal
-                    </h3>
-                </div>
-                <div class="card-modern-body">
-                    <form action="{{ route('admin.visual.config.update') }}" method="POST" enctype="multipart/form-data">
+            <div class="content-section">
+                <h3 class="section-title">
+                    <i class="fas fa-image text-success me-2"></i>
+                    Logo Principal
+                </h3>
+                
+                <form action="{{ route('admin.visual.config.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -68,21 +66,18 @@
                             Actualizar Logo
                         </button>
                     </form>
-                </div>
             </div>
         </div>
 
         <!-- Logo Secundario -->
         <div class="col-lg-6 mb-4">
-            <div class="card-modern">
-                <div class="card-modern-header">
-                    <h3 class="card-modern-title">
-                        <i class="fas fa-images text-info me-2"></i>
-                        Logo Secundario
-                    </h3>
-                </div>
-                <div class="card-modern-body">
-                    <form action="{{ route('admin.visual.config.update') }}" method="POST" enctype="multipart/form-data">
+            <div class="content-section">
+                <h3 class="section-title">
+                    <i class="fas fa-images text-info me-2"></i>
+                    Logo Secundario
+                </h3>
+                
+                <form action="{{ route('admin.visual.config.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -105,7 +100,6 @@
                             Actualizar Logo Secundario
                         </button>
                     </form>
-                </div>
             </div>
         </div>
     </div>
@@ -113,15 +107,13 @@
     <!-- Colores y Tipografía -->
     <div class="row">
         <div class="col-lg-12 mb-4">
-            <div class="card-modern">
-                <div class="card-modern-header">
-                    <h3 class="card-modern-title">
-                        <i class="fas fa-palette text-warning me-2"></i>
-                        Esquema de Colores y Tipografía
-                    </h3>
-                </div>
-                <div class="card-modern-body">
-                    <form action="{{ route('admin.visual.config.update') }}" method="POST">
+            <div class="content-section">
+                <h3 class="section-title">
+                    <i class="fas fa-palette text-warning me-2"></i>
+                    Esquema de Colores y Tipografía
+                </h3>
+                
+                <form action="{{ route('admin.visual.config.update') }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -221,7 +213,6 @@
                             Actualizar Colores y Tipografía
                         </button>
                     </form>
-                </div>
             </div>
         </div>
     </div>
@@ -229,15 +220,13 @@
     <!-- Configuraciones Adicionales -->
     <div class="row">
         <div class="col-lg-12 mb-4">
-            <div class="card-modern">
-                <div class="card-modern-header">
-                    <h3 class="card-modern-title">
-                        <i class="fas fa-cogs text-primary me-2"></i>
-                        Configuraciones Adicionales
-                    </h3>
-                </div>
-                <div class="card-modern-body">
-                    <form action="{{ route('admin.visual.config.update') }}" method="POST">
+            <div class="content-section">
+                <h3 class="section-title">
+                    <i class="fas fa-cogs text-primary me-2"></i>
+                    Configuraciones Adicionales
+                </h3>
+                
+                <form action="{{ route('admin.visual.config.update') }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -271,7 +260,6 @@
                             Actualizar Configuraciones
                         </button>
                     </form>
-                </div>
             </div>
         </div>
     </div>
@@ -279,15 +267,13 @@
     <!-- Restablecer Configuración -->
     <div class="row">
         <div class="col-lg-12 mb-4">
-            <div class="card-modern border-danger">
-                <div class="card-modern-header bg-danger text-white">
-                    <h3 class="card-modern-title mb-0">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Zona de Peligro
-                    </h3>
-                </div>
-                <div class="card-modern-body">
-                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <div class="content-section border-danger">
+                <h3 class="section-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Zona de Peligro
+                </h3>
+                
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <div>
                             <strong>¡Atención!</strong> Restablecer toda la configuración visual eliminará todas las personalizaciones actuales y volverá a los valores predeterminados.
@@ -303,7 +289,6 @@
                             Restablecer Configuración
                         </button>
                     </form>
-                </div>
             </div>
         </div>
     </div>
@@ -351,6 +336,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Procesando...';
+                submitBtn.disabled = true;
+            }
+        });
+    });
+});
+</script>
+@endpush
+    form.addEventListener('submit', function() {
             const submitBtn = this.querySelector('button[type="submit"]');
             if (submitBtn) {
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Procesando...';

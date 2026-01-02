@@ -93,15 +93,13 @@
     </div>
 
     <!-- Filtros de búsqueda -->
-    <div class="card-modern mb-4">
-        <div class="card-header-modern">
-            <h5 class="card-title-modern text-success">
-                <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
-            </h5>
-        </div>
-        <div class="card-body">
-            <form id="searchForm">
-                <div class="row">
+    <div class="content-section mb-4">
+        <h5 class="section-title">
+            <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+        </h5>
+        
+        <form id="searchForm">
+            <div class="row">
                     <div class="col-md-3 mb-3">
                         <label for="search" class="form-label">Buscar Socio</label>
                         <div class="input-group">
@@ -155,21 +153,17 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 
     <!-- Lista de socios -->
-    <div class="card-modern">
-        <div class="card-header-modern">
-            <h5 class="card-title-modern text-success">
-                <i class="fas fa-list me-2"></i>Lista de Socios
-            </h5>
-        </div>
-        <div class="card-body">
-            <!-- Contenedor de resultados dinámicos -->
-            <div id="sociosResults">
-                @include('admin.socios.partials.table', ['socios' => $socios])
-            </div>
+    <div class="content-section">
+        <h5 class="section-title">
+            <i class="fas fa-list me-2"></i>Lista de Socios
+        </h5>
+        
+        <!-- Contenedor de resultados dinámicos -->
+        <div id="sociosResults">
+            @include('admin.socios.partials.table', ['socios' => $socios])
         </div>
     </div>
 </div>

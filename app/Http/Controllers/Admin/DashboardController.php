@@ -43,13 +43,14 @@ class DashboardController extends Controller
      */
     private function getDashboardData()
     {
-        // Cachear datos por 5 minutos para mejorar rendimiento
-        return Cache::remember('admin.dashboard.data', 300, function () {
+        // Cachear datos por 1 minuto para tener datos más actualizados
+        return Cache::remember('admin.dashboard.data', 60, function () {
             return [
                 'totalMembers' => Member::count(),
                 'activeMembers' => Member::where('subscription_end_date', '>=', now())->count(),
                 'todayAttendances' => $this->getTodayAttendances(),
                 'monthlyRevenue' => $this->getMonthlyRevenue(),
+                'expiredMemberships' => $this->getExpiredMemberships(),
                 'membershipPlans' => MembershipPlan::with('members')->get(),
                 'recentMembers' => Member::latest()->take(5)->get(),
                 'attendanceStats' => $this->getAttendanceStats(),
@@ -69,6 +70,7 @@ class DashboardController extends Controller
                 'activeMembers' => Member::where('subscription_end_date', '>=', now())->count() ?? 0,
                 'todayAttendances' => 0,
                 'monthlyRevenue' => 0,
+                'expiredMemberships' => 0,
                 'membershipPlans' => collect([]),
                 'recentMembers' => collect([]),
                 'attendanceStats' => [],
@@ -81,6 +83,7 @@ class DashboardController extends Controller
                 'activeMembers' => 0,
                 'todayAttendances' => 0,
                 'monthlyRevenue' => 0,
+                'expiredMemberships' => 0,
                 'membershipPlans' => collect([]),
                 'recentMembers' => collect([]),
                 'attendanceStats' => [],
@@ -156,6 +159,21 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error obteniendo estadísticas de planes: ' . $e->getMessage());
             return [];
+        }
+    }
+
+    /**
+     * Obtiene el número de membresías vencidas
+     */
+    private function getExpiredMemberships()
+    {
+        try {
+            return Member::where('subscription_end_date', '<', now())
+                        ->whereNotNull('subscription_end_date')
+                        ->count();
+        } catch (\Exception $e) {
+            Log::warning('Error obteniendo membresías vencidas: ' . $e->getMessage());
+            return 0;
         }
     }
 

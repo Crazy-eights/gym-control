@@ -106,15 +106,13 @@
     @endif
 
     <!-- Filtros de búsqueda -->
-    <div class="card-modern mb-4">
-        <div class="card-header-modern">
-            <h5 class="card-title-modern text-success">
-                <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
-            </h5>
-        </div>
-        <div class="card-body">
-            <form id="searchFormClasses">
-                @csrf
+    <div class="content-section mb-4">
+        <h5 class="section-title">
+            <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+        </h5>
+        
+        <form id="searchFormClasses">
+            @csrf
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label for="search" class="form-label">Buscar Clase</label>
@@ -155,21 +153,17 @@
                     </div>
                 </div>
             </form>
-        </div>
     </div>
 
     <!-- Lista de clases -->
-    <div class="card-modern">
-        <div class="card-header-modern">
-            <h5 class="card-title-modern text-success">
-                <i class="fas fa-list me-2"></i>Lista de Clases
-            </h5>
-        </div>
-        <div class="card-body">
-            <!-- Contenedor de resultados dinámicos -->
-            <div id="classesResults">
-                @include('admin.classes.partials.table', ['classes' => $classes])
-            </div>
+    <div class="content-section">
+        <h5 class="section-title">
+            <i class="fas fa-list me-2"></i>Lista de Clases
+        </h5>
+        
+        <!-- Contenedor de resultados dinámicos -->
+        <div id="classesResults">
+            @include('admin.classes.partials.table', ['classes' => $classes])
         </div>
     </div>
 </div>
