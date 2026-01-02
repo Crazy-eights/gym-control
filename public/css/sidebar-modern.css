@@ -296,6 +296,25 @@
   transform: rotate(180deg);
 }
 
+/* === CONTENIDO PRINCIPAL === */
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  min-height: calc(100vh - var(--header-height));
+  transition: margin-left var(--transition-speed) ease;
+  padding: var(--spacing-xl);
+  background-color: var(--bg-secondary);
+}
+
+.sidebar-modern.collapsed ~ .main-content {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 /* === TOOLTIP PARA SIDEBAR COLAPSADO === */
 .sidebar-tooltip {
   position: absolute;
@@ -332,10 +351,13 @@
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .sidebar-modern {
     transform: translateX(-100%);
     transition: transform var(--transition-speed) ease;
+    top: 0; /* En móvil, empieza desde arriba */
+    height: 100vh; /* Ocupa toda la altura */
+    z-index: 1100; /* Más alto que el header en móvil */
   }
 
   .sidebar-modern.mobile-open {
@@ -343,7 +365,48 @@
   }
 
   .sidebar-toggle {
-    display: none;
+    display: none; /* Ocultar botón de colapso en móvil */
+  }
+
+  /* En móvil siempre mostrar todo el contenido del sidebar */
+  .sidebar-modern .sidebar-text,
+  .sidebar-modern .sidebar-section-title,
+  .sidebar-modern .sidebar-badge,
+  .sidebar-modern .sidebar-user-details {
+    opacity: 1 !important;
+    width: auto !important;
+    pointer-events: auto !important;
+  }
+
+  /* Ajustar el contenido principal en móvil */
+  .main-content {
+    margin-left: 0 !important;
+    margin-top: var(--header-height);
+    padding: var(--spacing-lg);
+  }
+
+  .content-wrapper {
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar-modern {
+    width: 280px; /* Ancho más razonable en móviles pequeños */
+  }
+
+  .main-content {
+    padding: var(--spacing-sm);
+  }
+
+  .content-wrapper {
+    padding: 0;
   }
 }
 
@@ -354,14 +417,21 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1050; /* Entre el header y el sidebar en móvil */
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-speed) ease;
+  display: none;
 }
 
-.sidebar-overlay.active {
-  opacity: 1;
-  pointer-events: all;
+@media (max-width: 992px) {
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
 }

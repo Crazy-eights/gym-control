@@ -3,10 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Panel de Administración - Gym Control">
     <meta name="author" content="Gym Control">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <title>@yield('title', 'Panel de Administración') - Gym Control</title>
 
@@ -20,6 +24,7 @@
     <link href="{{ asset('css/modern-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar-modern.css') }}" rel="stylesheet">
     <link href="{{ asset('css/header-modern.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
 
     <!-- Aplicar estado del sidebar ANTES de que el body sea visible -->
     <script>

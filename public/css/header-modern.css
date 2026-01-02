@@ -308,10 +308,11 @@
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .header-modern {
-    left: 0;
-    padding: 0 var(--spacing-lg);
+    left: 0 !important;
+    padding: 0 var(--spacing-md);
+    z-index: 1040; /* Menor que el sidebar en móvil */
   }
 
   .header-mobile-toggle {
@@ -330,14 +331,58 @@
     display: none;
   }
 
-  .header-title {
-    font-size: var(--font-size-lg);
+  .header-notifications {
+    order: 2;
+  }
+
+  .header-user {
+    order: 3;
+  }
+
+  .header-right {
+    gap: var(--spacing-sm);
   }
 }
 
-@media (max-width: 480px) {
-  .header-right {
-    gap: var(--spacing-sm);
+@media (max-width: 768px) {
+  .header-modern {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .header-logo-text {
+    font-size: var(--font-size-lg);
+  }
+
+  .header-notification-btn {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-base);
+  }
+
+  .header-user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 576px) {
+  .header-modern {
+    height: 56px;
+  }
+
+  .header-logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .header-logo-text {
+    font-size: var(--font-size-base);
+  }
+
+  .header-notifications {
+    display: none; /* Ocultar notificaciones en pantallas muy pequeñas */
   }
 
   .header-breadcrumb {

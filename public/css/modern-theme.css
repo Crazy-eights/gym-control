@@ -360,11 +360,21 @@ h6 { font-size: var(--font-size-base); }
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   :root {
-    --sidebar-width: 100%;
-    --sidebar-collapsed-width: 100%;
+    --header-height: 60px;
+    --spacing-xl: 1.5rem;
+    --spacing-2xl: 2rem;
   }
+
+  body {
+    font-size: var(--font-size-sm);
+  }
+
+  h1 { font-size: var(--font-size-3xl); }
+  h2 { font-size: var(--font-size-2xl); }
+  h3 { font-size: var(--font-size-xl); }
+  h4 { font-size: var(--font-size-lg); }
 
   .stat-card {
     padding: var(--spacing-lg);
@@ -372,5 +382,88 @@ h6 { font-size: var(--font-size-base); }
 
   .stat-number {
     font-size: var(--font-size-2xl);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 56px;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.25rem;
+    --spacing-2xl: 1.5rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .stat-card {
+    padding: var(--spacing-md);
+  }
+
+  .stat-number {
+    font-size: var(--font-size-xl);
+  }
+
+  .card-modern {
+    border-radius: var(--border-radius-md);
+  }
+
+  .table-modern {
+    font-size: var(--font-size-xs);
+  }
+
+  .table-modern thead th {
+    padding: var(--spacing-md) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .table-modern tbody td {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .action-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  :root {
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+  }
+
+  body {
+    font-size: var(--font-size-xs);
+  }
+
+  h1 { font-size: var(--font-size-2xl); }
+  h2 { font-size: var(--font-size-xl); }
+  h3 { font-size: var(--font-size-lg); }
+
+  .stat-card {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .card-modern {
+    padding: var(--spacing-md);
+  }
+
+  .btn-modern {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-xs);
   }
 }
