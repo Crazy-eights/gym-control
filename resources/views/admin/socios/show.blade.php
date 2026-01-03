@@ -50,10 +50,34 @@
                     <h4 class="mb-1 text-success">{{ $socio->full_name }}</h4>
                     <p class="text-muted mb-3">ID: {{ $socio->member_id }}</p>
 
+                    <!-- Estado de Suspensión -->
+                    @if($socio->isSuspended())
+                        <div class="alert alert-danger mb-3" role="alert">
+                            <h5 class="alert-heading mb-2">
+                                <i class="fas fa-user-slash me-2"></i>Socio Suspendido
+                            </h5>
+                            <hr>
+                            <p class="mb-1"><strong>Fecha de suspensión:</strong></p>
+                            <p class="mb-2">{{ $socio->suspended_at ? $socio->suspended_at->format('d/m/Y H:i') : 'N/A' }}</p>
+                            
+                            <p class="mb-1"><strong>Motivo:</strong></p>
+                            <p class="mb-0" style="white-space: pre-wrap;">{{ $socio->suspension_reason }}</p>
+                            
+                            <div class="mt-3">
+                                <form action="{{ route('admin.socios.activate', $socio) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Estás seguro de reactivar este socio?')">
+                                        <i class="fas fa-user-check me-1"></i>Reactivar Socio
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Estado de la Membresía -->
                     <div class="mb-3">
                         @php
-                            $status = $socio->status;
+                            $status = $socio->status_membership;
                         @endphp
                         @switch($status)
                             @case('activo')
@@ -123,6 +147,15 @@
                             <div class="col-4"><strong>Registrado:</strong></div>
                             <div class="col-8">{{ $socio->created_at->format('d/m/Y H:i') }}</div>
                         </div>
+
+                        @if($socio->notes)
+                            <div class="row mb-2">
+                                <div class="col-12"><strong><i class="fas fa-sticky-note me-1"></i>Observaciones:</strong></div>
+                                <div class="col-12 mt-2">
+                                    <div class="alert alert-info mb-0" style="white-space: pre-wrap;">{{ $socio->notes }}</div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

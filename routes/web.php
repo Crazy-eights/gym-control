@@ -180,6 +180,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // === MÓDULO DE SOCIOS ===
         Route::resource('socios', SociosController::class);
         Route::post('socios/{socio}/renovar-membresia', [SociosController::class, 'renovarMembresia'])->name('socios.renovar-membresia');
+        Route::post('socios/{socio}/suspend', [SociosController::class, 'suspend'])->name('socios.suspend');
+        Route::post('socios/{socio}/activate', [SociosController::class, 'activate'])->name('socios.activate');
 
         // === MÓDULO DE PLANES DE MEMBRESÍA ===
         Route::resource('membership-plans', MembershipPlansController::class);
@@ -204,6 +206,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // === MÓDULO DE INSTRUCTORES ===
         Route::resource('instructors', \App\Http\Controllers\Admin\InstructorsController::class);
+
+        // === NOTIFICACIONES ===
+        Route::get('notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
+        Route::get('notifications/unread', [\App\Http\Controllers\Admin\NotificationController::class, 'unread'])->name('notifications.unread');
+        Route::post('notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::post('notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+        Route::delete('notifications/{id}', [\App\Http\Controllers\Admin\NotificationController::class, 'delete'])->name('notifications.delete');
+
+        // === BÚSQUEDA GLOBAL ===
+        Route::get('search', [\App\Http\Controllers\Admin\SearchController::class, 'search'])->name('search');
 
         // Route::resource('employees', EmployeeController::class);  // Comentado hasta crear el controlador
     });

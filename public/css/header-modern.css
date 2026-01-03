@@ -182,10 +182,18 @@
   border-radius: 50%;
   font-size: var(--font-size-xs);
   font-weight: 600;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   border: 2px solid var(--bg-primary);
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+
+.header-notification-badge.has-notifications {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* === WIDGET DE USUARIO === */

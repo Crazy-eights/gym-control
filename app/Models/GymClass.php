@@ -12,6 +12,7 @@ class GymClass extends Model
     protected $fillable = [
         'name',
         'description',
+        'instructor_id',
         'instructor_name',
         'duration_minutes',
         'max_participants',
@@ -24,6 +25,12 @@ class GymClass extends Model
         'active' => 'boolean',
         'price' => 'decimal:2'
     ];
+
+    // Relación con el instructor (empleado)
+    public function instructor()
+    {
+        return $this->belongsTo(Employee::class, 'instructor_id');
+    }
 
     // Relación con horarios de clase
     public function schedules()

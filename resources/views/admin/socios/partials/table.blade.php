@@ -47,32 +47,42 @@
                         @endif
                     </td>
                     <td>
-                        @php
-                            $status = $socio->status;
-                        @endphp
-                        @switch($status)
-                            @case('activo')
-                                <span class="badge badge-modern badge-success">
-                                    <i class="fas fa-check-circle me-1"></i>Activo
-                                </span>
-                                @break
-                            @case('vencido')
-                                <span class="badge badge-modern badge-danger">
-                                    <i class="fas fa-times-circle me-1"></i>Vencido
-                                </span>
-                                @break
-                            @case('proximo_vencimiento')
-                                <span class="badge badge-modern badge-warning">
-                                    <i class="fas fa-exclamation-triangle me-1"></i>Próximo a vencer
-                                </span>
-                                @break
-                            @case('sin_plan')
-                            @default
-                                <span class="badge badge-modern badge-secondary">
-                                    <i class="fas fa-user-slash me-1"></i>Sin plan
-                                </span>
-                                @break
-                        @endswitch
+                        @if($socio->isSuspended())
+                            <span class="badge badge-modern badge-danger" 
+                                  data-bs-toggle="tooltip" 
+                                  data-bs-placement="top"
+                                  data-bs-html="true"
+                                  title="<strong>Suspendido desde:</strong><br>{{ $socio->suspended_at ? $socio->suspended_at->format('d/m/Y') : 'N/A' }}<br><br><strong>Motivo:</strong><br>{{ Str::limit($socio->suspension_reason, 100) }}">
+                                <i class="fas fa-user-slash me-1"></i>Suspendido
+                            </span>
+                        @else
+                            @php
+                                $status = $socio->status_membership;
+                            @endphp
+                            @switch($status)
+                                @case('activo')
+                                    <span class="badge badge-modern badge-success">
+                                        <i class="fas fa-check-circle me-1"></i>Activo
+                                    </span>
+                                    @break
+                                @case('vencido')
+                                    <span class="badge badge-modern badge-danger">
+                                        <i class="fas fa-times-circle me-1"></i>Vencido
+                                    </span>
+                                    @break
+                                @case('proximo_vencimiento')
+                                    <span class="badge badge-modern badge-warning">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>Próximo a vencer
+                                    </span>
+                                    @break
+                                @case('sin_plan')
+                                @default
+                                    <span class="badge badge-modern badge-secondary">
+                                        <i class="fas fa-user-slash me-1"></i>Sin plan
+                                    </span>
+                                    @break
+                            @endswitch
+                        @endif
                     </td>
                     <td>
                         @if($socio->subscription_end_date)
@@ -107,13 +117,30 @@
                             <a href="{{ route('admin.socios.show', $socio) }}" class="btn btn-sm btn-outline-success" title="Ver detalles">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <button type="button" class="btn btn-sm btn-outline-warning btn-edit-socio" 
-                                    data-socio-id="{{ $socio->id }}" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#editSocioModal" 
-                                    title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </button>
+                            @if($socio->isSuspended())
+                                <button type="button" class="btn btn-sm btn-outline-success btn-activate-socio" 
+                                        data-socio-id="{{ $socio->id }}"
+                                        data-socio-name="{{ $socio->full_name }}"
+                                        title="Activar">
+                                    <i class="fas fa-user-check"></i>
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-sm btn-outline-warning btn-edit-socio" 
+                                        data-socio-id="{{ $socio->id }}" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editSocioModal" 
+                                        title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-suspend-socio" 
+                                        data-socio-id="{{ $socio->id }}"
+                                        data-socio-name="{{ $socio->full_name }}"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#suspendModal" 
+                                        title="Suspender">
+                                    <i class="fas fa-user-slash"></i>
+                                </button>
+                            @endif
                             <button type="button" class="btn btn-sm btn-outline-danger btn-delete-socio" 
                                     data-socio-id="{{ $socio->id }}" 
                                     data-bs-toggle="modal" 

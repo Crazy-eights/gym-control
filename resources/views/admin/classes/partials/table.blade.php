@@ -27,7 +27,14 @@
                         </td>
                         <td>
                             <i class="fas fa-user-tie text-primary"></i>
-                            {{ $class->instructor_name }}
+                            @if($class->instructor)
+                                {{ $class->instructor->firstname }} {{ $class->instructor->lastname }}
+                                @if($class->instructor->position)
+                                    <br><small class="text-muted">{{ $class->instructor->position->description }}</small>
+                                @endif
+                            @else
+                                <span class="text-muted">{{ $class->instructor_name ?? 'Sin instructor' }}</span>
+                            @endif
                         </td>
                         <td>
                             <i class="fas fa-clock text-info"></i>
@@ -99,7 +106,7 @@
                                 <button type="button"
                                         class="btn btn-sm btn-outline-warning"
                                         title="Editar"
-                                        onclick="editClass('{{ $class->id }}', '{{ $class->name }}', '{{ $class->instructor_name }}', '{{ $class->duration_minutes }}', '{{ $class->max_participants }}', '{{ $class->price }}', '{{ $class->difficulty_level }}', '{{ $class->active }}', '{{ addslashes($class->description ?? '') }}')">
+                                        onclick="editClass('{{ $class->id }}', '{{ $class->name }}', '{{ $class->instructor_id }}', '{{ $class->duration_minutes }}', '{{ $class->max_participants }}', '{{ $class->price }}', '{{ $class->difficulty_level }}', '{{ $class->active }}', '{{ addslashes($class->description ?? '') }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button type="button"

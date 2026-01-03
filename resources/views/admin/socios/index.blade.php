@@ -60,6 +60,23 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
+                    <div class="stat-number">{{ $stats['suspendidos'] }}</div>
+                    <div class="stat-label">Socios Suspendidos</div>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-user-slash" style="color: var(--danger); font-size: 2rem;"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <small class="text-danger">
+                    <i class="fas fa-ban"></i> Sin acceso
+                </small>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
                     <div class="stat-number">{{ $stats['proximos_vencimiento'] }}</div>
                     <div class="stat-label">Próximos a Vencer</div>
                 </div>
@@ -115,6 +132,7 @@
                         <select class="form-select" id="status" name="status">
                             <option value="">Todos</option>
                             <option value="activo" {{ request('status') == 'activo' ? 'selected' : '' }}>Activo</option>
+                            <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>Suspendido</option>
                             <option value="vencido" {{ request('status') == 'vencido' ? 'selected' : '' }}>Vencido</option>
                             <option value="proximo_vencimiento" {{ request('status') == 'proximo_vencimiento' ? 'selected' : '' }}>Próximo a vencer</option>
                             <option value="sin_plan" {{ request('status') == 'sin_plan' ? 'selected' : '' }}>Sin plan</option>
@@ -249,6 +267,11 @@
                             <label for="edit_subscription_end_date" class="form-label fw-semibold">Fecha Fin Membresía</label>
                             <input type="date" class="form-control" id="edit_subscription_end_date" name="subscription_end_date">
                         </div>
+                        <div class="col-md-12">
+                            <label for="edit_notes" class="form-label fw-semibold">Observaciones / Notas</label>
+                            <textarea class="form-control" id="edit_notes" name="notes" rows="3" placeholder="Escribe cualquier observación o nota sobre el socio..."></textarea>
+                            <small class="text-muted">Información adicional, historial médico, preferencias, etc.</small>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-3">
@@ -338,6 +361,11 @@
                             <label for="create_password_confirmation" class="form-label fw-semibold">Confirmar Contraseña <span class="text-danger">*</span></label>
                             <input type="password" class="form-control" id="create_password_confirmation" name="password_confirmation" required minlength="6">
                         </div>
+                        <div class="col-md-12">
+                            <label for="create_notes" class="form-label fw-semibold">Observaciones / Notas</label>
+                            <textarea class="form-control" id="create_notes" name="notes" rows="3" placeholder="Escribe cualquier observación o nota sobre el socio..."></textarea>
+                            <small class="text-muted">Información adicional, historial médico, preferencias, etc.</small>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-3">
@@ -346,6 +374,44 @@
                     </button>
                     <button type="submit" class="btn btn-success btn-modern">
                         <i class="fas fa-save me-2"></i>Crear Socio
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para suspender socio -->
+<div class="modal fade" id="suspendModal" tabindex="-1" aria-labelledby="suspendModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="suspendModalLabel">
+                    <i class="fas fa-user-slash me-2"></i>Suspender Socio
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="suspendForm" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        El socio <strong id="suspendSocioName"></strong> no podrá acceder al gimnasio mientras esté suspendido.
+                    </div>
+                    <div class="mb-3">
+                        <label for="suspension_reason" class="form-label fw-semibold">
+                            Motivo de la suspensión <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="suspension_reason" name="suspension_reason" 
+                                  rows="4" required 
+                                  placeholder="Ejemplo: Falta de pago, comportamiento inadecuado, etc."></textarea>
+                        <div class="form-text">Este motivo quedará registrado en el historial.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-user-slash me-1"></i>Suspender Socio
                     </button>
                 </div>
             </form>
@@ -387,6 +453,12 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let searchTimeout;
+    
+    // Inicializar tooltips de Bootstrap
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
     
     // Elementos del DOM
     const searchForm = document.getElementById('searchForm');
@@ -596,6 +668,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función para inicializar event listeners de elementos dinámicos
     function initializeEventListeners() {
+        // Reinicializar tooltips después de actualizar contenido
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
         // Botones de editar
         document.querySelectorAll('.btn-edit-socio').forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -603,6 +681,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 const socioId = this.getAttribute('data-socio-id');
                 if (socioId) {
                     abrirModalEditar(socioId);
+                }
+            });
+        });
+
+        // Botones de suspender
+        document.querySelectorAll('.btn-suspend-socio').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const socioId = this.getAttribute('data-socio-id');
+                const socioName = this.getAttribute('data-socio-name');
+                const suspendForm = document.getElementById('suspendForm');
+                const suspendSocioName = document.getElementById('suspendSocioName');
+                
+                if (socioId && suspendForm) {
+                    suspendForm.action = `{{ route('admin.socios.index') }}/${socioId}/suspend`;
+                }
+                if (socioName && suspendSocioName) {
+                    suspendSocioName.textContent = socioName;
+                }
+            });
+        });
+
+        // Botones de activar
+        document.querySelectorAll('.btn-activate-socio').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const socioId = this.getAttribute('data-socio-id');
+                const socioName = this.getAttribute('data-socio-name');
+                
+                if (confirm(`¿Estás seguro de reactivar a ${socioName}?`)) {
+                    // Crear y enviar formulario
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `{{ route('admin.socios.index') }}/${socioId}/activate`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             });
         });

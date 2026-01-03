@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\GymClass;
 use App\Models\ClassSchedule;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,15 +15,18 @@ class GymClassController extends Controller
     {
         $query = GymClass::with(['schedules' => function($query) {
             $query->where('active', true);
-        }]);
+        }, 'instructor']);
 
         // Búsqueda por nombre o instructor
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('instructor_name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhereHas('instructor', function($q) use ($search) {
+                      $q->where('firstname', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%");
+                  });
             });
         }
 
@@ -65,12 +69,16 @@ class GymClassController extends Controller
             return view('admin.classes.partials.table', compact('classes'))->render();
         }
 
-        return view('admin.classes.index', compact('classes', 'totalCapacity', 'availableSpots'));
+        // Cargar lista de instructores para los formularios
+        $instructors = Employee::orderBy('firstname')->orderBy('lastname')->get();
+
+        return view('admin.classes.index', compact('classes', 'totalCapacity', 'availableSpots', 'instructors'));
     }
 
     public function create()
     {
-        return view('admin.classes.create');
+        $instructors = Employee::orderBy('firstname')->orderBy('lastname')->get();
+        return view('admin.classes.create', compact('instructors'));
     }
 
     public function store(Request $request)
@@ -78,7 +86,7 @@ class GymClassController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'instructor_name' => 'required|string|max:255',
+            'instructor_id' => 'required|exists:employees,id',
             'duration_minutes' => 'required|integer|min:15|max:240',
             'max_participants' => 'required|integer|min:1|max:100',
             'price' => 'required|numeric|min:0',
@@ -97,10 +105,14 @@ class GymClassController extends Controller
 
         DB::beginTransaction();
         try {
+            // Obtener el instructor
+            $instructor = Employee::findOrFail($request->instructor_id);
+            
             $gymClass = GymClass::create([
                 'name' => $request->name,
                 'description' => $request->description,
-                'instructor_name' => $request->instructor_name,
+                'instructor_id' => $request->instructor_id,
+                'instructor_name' => $instructor->firstname . ' ' . $instructor->lastname,
                 'duration_minutes' => $request->duration_minutes,
                 'max_participants' => $request->max_participants,
                 'price' => $request->price,
@@ -170,8 +182,9 @@ class GymClassController extends Controller
 
     public function edit(GymClass $class)
     {
-        $class->load('schedules');
-        return view('admin.classes.edit', compact('class'));
+        $class->load('schedules', 'instructor');
+        $instructors = Employee::orderBy('firstname')->orderBy('lastname')->get();
+        return view('admin.classes.edit', compact('class', 'instructors'));
     }
 
     public function update(Request $request, GymClass $class)
@@ -196,7 +209,7 @@ class GymClassController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'instructor_name' => 'required|string|max:255',
+            'instructor_id' => 'required|exists:employees,id',
             'duration_minutes' => 'required|integer|min:15|max:240',
             'max_participants' => 'required|integer|min:1|max:100',
             'price' => 'required|numeric|min:0',
@@ -215,10 +228,14 @@ class GymClassController extends Controller
 
     private function updateClassData(Request $request, GymClass $class)
     {
+        // Obtener el instructor
+        $instructor = Employee::findOrFail($request->instructor_id);
+        
         $class->update([
             'name' => $request->name,
             'description' => $request->description,
-            'instructor_name' => $request->instructor_name,
+            'instructor_id' => $request->instructor_id,
+            'instructor_name' => $instructor->firstname . ' ' . $instructor->lastname,
             'duration_minutes' => $request->duration_minutes,
             'max_participants' => $request->max_participants,
             'price' => $request->price,
@@ -335,15 +352,17 @@ class GymClassController extends Controller
             'day_of_week' => 'required|integer|min:0|max:6',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
-            'start_date' => 'nullable|date|after_or_equal:today',
+            'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after:start_date',
-            'is_recurring' => 'boolean',
-            'active' => 'boolean'
+            'is_recurring' => 'nullable',
+            'active' => 'nullable'
         ], [
             'day_of_week.required' => 'Debe seleccionar un día de la semana.',
             'start_time.required' => 'La hora de inicio es obligatoria.',
             'end_time.required' => 'La hora de fin es obligatoria.',
             'end_time.after' => 'La hora de fin debe ser posterior a la hora de inicio.',
+            'start_date.date' => 'La fecha de inicio debe ser una fecha válida.',
+            'end_date.after' => 'La fecha de fin debe ser posterior a la fecha de inicio.',
         ]);
 
         try {
@@ -353,8 +372,8 @@ class GymClassController extends Controller
                 'end_time' => $request->end_time,
                 'start_date' => $request->start_date ?? now()->toDateString(),
                 'end_date' => $request->end_date,
-                'is_recurring' => $request->has('is_recurring'),
-                'active' => $request->has('active')
+                'is_recurring' => $request->has('is_recurring') ? 1 : 0,
+                'active' => $request->has('active') ? 1 : 0
             ]);
 
             if ($request->ajax()) {

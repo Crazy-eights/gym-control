@@ -33,6 +33,10 @@ class Member extends Authenticatable
         'subscription_start_date',
         'subscription_end_date',
         'photo',
+        'status',
+        'suspension_reason',
+        'suspended_at',
+        'notes',
     ];
 
     /**
@@ -135,9 +139,9 @@ class Member extends Authenticatable
     }
 
     /**
-     * Obtiene el estado de la membresía.
+     * Obtiene el estado de la membresía (diferente del estado de suspensión).
      */
-    public function getStatusAttribute()
+    public function getStatusMembershipAttribute()
     {
         if (!$this->subscription_end_date || !$this->plan_id) {
             return 'sin_plan';
@@ -160,9 +164,9 @@ class Member extends Authenticatable
     }
 
     /**
-     * Scope para miembros activos.
+     * Scope para miembros con membresía activa (no vencida).
      */
-    public function scopeActive($query)
+    public function scopeActiveSubscription($query)
     {
         return $query->where('subscription_end_date', '>=', now());
     }
@@ -176,6 +180,38 @@ class Member extends Authenticatable
     }
 
     /**
+     * Scope para miembros activos (no suspendidos).
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    /**
+     * Scope para miembros suspendidos.
+     */
+    public function scopeSuspended($query)
+    {
+        return $query->where('status', 'suspended');
+    }
+
+    /**
+     * Verificar si el socio está suspendido.
+     */
+    public function isSuspended()
+    {
+        return $this->status === 'suspended';
+    }
+
+    /**
+     * Verificar si el socio está activo.
+     */
+    public function isActive()
+    {
+        return $this->status === 'active';
+    }
+
+    /**
      * Casting de fechas.
      */
     protected $casts = [
@@ -183,5 +219,6 @@ class Member extends Authenticatable
         'subscription_start_date' => 'date',
         'subscription_end_date' => 'date',
         'email_verified_at' => 'datetime',
+        'suspended_at' => 'datetime',
     ];
 }

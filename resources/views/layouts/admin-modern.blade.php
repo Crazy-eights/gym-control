@@ -25,6 +25,7 @@
     <link href="{{ asset('css/sidebar-modern.css') }}" rel="stylesheet">
     <link href="{{ asset('css/header-modern.css') }}" rel="stylesheet">
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/notifications.css') }}" rel="stylesheet">
 
     <!-- Aplicar estado del sidebar ANTES de que el body sea visible -->
     <script>
@@ -267,17 +268,33 @@
         <!-- Search Widget -->
         <div class="header-search">
             <i class="fas fa-search header-search-icon"></i>
-            <input type="text" class="header-search-input" placeholder="Buscar socios, clases...">
+            <input type="text" class="header-search-input" id="globalSearch" placeholder="Buscar socios, empleados..." autocomplete="off">
+            <!-- Resultados de búsqueda -->
+            <div class="search-results" id="searchResults" style="display: none;"></div>
         </div>
 
         <!-- Right Section -->
         <div class="header-right">
             <!-- Notifications Widget -->
             <div class="header-notifications">
-                <button class="header-notification-btn">
+                <button class="header-notification-btn" id="notificationBtn">
                     <i class="fas fa-bell"></i>
-                    <span class="header-notification-badge">3</span>
+                    <span class="header-notification-badge" id="notificationBadge">0</span>
                 </button>
+                <!-- Dropdown de notificaciones -->
+                <div class="notifications-dropdown" id="notificationsDropdown" style="display: none;">
+                    <div class="notifications-header">
+                        <h6>Notificaciones</h6>
+                        <button class="btn-mark-all-read" id="markAllRead">
+                            <i class="fas fa-check-double"></i> Marcar todas como leídas
+                        </button>
+                    </div>
+                    <div class="notifications-list" id="notificationsList">
+                        <div class="text-center py-3">
+                            <i class="fas fa-spinner fa-spin"></i> Cargando...
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- User Widget -->

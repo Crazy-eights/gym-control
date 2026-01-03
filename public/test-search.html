@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Búsqueda</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 50px; }
+        .search-container {
+            position: relative;
+            width: 400px;
+            margin: 0 auto;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        #results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .result-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .result-item:hover {
+            background: #f5f5f5;
+        }
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .result-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de Búsqueda</h1>
+    
+    <div class="status">
+        <strong>Status:</strong> <span id="status">Esperando...</span>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Buscar socios, empleados..." autocomplete="off">
+        <div id="results"></div>
+    </div>
+
+    <div class="status" style="margin-top: 20px;">
+        <strong>Console Log:</strong>
+        <pre id="log" style="max-height: 200px; overflow-y: auto; background: white; padding: 10px;"></pre>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const results = document.getElementById('results');
+        const status = document.getElementById('status');
+        const logEl = document.getElementById('log');
+        let searchTimeout;
+
+        function log(message) {
+            console.log(message);
+            logEl.textContent += message + '\n';
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        log('Script cargado');
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+
+            log(`Input: "${query}"`);
+            status.textContent = `Escribiendo: ${query}`;
+
+            if (query.length >= 2) {
+                searchTimeout = setTimeout(() => {
+                    log(`Ejecutando búsqueda para: "${query}"`);
+                    status.textContent = `Buscando: ${query}...`;
+                    performSearch(query);
+                }, 300);
+            } else {
+                results.style.display = 'none';
+                status.textContent = 'Esperando (mínimo 2 caracteres)...';
+            }
+        });
+
+        async function performSearch(query) {
+            try {
+                const url = `/admin/search?q=${encodeURIComponent(query)}`;
+                log(`Fetch URL: ${url}`);
+                
+                const response = await fetch(url);
+                log(`Response status: ${response.status}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                log(`Resultados: ${JSON.stringify(data)}`);
+                
+                status.textContent = `Encontrados: ${data.total} resultados`;
+
+                if (data.results && data.results.length > 0) {
+                    displayResults(data.results);
+                } else {
+                    displayNoResults();
+                }
+            } catch (error) {
+                log(`ERROR: ${error.message}`);
+                status.textContent = `Error: ${error.message}`;
+                results.innerHTML = `<div class="result-item">Error: ${error.message}</div>`;
+                results.style.display = 'block';
+            }
+        }
+
+        function displayResults(items) {
+            const html = items.map(item => `
+                <div class="result-item">
+                    <div class="result-title">${item.title}</div>
+                    <div class="result-subtitle">${item.subtitle}</div>
+                </div>
+            `).join('');
+
+            results.innerHTML = html;
+            results.style.display = 'block';
+            log('Resultados mostrados');
+        }
+
+        function displayNoResults() {
+            results.innerHTML = '<div class="result-item">No se encontraron resultados</div>';
+            results.style.display = 'block';
+            log('Sin resultados');
+        }
+    </script>
+</body>
+</html>

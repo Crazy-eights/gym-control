@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\MembershipPlan;
+use App\Models\Admin;
+use App\Notifications\NewMemberRegistered;
+use App\Notifications\MembershipExpiring;
+use App\Notifications\MemberSuspended;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -34,7 +38,7 @@ class SociosController extends Controller
         if ($request->filled('status')) {
             switch ($request->status) {
                 case 'activo':
-                    $query->active();
+                    $query->activeSubscription();
                     break;
                 case 'vencido':
                     $query->expired();
@@ -47,6 +51,9 @@ class SociosController extends Controller
                         now(),
                         now()->addDays(7)
                     ]);
+                    break;
+                case 'suspended':
+                    $query->suspended();
                     break;
             }
         }
@@ -67,7 +74,8 @@ class SociosController extends Controller
         // Estadísticas rápidas
         $stats = [
             'total' => Member::count(),
-            'activos' => Member::active()->count(),
+            'activos' => Member::activeSubscription()->count(),
+            'suspendidos' => Member::suspended()->count(),
             'vencidos' => Member::expired()->count(),
             'proximos_vencimiento' => Member::whereBetween('subscription_end_date', [
                 now(),
@@ -161,6 +169,25 @@ class SociosController extends Controller
             }
 
             $socio = Member::create($validated);
+
+            // Notificar a todos los admins sobre el nuevo socio
+            $admins = Admin::all();
+            foreach ($admins as $admin) {
+                $admin->notify(new NewMemberRegistered($socio));
+            }
+
+            // Verificar si la membresía está vencida o próxima a vencer
+            if (isset($validated['subscription_end_date'])) {
+                $endDate = \Carbon\Carbon::parse($validated['subscription_end_date']);
+                $daysLeft = now()->diffInDays($endDate, false);
+                
+                // Notificar si está vencida (hasta 30 días atrás) o por vencer (próximos 7 días)
+                if ($daysLeft >= -30 && $daysLeft <= 7) {
+                    foreach ($admins as $admin) {
+                        $admin->notify(new MembershipExpiring($socio, $daysLeft));
+                    }
+                }
+            }
 
             // Si es una petición AJAX, devolver JSON
             if ($request->ajax()) {
@@ -329,6 +356,20 @@ class SociosController extends Controller
 
             $socio->update($validated);
 
+            // Verificar si la membresía está vencida o próxima a vencer
+            if (isset($validated['subscription_end_date'])) {
+                $endDate = \Carbon\Carbon::parse($validated['subscription_end_date']);
+                $daysLeft = now()->diffInDays($endDate, false);
+                
+                // Notificar si está vencida (hasta 30 días atrás) o por vencer (próximos 7 días)
+                if ($daysLeft >= -30 && $daysLeft <= 7) {
+                    $admins = Admin::all();
+                    foreach ($admins as $admin) {
+                        $admin->notify(new MembershipExpiring($socio, $daysLeft));
+                    }
+                }
+            }
+
             // Si es una petición AJAX, devolver JSON
             if ($request->ajax()) {
                 return response()->json([
@@ -426,6 +467,79 @@ class SociosController extends Controller
             Log::error('Error al renovar membresía: ' . $e->getMessage());
             return redirect()->back()
                 ->withErrors(['error' => 'Error al renovar la membresía.']);
+        }
+    }
+
+    /**
+     * Suspender un socio.
+     */
+    public function suspend(Request $request, Member $socio)
+    {
+        $validated = $request->validate([
+            'suspension_reason' => 'required|string|max:500',
+        ], [
+            'suspension_reason.required' => 'Debes proporcionar un motivo para la suspensión.',
+            'suspension_reason.max' => 'El motivo no puede tener más de 500 caracteres.',
+        ]);
+
+        try {
+            $socio->update([
+                'status' => 'suspended',
+                'suspension_reason' => $validated['suspension_reason'],
+                'suspended_at' => now(),
+            ]);
+
+            // Notificar a todos los admins
+            $admins = Admin::all();
+            foreach ($admins as $admin) {
+                $admin->notify(new MemberSuspended($socio, $validated['suspension_reason']));
+            }
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Socio suspendido exitosamente.',
+                    'socio' => $socio
+                ]);
+            }
+
+            return redirect()->back()
+                ->with('success', 'Socio suspendido exitosamente.');
+
+        } catch (\Exception $e) {
+            Log::error('Error al suspender socio: ' . $e->getMessage());
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al suspender el socio.'
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->withErrors(['error' => 'Error al suspender el socio.']);
+        }
+    }
+
+    /**
+     * Reactivar un socio suspendido.
+     */
+    public function activate(Member $socio)
+    {
+        try {
+            $socio->update([
+                'status' => 'active',
+                'suspension_reason' => null,
+                'suspended_at' => null,
+            ]);
+
+            return redirect()->back()
+                ->with('success', 'Socio reactivado exitosamente.');
+
+        } catch (\Exception $e) {
+            Log::error('Error al reactivar socio: ' . $e->getMessage());
+            return redirect()->back()
+                ->withErrors(['error' => 'Error al reactivar el socio.']);
         }
     }
 }

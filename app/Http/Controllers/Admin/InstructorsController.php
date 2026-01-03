@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Schedule;
+use App\Models\Admin;
+use App\Notifications\NewEmployeeRegistered;
 use Illuminate\Http\Request;
 
 class InstructorsController extends Controller
@@ -88,6 +90,12 @@ class InstructorsController extends Controller
         $data['photo'] = $data['photo'] ?? 'default.jpg';
 
         $instructor = Employee::create($data);
+
+        // Notificar a todos los admins sobre el nuevo empleado
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewEmployeeRegistered($instructor->load('position')));
+        }
 
         if ($request->ajax()) {
             return response()->json([

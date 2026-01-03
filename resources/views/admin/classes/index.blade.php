@@ -193,13 +193,22 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="create_instructor_name" class="form-label fw-semibold">Instructor <span class="text-danger">*</span></label>
-                                <input type="text"
-                                       class="form-control form-control-sm"
-                                       id="create_instructor_name"
-                                       name="instructor_name"
-                                       placeholder="Nombre del instructor"
-                                       required>
+                                <label for="create_instructor_id" class="form-label fw-semibold">Instructor <span class="text-danger">*</span></label>
+                                <select class="form-select form-select-sm"
+                                        id="create_instructor_id"
+                                        name="instructor_id"
+                                        required>
+                                    <option value="">Seleccionar instructor...</option>
+                                    @foreach($instructors as $instructor)
+                                        <option value="{{ $instructor->id }}">
+                                            {{ $instructor->firstname }} {{ $instructor->lastname }}
+                                            @if($instructor->position)
+                                                - {{ $instructor->position->description }}
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="text-muted">Selecciona un instructor del personal registrado</small>
                             </div>
                         </div>
 
@@ -274,6 +283,16 @@
                                           placeholder="Describe la clase, objetivos y beneficios..."></textarea>
                             </div>
                         </div>
+
+                        <!-- Nota sobre Horarios -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Horarios:</strong> Después de crear la clase, podrás agregar sus horarios desde el botón <strong><i class="fas fa-eye"></i> Ver detalles</strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer bg-light border-0 py-2">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -313,12 +332,21 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="edit_instructor_name" class="form-label fw-semibold">Instructor <span class="text-danger">*</span></label>
-                                <input type="text"
-                                       class="form-control form-control-sm"
-                                       id="edit_instructor_name"
-                                       name="instructor_name"
-                                       required>
+                                <label for="edit_instructor_id" class="form-label fw-semibold">Instructor <span class="text-danger">*</span></label>
+                                <select class="form-select form-select-sm"
+                                        id="edit_instructor_id"
+                                        name="instructor_id"
+                                        required>
+                                    <option value="">Seleccionar instructor...</option>
+                                    @foreach($instructors as $instructor)
+                                        <option value="{{ $instructor->id }}">
+                                            {{ $instructor->firstname }} {{ $instructor->lastname }}
+                                            @if($instructor->position)
+                                                - {{ $instructor->position->description }}
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -386,6 +414,25 @@
                                           id="edit_description"
                                           name="description"
                                           rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Sección de Horarios -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <hr>
+                                <h6 class="fw-bold text-success mb-3">
+                                    <i class="fas fa-calendar-alt me-2"></i>Gestionar Horarios
+                                </h6>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Para agregar o modificar horarios:</strong>
+                                    <ol class="mb-0 mt-2">
+                                        <li>Guarda primero los cambios de la clase</li>
+                                        <li>Haz clic en el botón <strong><i class="fas fa-eye"></i> Ver detalles</strong> de la clase</li>
+                                        <li>Desde allí podrás gestionar todos los horarios</li>
+                                    </ol>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -622,9 +669,9 @@ function confirmDelete(classId, className) {
 }
 
 // Función para editar clase
-function editClass(id, name, instructorName, durationMinutes, maxParticipants, price, difficultyLevel, active, description) {
+function editClass(id, name, instructorId, durationMinutes, maxParticipants, price, difficultyLevel, active, description) {
     document.getElementById('edit_name').value = name;
-    document.getElementById('edit_instructor_name').value = instructorName;
+    document.getElementById('edit_instructor_id').value = instructorId || '';
     document.getElementById('edit_duration_minutes').value = durationMinutes;
     document.getElementById('edit_max_participants').value = maxParticipants;
     document.getElementById('edit_price').value = price;

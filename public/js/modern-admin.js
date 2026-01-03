@@ -95,9 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // === BÚSQUEDA EN TIEMPO REAL ===
-    const searchInput = document.querySelector('.header-search-input');
-    if (searchInput) {
+    // === BÚSQUEDA GLOBAL ===
+    const searchInput = document.getElementById('globalSearch');
+    const searchResults = document.getElementById('searchResults');
+    
+    if (searchInput && searchResults) {
         let searchTimeout;
 
         searchInput.addEventListener('input', function() {
@@ -106,30 +108,277 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (query.length >= 2) {
                 searchTimeout = setTimeout(() => {
-                    performSearch(query);
+                    performGlobalSearch(query);
                 }, 300);
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Cerrar resultados al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
             }
         });
     }
 
-    // === FUNCIÓN DE BÚSQUEDA ===
-    function performSearch(query) {
-        // Aquí puedes implementar la lógica de búsqueda
-        console.log('Buscando:', query);
+    // === FUNCIÓN DE BÚSQUEDA GLOBAL ===
+    async function performGlobalSearch(query) {
+        try {
+            const url = `/admin/search?q=${encodeURIComponent(query)}`;
+            const response = await fetch(url);
+            const data = await response.json();
 
-        // Ejemplo: buscar en la navegación
-        const sidebarLinks = document.querySelectorAll('.sidebar-text');
-        sidebarLinks.forEach(link => {
-            const text = link.textContent.toLowerCase();
-            const item = link.closest('.sidebar-item');
-
-            if (text.includes(query.toLowerCase())) {
-                item.style.display = 'block';
-                item.style.background = 'rgba(76, 175, 80, 0.1)';
+            if (data.results && data.results.length > 0) {
+                displaySearchResults(data.results);
             } else {
-                item.style.background = '';
+                displayNoResults();
+            }
+        } catch (error) {
+            console.error('Error en búsqueda:', error);
+            searchResults.innerHTML = `
+                <div class="search-no-results">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>Error al realizar la búsqueda</div>
+                </div>
+            `;
+            searchResults.style.display = 'block';
+        }
+    }
+
+    // === MOSTRAR RESULTADOS DE BÚSQUEDA ===
+    function displaySearchResults(results) {
+        const html = results.map(result => `
+            <a href="${result.url}" class="search-result-item">
+                <div class="search-result-icon ${result.color}">
+                    <i class="fas ${result.icon}"></i>
+                </div>
+                <div class="search-result-content">
+                    <div class="search-result-title">${result.title}</div>
+                    <div class="search-result-subtitle">${result.subtitle}</div>
+                </div>
+            </a>
+        `).join('');
+
+        searchResults.innerHTML = html;
+        searchResults.style.display = 'block';
+    }
+
+    // === MOSTRAR "SIN RESULTADOS" ===
+    function displayNoResults() {
+        searchResults.innerHTML = `
+            <div class="search-no-results">
+                <i class="fas fa-search"></i>
+                <div>No se encontraron resultados</div>
+            </div>
+        `;
+        searchResults.style.display = 'block';
+    }
+
+    // === NOTIFICACIONES ===
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationsDropdown = document.getElementById('notificationsDropdown');
+    const notificationBadge = document.getElementById('notificationBadge');
+    const notificationsList = document.getElementById('notificationsList');
+    const markAllRead = document.getElementById('markAllRead');
+
+    if (notificationBtn && notificationsDropdown) {
+        // Toggle dropdown
+        notificationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationsDropdown.style.display = 
+                notificationsDropdown.style.display === 'block' ? 'none' : 'block';
+            
+            if (notificationsDropdown.style.display === 'block') {
+                loadNotifications();
             }
         });
+
+        // Cerrar dropdown al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!notificationBtn.contains(e.target) && !notificationsDropdown.contains(e.target)) {
+                notificationsDropdown.style.display = 'none';
+            }
+        });
+
+        // Marcar todas como leídas
+        if (markAllRead) {
+            markAllRead.addEventListener('click', function() {
+                markAllNotificationsAsRead();
+            });
+        }
+
+        // Cargar notificaciones iniciales
+        loadNotificationsCount();
+        
+        // Actualizar cada 30 segundos
+        setInterval(loadNotificationsCount, 30000);
+    }
+
+    // === CARGAR NOTIFICACIONES ===
+    async function loadNotifications() {
+        try {
+            const response = await fetch('/admin/notifications/unread');
+            const data = await response.json();
+
+            if (data.notifications && data.notifications.length > 0) {
+                displayNotifications(data.notifications);
+            } else {
+                displayNoNotifications();
+            }
+
+            updateNotificationBadge(data.unread_count);
+        } catch (error) {
+            console.error('Error cargando notificaciones:', error);
+            notificationsList.innerHTML = '<div class="text-center py-3 text-danger">Error al cargar notificaciones</div>';
+        }
+    }
+
+    // === CARGAR SOLO EL CONTADOR ===
+    async function loadNotificationsCount() {
+        try {
+            const response = await fetch('/admin/notifications/unread');
+            const data = await response.json();
+            updateNotificationBadge(data.unread_count);
+        } catch (error) {
+            console.error('Error cargando contador:', error);
+        }
+    }
+
+    // === MOSTRAR NOTIFICACIONES ===
+    function displayNotifications(notifications) {
+        const html = notifications.map(notif => `
+            <div class="notification-item ${notif.read ? '' : 'unread'}" data-id="${notif.id}">
+                <div class="notification-icon ${notif.color}">
+                    <i class="fas ${notif.icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notif.title}</div>
+                    <div class="notification-message">${notif.message}</div>
+                    <div class="notification-time">${notif.created_at}</div>
+                </div>
+                <div class="notification-actions">
+                    <button class="notification-action-btn mark-read" data-id="${notif.id}" title="Marcar como leída">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="notification-action-btn delete-notif" data-id="${notif.id}" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        notificationsList.innerHTML = html;
+
+        // Agregar event listeners
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (!e.target.closest('.notification-actions')) {
+                    const url = notifications.find(n => n.id === this.dataset.id)?.url;
+                    if (url && url !== '#') {
+                        markNotificationAsRead(this.dataset.id);
+                        window.location.href = url;
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.mark-read').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                markNotificationAsRead(this.dataset.id);
+            });
+        });
+
+        document.querySelectorAll('.delete-notif').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                deleteNotification(this.dataset.id);
+            });
+        });
+    }
+
+    // === SIN NOTIFICACIONES ===
+    function displayNoNotifications() {
+        notificationsList.innerHTML = `
+            <div class="notifications-empty">
+                <i class="fas fa-bell-slash"></i>
+                <div>No tienes notificaciones</div>
+            </div>
+        `;
+    }
+
+    // === ACTUALIZAR BADGE ===
+    function updateNotificationBadge(count) {
+        if (notificationBadge) {
+            notificationBadge.textContent = count;
+            if (count > 0) {
+                notificationBadge.classList.add('has-notifications');
+            } else {
+                notificationBadge.classList.remove('has-notifications');
+            }
+        }
+    }
+
+    // === MARCAR COMO LEÍDA ===
+    async function markNotificationAsRead(id) {
+        try {
+            const response = await fetch(`/admin/notifications/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                loadNotifications();
+            }
+        } catch (error) {
+            console.error('Error marcando notificación:', error);
+        }
+    }
+
+    // === MARCAR TODAS COMO LEÍDAS ===
+    async function markAllNotificationsAsRead() {
+        try {
+            const response = await fetch('/admin/notifications/read-all', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                loadNotifications();
+            }
+        } catch (error) {
+            console.error('Error marcando todas:', error);
+        }
+    }
+
+    // === ELIMINAR NOTIFICACIÓN ===
+    async function deleteNotification(id) {
+        try {
+            const response = await fetch(`/admin/notifications/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                loadNotifications();
+            }
+        } catch (error) {
+            console.error('Error eliminando notificación:', error);
+        }
     }
 
     // === ANIMACIONES DE ENTRADA ===
@@ -163,16 +412,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // === NOTIFICACIONES DINÁMICAS ===
-    function updateNotificationBadge() {
-        // Simulación de actualización de notificaciones
-        const badge = document.querySelector('.header-notification-badge');
-        if (badge) {
-            // Aquí puedes conectar con tu API para obtener el número real
-            // Por ahora es estático
-        }
-    }
-
     // === RELOJ EN TIEMPO REAL ===
     function updateDateTime() {
         const dateDay = document.querySelector('.header-date-day');
@@ -192,7 +431,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // === INICIALIZACIÓN ===
     animateElements();
     initializeTooltips();
-    updateNotificationBadge();
     updateDateTime();
 
     // Actualizar fecha cada minuto

@@ -12,7 +12,7 @@
                     <h2 class="text-success mb-1">
                         <i class="fas fa-dumbbell me-2"></i>{{ $class->name }}
                         @if(!$class->active)
-                            <span class="badge bg-secondary ms-2">Inactiva</span>
+                            <span class="badge badge-modern badge-secondary ms-2">Inactiva</span>
                         @endif
                     </h2>
                     <p class="text-muted mb-0">Información completa de la clase</p>
@@ -21,133 +21,149 @@
                     <a href="{{ route('admin.classes.index') }}" class="btn btn-secondary btn-modern">
                         <i class="fas fa-arrow-left me-2"></i>Volver
                     </a>
-                    <a href="{{ route('admin.classes.edit', $class->id) }}" class="btn btn-warning btn-modern">
-                        <i class="fas fa-edit me-2"></i>Editar
-                    </a>
                 </div>
             </div>
 
             <div class="row">
                 <!-- Información de la Clase -->
                 <div class="col-lg-8">
-                    <div class="modern-card mb-4">
-                        <div class="modern-card-header">
-                            <h6 class="mb-0 fw-bold text-success">
-                                <i class="fas fa-info-circle me-2"></i>Información de la Clase
-                            </h6>
-                        </div>
-                        <div class="modern-card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6 class="text-success fw-semibold">
-                                        <i class="fas fa-user-tie me-2"></i>Instructor
-                                    </h6>
-                                    <p class="mb-3 text-muted">{{ $class->instructor_name }}</p>
+                    <div class="content-section mb-4">
+                        <h5 class="section-title">
+                            <i class="fas fa-info-circle me-2"></i>Información de la Clase
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-group mb-3">
+                                    <label class="info-label">
+                                        <i class="fas fa-user-tie me-2 text-success"></i>Instructor
+                                    </label>
+                                    <p class="info-value">
+                                        @if($class->instructor)
+                                            {{ $class->instructor->firstname }} {{ $class->instructor->lastname }}
+                                            @if($class->instructor->position)
+                                                <br><small class="text-muted">{{ $class->instructor->position->description }}</small>
+                                            @endif
+                                        @else
+                                            {{ $class->instructor_name ?? 'Sin instructor' }}
+                                        @endif
+                                    </p>
+                                </div>
 
-                                    <h6 class="text-success fw-semibold">
-                                        <i class="fas fa-clock me-2"></i>Duración
-                                    </h6>
-                                    <p class="mb-3 text-muted">{{ $class->duration_minutes }} minutos</p>
+                                <div class="info-group mb-3">
+                                    <label class="info-label">
+                                        <i class="fas fa-clock me-2 text-success"></i>Duración
+                                    </label>
+                                    <p class="info-value">{{ $class->duration_minutes }} minutos</p>
+                                </div>
 
-                                    <h6 class="text-success fw-semibold">
-                                        <i class="fas fa-signal me-2"></i>Nivel de Dificultad
-                                    </h6>
-                                    <p class="mb-3">
+                                <div class="info-group mb-3">
+                                    <label class="info-label">
+                                        <i class="fas fa-signal me-2 text-success"></i>Nivel de Dificultad
+                                    </label>
+                                    <p class="info-value">
                                         @switch($class->difficulty_level)
                                             @case('principiante')
-                                                <span class="badge badge-success badge-pill">
-                                                    <i class="fas fa-star"></i> Principiante
+                                                <span class="badge badge-modern badge-success">
+                                                    <i class="fas fa-star me-1"></i>Principiante
                                                 </span>
                                                 @break
                                             @case('intermedio')
-                                                <span class="badge badge-warning badge-pill">
-                                                    <i class="fas fa-star"></i><i class="fas fa-star"></i> Intermedio
+                                                <span class="badge badge-modern badge-warning">
+                                                    <i class="fas fa-star me-1"></i>Intermedio
                                                 </span>
                                                 @break
                                             @case('avanzado')
-                                                <span class="badge badge-danger badge-pill">
-                                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> Avanzado
+                                                <span class="badge badge-modern badge-danger">
+                                                    <i class="fas fa-star me-1"></i>Avanzado
                                                 </span>
                                                 @break
                                         @endswitch
                                     </p>
                                 </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-primary">
-                                        <i class="fas fa-users"></i> Capacidad Máxima
-                                    </h6>
-                                    <p class="mb-3">{{ $class->max_participants }} participantes</p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-group mb-3">
+                                    <label class="info-label">
+                                        <i class="fas fa-users me-2 text-success"></i>Capacidad Máxima
+                                    </label>
+                                    <p class="info-value">{{ $class->max_participants }} participantes</p>
+                                </div>
 
-                                    <h6 class="text-primary">
-                                        <i class="fas fa-dollar-sign"></i> Precio
-                                    </h6>
-                                    <p class="mb-3">
+                                <div class="info-group mb-3">
+                                    <label class="info-label">
+                                        <i class="fas fa-dollar-sign me-2 text-success"></i>Precio
+                                    </label>
+                                    <p class="info-value">
                                         <strong class="text-success h5">${{ number_format($class->price, 2) }}</strong>
                                     </p>
+                                </div>
 
-                                    <h6 class="text-primary">
-                                        <i class="fas fa-calendar-check"></i> Estado
-                                    </h6>
-                                    <p class="mb-3">
+                                <div class="info-group mb-3">
+                                    <label class="info-label">
+                                        <i class="fas fa-toggle-on me-2 text-success"></i>Estado
+                                    </label>
+                                    <p class="info-value">
                                         @if($class->active)
-                                            <span class="badge badge-success badge-pill">
-                                                <i class="fas fa-check"></i> Activa
+                                            <span class="badge badge-modern badge-success">
+                                                <i class="fas fa-check-circle me-1"></i>Activa
                                             </span>
                                         @else
-                                            <span class="badge badge-secondary badge-pill">
-                                                <i class="fas fa-pause"></i> Inactiva
+                                            <span class="badge badge-modern badge-secondary">
+                                                <i class="fas fa-pause-circle me-1"></i>Inactiva
                                             </span>
                                         @endif
                                     </p>
                                 </div>
                             </div>
-
-                            @if($class->description)
-                                <hr>
-                                <h6 class="text-primary">
-                                    <i class="fas fa-align-left"></i> Descripción
-                                </h6>
-                                <p class="text-gray-800">{{ $class->description }}</p>
-                            @endif
                         </div>
+
+                        @if($class->description)
+                            <hr class="my-3">
+                            <div class="info-group">
+                                <label class="info-label">
+                                    <i class="fas fa-align-left me-2 text-success"></i>Descripción
+                                </label>
+                                <p class="info-value">{{ $class->description }}</p>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Horarios de la Clase -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fas fa-calendar-alt"></i> Horarios de la Clase
-                            </h6>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
-                                <i class="fas fa-plus"></i> Agregar Horario
+                    <div class="content-section mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="section-title mb-0">
+                                <i class="fas fa-calendar-alt me-2"></i>Horarios de la Clase
+                            </h5>
+                            <button class="btn btn-success btn-modern" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+                                <i class="fas fa-plus me-2"></i>Agregar Horario
                             </button>
                         </div>
-                        <div class="card-body">
-                            @if($class->schedules->count() > 0)
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
+                        
+                        @if($class->schedules->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table table-modern">
+                                    <thead>
+                                        <tr>
+                                            <th>Día</th>
+                                            <th>Hora de Inicio</th>
+                                            <th>Hora de Fin</th>
+                                            <th>Tipo</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($class->schedules as $schedule)
                                             <tr>
-                                                <th>Día</th>
-                                                <th>Hora de Inicio</th>
-                                                <th>Hora de Fin</th>
-                                                <th>Tipo</th>
-                                                <th>Estado</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($class->schedules as $schedule)
-                                                <tr>
-                                                    <td>
-                                                        @php
-                                                            $days = [
-                                                                0 => 'Domingo',
-                                                                1 => 'Lunes',
-                                                                2 => 'Martes',
-                                                                3 => 'Miércoles',
-                                                                4 => 'Jueves',
-                                                                5 => 'Viernes',
+                                                <td>
+                                                    @php
+                                                        $days = [
+                                                            0 => 'Domingo',
+                                                            1 => 'Lunes',
+                                                            2 => 'Martes',
+                                                            3 => 'Miércoles',
+                                                            4 => 'Jueves',
+                                                            5 => 'Viernes',
                                                                 6 => 'Sábado'
                                                             ];
                                                         @endphp
@@ -163,29 +179,29 @@
                                                     </td>
                                                     <td>
                                                         @if($schedule->is_recurring)
-                                                            <span class="badge bg-info text-white">
-                                                                <i class="fas fa-repeat"></i> Recurrente
+                                                            <span class="badge badge-modern badge-info">
+                                                                <i class="fas fa-repeat me-1"></i>Recurrente
                                                             </span>
                                                         @else
-                                                            <span class="badge bg-secondary">
-                                                                <i class="fas fa-calendar-day"></i> Único
+                                                            <span class="badge badge-modern badge-secondary">
+                                                                <i class="fas fa-calendar-day me-1"></i>Único
                                                             </span>
                                                         @endif
                                                     </td>
                                                     <td>
                                                         @if($schedule->active)
-                                                            <span class="badge bg-success">Activo</span>
+                                                            <span class="badge badge-modern badge-success">Activo</span>
                                                         @else
-                                                            <span class="badge bg-secondary">Inactivo</span>
+                                                            <span class="badge badge-modern badge-secondary">Inactivo</span>
                                                         @endif
                                                     </td>
                                                     <td>
                                                         <div class="btn-group btn-group-sm">
-                                                            <button class="btn btn-outline-primary"
+                                                            <button class="btn btn-outline-success btn-sm"
                                                                     onclick="editSchedule({{ $schedule->id }})">
                                                                 <i class="fas fa-edit"></i>
                                                             </button>
-                                                            <button class="btn btn-outline-danger"
+                                                            <button class="btn btn-outline-danger btn-sm"
                                                                     onclick="deleteSchedule({{ $schedule->id }})">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
@@ -197,16 +213,15 @@
                                     </table>
                                 </div>
                             @else
-                                <div class="text-center py-4">
-                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                                    <h6 class="text-muted">No hay horarios configurados</h6>
-                                    <p class="text-muted">Agrega horarios para que los miembros puedan reservar esta clase.</p>
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
-                                        <i class="fas fa-plus"></i> Agregar Primer Horario
+                                <div class="alert alert-info text-center">
+                                    <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                                    <h6>No hay horarios configurados</h6>
+                                    <p class="mb-3">Agrega horarios para que los miembros puedan reservar esta clase.</p>
+                                    <button class="btn btn-success btn-modern" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+                                        <i class="fas fa-plus me-2"></i>Agregar Primer Horario
                                     </button>
                                 </div>
                             @endif
-                        </div>
                     </div>
                 </div>
 
@@ -215,86 +230,58 @@
                     <!-- Estadísticas Rápidas -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="card border-left-primary shadow h-100 py-2 mb-3">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Reservas
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                {{ $stats['total_bookings'] }}
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
+                            <div class="stat-card stat-card-success mb-3">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="stat-details">
+                                    <div class="stat-label">Total Reservas</div>
+                                    <div class="stat-value">{{ $stats['total_bookings'] }}</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <div class="card border-left-success shadow h-100 py-2 mb-3">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Ingresos del Mes
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                ${{ number_format($stats['revenue_this_month'], 2) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
+                            <div class="stat-card stat-card-success mb-3">
+                                <div class="stat-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="stat-details">
+                                    <div class="stat-label">Ingresos del Mes</div>
+                                    <div class="stat-value">${{ number_format($stats['revenue_this_month'], 2) }}</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <div class="card border-left-info shadow h-100 py-2 mb-3">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Sesiones Programadas
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                {{ $stats['upcoming_sessions'] }}
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
+                            <div class="stat-card stat-card-info mb-3">
+                                <div class="stat-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-details">
+                                    <div class="stat-label">Sesiones Programadas</div>
+                                    <div class="stat-value">{{ $stats['upcoming_sessions'] }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Información Adicional -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fas fa-info"></i> Información Adicional
-                            </h6>
+                    <div class="content-section mb-4">
+                        <h5 class="section-title">
+                            <i class="fas fa-info-circle me-2"></i>Información Adicional
+                        </h5>
+                        <div class="info-group mb-3">
+                            <label class="info-label">Creada el:</label>
+                            <p class="info-value">{{ $class->created_at->format('d/m/Y H:i') }}</p>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <small class="text-muted">Creada el:</small><br>
-                                <strong>{{ $class->created_at->format('d/m/Y H:i') }}</strong>
-                            </div>
-                            <div class="mb-3">
-                                <small class="text-muted">Última modificación:</small><br>
-                                <strong>{{ $class->updated_at->format('d/m/Y H:i') }}</strong>
-                            </div>
-                            <div class="mb-3">
-                                <small class="text-muted">ID de la clase:</small><br>
-                                <code>{{ $class->id }}</code>
-                            </div>
+                        <div class="info-group mb-3">
+                            <label class="info-label">Última modificación:</label>
+                            <p class="info-value">{{ $class->updated_at->format('d/m/Y H:i') }}</p>
+                        </div>
+                        <div class="info-group mb-3">
+                            <label class="info-label">ID de la clase:</label>
+                            <p class="info-value"><code class="text-success">{{ $class->id }}</code></p>
                         </div>
                     </div>
                 </div>
@@ -376,11 +363,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> Cancelar
+                    <button type="button" class="btn btn-secondary btn-modern" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar Horario
+                    <button type="submit" class="btn btn-success btn-modern">
+                        <i class="fas fa-save me-2"></i>Guardar Horario
                     </button>
                 </div>
             </form>
@@ -408,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const originalText = submitBtn.innerHTML;
 
             // Mostrar estado de carga
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
             submitBtn.disabled = true;
 
             fetch(this.action, {
