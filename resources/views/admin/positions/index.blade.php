@@ -82,7 +82,7 @@
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="searchPosition" class="form-control search-input" 
-                       placeholder="Buscar por descripción de la posición...">
+                       placeholder="Buscar por descripción del Puesto...">
                 <div id="searchSpinner" class="search-spinner d-none">
                     <div class="spinner-border spinner-border-sm" role="status"></div>
                 </div>
@@ -105,13 +105,13 @@
     </div>
 </div>
 
-<!-- Modal para crear posición -->
+<!-- Modal para crear Puesto -->
 <div class="modal fade" id="createPositionModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header bg-gradient-success text-white py-2">
                 <h6 class="modal-title fw-bold mb-0">
-                    <i class="fas fa-plus-circle me-2"></i>Nueva Posición
+                    <i class="fas fa-plus-circle me-2"></i>Nueva Puesto
                 </h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -131,7 +131,7 @@
                                 <span class="input-group-text">$</span>
                                 <input type="number" class="form-control" id="create_rate" name="rate" step="0.01" min="0" required>
                             </div>
-                            <small class="text-muted">Tarifa base por hora para esta posición</small>
+                            <small class="text-muted">Tarifa base por hora para esta Puesto</small>
                         </div>
                         --}}
                         {{-- Campo oculto para enviar valor por defecto --}}
@@ -143,7 +143,7 @@
                         <i class="fas fa-times me-2"></i>Cancelar
                     </button>
                     <button type="submit" class="btn btn-success btn-modern">
-                        <i class="fas fa-save me-2"></i>Guardar Posición
+                        <i class="fas fa-save me-2"></i>Guardar Puesto
                     </button>
                 </div>
             </form>
@@ -151,13 +151,13 @@
     </div>
 </div>
 
-<!-- Modal para editar posición -->
+<!-- Modal para editar Puesto -->
 <div class="modal fade" id="editPositionModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header bg-gradient-success text-white py-2">
                 <h6 class="modal-title fw-bold mb-0">
-                    <i class="fas fa-edit me-2"></i>Editar Posición
+                    <i class="fas fa-edit me-2"></i>Editar Puesto
                 </h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -179,7 +179,7 @@
                                 <span class="input-group-text">$</span>
                                 <input type="number" class="form-control" id="edit_rate" name="rate" step="0.01" min="0" required>
                             </div>
-                            <small class="text-muted">Tarifa base por hora para esta posición</small>
+                            <small class="text-muted">Tarifa base por hora para esta Puesto</small>
                         </div>
                         --}}
                         {{-- Campo oculto para mantener valor actual --}}
@@ -191,7 +191,7 @@
                         <i class="fas fa-times me-2"></i>Cancelar
                     </button>
                     <button type="submit" class="btn btn-success btn-modern">
-                        <i class="fas fa-save me-2"></i>Actualizar Posición
+                        <i class="fas fa-save me-2"></i>Actualizar Puesto
                     </button>
                 </div>
             </form>
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchPositions();
     };
 
-    // Formulario de crear posición
+    // Formulario de crear Puesto
     document.getElementById('createPositionForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const modal = bootstrap.Modal.getInstance(document.getElementById('createPositionModal'));
                 modal.hide();
                 this.reset();
-                showToast('Posición creada exitosamente', 'success');
+                showToast('Puesto cread exitosamente', 'success');
                 setTimeout(() => searchPositions(), 1000);
             } else if (data.errors) {
                 Object.keys(data.errors).forEach(field => {
@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             } else {
-                showToast(data.message || 'Error al crear la posición', 'error');
+                showToast(data.message || 'Error al crear el Puesto', 'error');
             }
         })
         .catch(error => {
@@ -347,13 +347,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .finally(() => {
             if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Posición';
+                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Puesto';
                 submitBtn.disabled = false;
             }
         });
     });
 
-    // Formulario de editar posición
+    // Formulario de editar Puesto
     document.getElementById('editPositionForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 const modal = bootstrap.Modal.getInstance(document.getElementById('editPositionModal'));
                 modal.hide();
-                showToast('Posición actualizada exitosamente', 'success');
+                showToast('Puesto actualizada exitosamente', 'success');
                 setTimeout(() => searchPositions(), 1000);
             } else if (data.errors) {
                 Object.keys(data.errors).forEach(field => {
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             } else {
-                showToast(data.message || 'Error al actualizar la posición', 'error');
+                showToast(data.message || 'Error al actualizar el Puesto', 'error');
             }
         })
         .catch(error => {
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .finally(() => {
             if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Posición';
+                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Puesto';
                 submitBtn.disabled = false;
             }
         });
@@ -451,12 +451,12 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error al cargar datos:', error);
-            showToast('Error al cargar los datos de la posición', 'error');
+            showToast('Error al cargar los datos del Puesto', 'error');
         });
     }
 
     function deletePosition(positionId, positionName) {
-        if (confirm(`¿Está seguro de que desea eliminar la posición "${positionName}"?`)) {
+        if (confirm(`¿Está seguro de que desea eliminar el Puesto "${positionName}"?`)) {
             fetch(`{{ url('admin/positions') }}/${positionId}`, {
                 method: 'DELETE',
                 headers: {
@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     showToast(data.message, 'success');
                     searchPositions();
                 } else {
-                    showToast(data.message || 'Error al eliminar la posición', 'error');
+                    showToast(data.message || 'Error al eliminar el Puesto', 'error');
                 }
             })
             .catch(error => {

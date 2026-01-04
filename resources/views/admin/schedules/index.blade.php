@@ -380,7 +380,7 @@
                                         <div>
                                             <i class="fas fa-user-tie me-2 text-primary"></i>
                                             <strong>\${emp.firstname} \${emp.lastname}</strong>
-                                            \${emp.position ? '<br><small class="text-muted">Posición: ' + emp.position + '</small>' : ''}
+                                            \${emp.position ? '<br><small class="text-muted">Puesto: ' + emp.position + '</small>' : ''}
                                         </div>
                                         <span class="badge bg-primary">\${emp.employee_id}</span>
                                     </div>

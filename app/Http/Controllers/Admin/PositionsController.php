@@ -50,7 +50,7 @@ class PositionsController extends Controller
         ], [
             'description.required' => 'La descripción es obligatoria.',
             'description.max' => 'La descripción no puede tener más de 100 caracteres.',
-            'description.unique' => 'Ya existe una posición con esta descripción.',
+            'description.unique' => 'Ya existe un puesto con esta descripción.',
             'rate.numeric' => 'La tarifa debe ser un número válido.',
             'rate.min' => 'La tarifa no puede ser negativa.',
             'rate.max' => 'La tarifa no puede ser mayor a 99999.99.'
@@ -65,13 +65,13 @@ class PositionsController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Posición creada exitosamente',
+                    'message' => 'Puesto creada exitosamente',
                     'position' => $position
                 ]);
             }
 
             return redirect()->route('admin.positions.index')
-                           ->with('success', 'Posición creada exitosamente');
+                           ->with('success', 'Puesto creada exitosamente');
                            
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->ajax()) {
@@ -84,17 +84,17 @@ class PositionsController extends Controller
             throw $e;
             
         } catch (\Exception $e) {
-            Log::error('Error al crear posición: ' . $e->getMessage());
+            Log::error('Error al crear puesto: ' . $e->getMessage());
             
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error al crear la posición: ' . $e->getMessage()
+                    'message' => 'Error al crear el puesto: ' . $e->getMessage()
                 ], 500);
             }
             
             return redirect()->back()
-                           ->withErrors(['error' => 'Error al crear la posición.'])
+                           ->withErrors(['error' => 'Error al crear el puesto.'])
                            ->withInput();
         }
     }
@@ -110,7 +110,7 @@ class PositionsController extends Controller
         ], [
             'description.required' => 'La descripción es obligatoria.',
             'description.max' => 'La descripción no puede tener más de 100 caracteres.',
-            'description.unique' => 'Ya existe una posición con esta descripción.',
+            'description.unique' => 'Ya existe un puesto con esta descripción.',
             'rate.numeric' => 'La tarifa debe ser un número válido.',
             'rate.min' => 'La tarifa no puede ser negativa.',
             'rate.max' => 'La tarifa no puede ser mayor a 99999.99.'
@@ -127,13 +127,13 @@ class PositionsController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Posición actualizada exitosamente',
+                    'message' => 'Puesto actualizado exitosamente',
                     'position' => $position
                 ]);
             }
 
             return redirect()->route('admin.positions.index')
-                           ->with('success', 'Posición actualizada exitosamente');
+                           ->with('success', 'Puesto actualizado exitosamente');
                            
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->ajax()) {
@@ -146,17 +146,17 @@ class PositionsController extends Controller
             throw $e;
             
         } catch (\Exception $e) {
-            Log::error('Error al actualizar posición: ' . $e->getMessage());
+            Log::error('Error al actualizar puesto: ' . $e->getMessage());
             
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error al actualizar la posición: ' . $e->getMessage()
+                    'message' => 'Error al actualizar el puesto: ' . $e->getMessage()
                 ], 500);
             }
             
             return redirect()->back()
-                           ->withErrors(['error' => 'Error al actualizar la posición.'])
+                           ->withErrors(['error' => 'Error al actualizar el puesto.'])
                            ->withInput();
         }
     }
@@ -166,11 +166,11 @@ class PositionsController extends Controller
         try {
             $position = Position::findOrFail($id);
             
-            // Verificar si hay empleados asignados a esta posición
+            // Verificar si hay empleados asignados a esta Puesto
             if ($position->employees()->count() > 0) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se puede eliminar esta posición porque tiene empleados asignados.'
+                    'message' => 'No se puede eliminar este puesto porque tiene empleados asignados.'
                 ], 400);
             }
             
@@ -178,15 +178,15 @@ class PositionsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Posición eliminada exitosamente'
+                'message' => 'Puesto eliminado exitosamente'
             ]);
             
         } catch (\Exception $e) {
-            Log::error('Error al eliminar posición: ' . $e->getMessage());
+            Log::error('Error al eliminar puesto: ' . $e->getMessage());
             
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar la posición: ' . $e->getMessage()
+                'message' => 'Error al eliminar el puesto: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -144,9 +144,9 @@
                             <input type="text" class="form-control" id="create_contact_info" name="contact_info" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="create_position_id" class="form-label">Posición *</label>
+                            <label for="create_position_id" class="form-label">Puesto *</label>
                             <select class="form-select" id="create_position_id" name="position_id" required>
-                                <option value="">Seleccionar posición...</option>
+                                <option value="">Seleccionar Puesto...</option>
                                 @foreach($positions ?? [] as $position)
                                     <option value="{{ $position->id }}">{{ $position->description }}</option>
                                 @endforeach
@@ -226,9 +226,9 @@
                             <input type="text" class="form-control" id="edit_contact_info" name="contact_info" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="edit_position_id" class="form-label">Posición *</label>
+                            <label for="edit_position_id" class="form-label">Puesto *</label>
                             <select class="form-select" id="edit_position_id" name="position_id" required>
-                                <option value="">Seleccionar posición...</option>
+                                <option value="">Seleccionar Puesto...</option>
                                 @foreach($positions ?? [] as $position)
                                     <option value="{{ $position->id }}">{{ $position->description }}</option>
                                 @endforeach
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <tr>
                             <th>ID</th>
                             <th>Nombre Completo</th>
-                            <th>Posición</th>
+                            <th>Puesto</th>
                             <th>Contacto</th>
                             <th>Acciones</th>
                         </tr>
@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Actualizar opciones de posiciones si están disponibles
             if (data.positions) {
                 const positionSelect = document.getElementById('edit_position_id');
-                positionSelect.innerHTML = '<option value="">Seleccionar posición...</option>';
+                positionSelect.innerHTML = '<option value="">Seleccionar Puesto...</option>';
                 data.positions.forEach(position => {
                     const option = document.createElement('option');
                     option.value = position.id;

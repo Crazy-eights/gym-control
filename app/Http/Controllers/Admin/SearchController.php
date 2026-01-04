@@ -51,7 +51,7 @@ class SearchController extends Controller
             ->get();
 
         foreach ($employees as $employee) {
-            $positionName = $employee->position ? $employee->position->description : 'Sin posición';
+            $positionName = $employee->position ? $employee->position->description : 'Sin Puesto';
             
             $results[] = [
                 'type' => 'employee',

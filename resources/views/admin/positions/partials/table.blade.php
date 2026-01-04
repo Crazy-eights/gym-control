@@ -39,7 +39,7 @@
                                     {{ $position->description }}
                                 </div>
                                 <small class="text-muted">
-                                    Posición de trabajo
+                                    Puesto de trabajo
                                 </small>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                             <button type="button" 
                                     class="btn btn-outline-success btn-sm edit-position" 
                                     data-id="{{ $position->id }}"
-                                    title="Editar posición">
+                                    title="Editar Puesto">
                                 <i class="fas fa-edit"></i>
                             </button>
                             
@@ -80,7 +80,7 @@
                                         class="btn btn-outline-danger btn-sm delete-position" 
                                         data-id="{{ $position->id }}"
                                         data-name="{{ $position->description }}"
-                                        title="Eliminar posición">
+                                        title="Eliminar Puesto">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             @else
@@ -99,12 +99,12 @@
                     <td colspan="5" class="text-center py-4">
                         <div class="empty-state">
                             <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No se encontraron posiciones</h5>
+                            <h5 class="text-muted">No se encontraron Puestos</h5>
                             <p class="text-muted mb-0">
                                 @if(request('search'))
-                                    No hay posiciones que coincidan con tu búsqueda.
+                                    No hay Puestos que coincidan con tu búsqueda.
                                 @else
-                                    Comienza agregando tu primera posición de trabajo.
+                                    Comienza agregando tu primer puesto de trabajo.
                                 @endif
                             </p>
                         </div>

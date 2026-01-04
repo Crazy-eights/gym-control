@@ -23,7 +23,7 @@ class NewEmployeeRegistered extends Notification
 
     public function toArray($notifiable)
     {
-        $positionName = $this->employee->position ? $this->employee->position->description : 'Sin posición';
+        $positionName = $this->employee->position ? $this->employee->position->description : 'Sin Puesto';
         
         return [
             'type' => 'new_employee',

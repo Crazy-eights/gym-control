@@ -147,8 +147,8 @@
                         <div class="sidebar-icon">
                             <i class="fas fa-user-tie"></i>
                         </div>
-                        <span class="sidebar-text">Posiciones</span>
-                        <div class="sidebar-tooltip">Gestión de Posiciones</div>
+                        <span class="sidebar-text">Puestos</span>
+                        <div class="sidebar-tooltip">Gestión de Puestos</div>
                     </a>
                 </div>
 

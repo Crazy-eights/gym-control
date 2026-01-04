@@ -9,7 +9,7 @@
                     <i class="fas fa-user me-1"></i>Nombre Completo
                 </th>
                 <th class="fw-semibold text-dark">
-                    <i class="fas fa-briefcase me-1"></i>Posición
+                    <i class="fas fa-briefcase me-1"></i>Puesto
                 </th>
                 <th class="fw-semibold text-dark">
                     <i class="fas fa-clock me-1"></i>Horario
@@ -54,7 +54,7 @@
                                 {{ $instructor->position->description }}
                             </span>
                         @else
-                            <span class="text-muted">Sin posición</span>
+                            <span class="text-muted">Sin Puesto</span>
                         @endif
                     </td>
                     <td>
