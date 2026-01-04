@@ -198,11 +198,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // === MÓDULO DE POSICIONES ===
         Route::resource('positions', \App\Http\Controllers\Admin\PositionsController::class);
-        // Ruta de test temporal
-        Route::get('positions-test', function() {
-            $positions = \App\Models\Position::all();
-            return view('admin.positions.test', compact('positions'));
-        })->name('positions.test');
 
         // === MÓDULO DE INSTRUCTORES ===
         Route::resource('instructors', \App\Http\Controllers\Admin\InstructorsController::class);
