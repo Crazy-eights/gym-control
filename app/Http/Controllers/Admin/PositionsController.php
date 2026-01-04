@@ -65,13 +65,13 @@ class PositionsController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Puesto creada exitosamente',
+                    'message' => 'Puesto creado exitosamente',
                     'position' => $position
                 ]);
             }
 
             return redirect()->route('admin.positions.index')
-                           ->with('success', 'Puesto creada exitosamente');
+                           ->with('success', 'Puesto creado exitosamente');
                            
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->ajax()) {

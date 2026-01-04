@@ -227,6 +227,7 @@ class VisualConfigController extends Controller
             $css .= "}\n\n";
         }
 
+
         // Enlaces y elementos primarios
         if ($config->primary_color) {
             $css .= "a, .text-primary {\n";
